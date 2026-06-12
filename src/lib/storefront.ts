@@ -31,7 +31,8 @@ const DEMO: StorefrontDrop[] = [];
 export async function getStorefrontDrops(): Promise<StorefrontDrop[]> {
   try {
     const drops = await prisma.drop.findMany({
-      where: { published: true },
+      // Archived drops live only on /archive, never on the homepage storefront.
+      where: { published: true, status: { not: 'ARCHIVED' } },
       include: {
         products: {
           where: { isActive: true },

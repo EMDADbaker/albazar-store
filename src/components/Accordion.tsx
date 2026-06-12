@@ -28,11 +28,17 @@ export default function Accordion({
           {open ? '−' : '+'}
         </span>
       </button>
-      {open && (
-        <div className="pb-5 text-[13px] text-coal/60 leading-relaxed space-y-3">
-          {children}
+      {/* grid-rows 0fr→1fr animates height smoothly without a layout jump */}
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <div className="pb-5 text-[13px] text-coal/60 leading-relaxed space-y-3">
+            {children}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

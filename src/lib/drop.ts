@@ -33,10 +33,16 @@ const DEMO_DROP: ActiveDrop = {
  */
 export async function getActiveDrop(): Promise<ActiveDrop> {
   try {
-    const drop = await prisma.drop.findFirst({
+    const candidates = await prisma.drop.findMany({
       where: { published: true, status: { in: ['LIVE', 'TEASER', 'SOLDOUT'] } },
-      orderBy: [{ status: 'asc' }, { launchAt: 'asc' }],
     });
+    // Prefer a LIVE drop, then the soonest upcoming TEASER, then SOLDOUT.
+    const rank: Record<string, number> = { LIVE: 0, TEASER: 1, SOLDOUT: 2 };
+    const drop = candidates.sort(
+      (a, b) =>
+        (rank[a.status] ?? 9) - (rank[b.status] ?? 9) ||
+        a.launchAt.getTime() - b.launchAt.getTime(),
+    )[0];
     if (!drop) return DEMO_DROP;
     return {
       id: drop.id,

@@ -29,7 +29,10 @@ export default async function Home({
         {live ? (
           <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} />
         ) : (
-          <CountdownHero launchAtMs={new Date(drop.launchAt).getTime()} />
+          <CountdownHero
+            launchAtMs={new Date(drop.launchAt).getTime()}
+            name={locale === 'ar' ? drop.nameAr : drop.nameEn}
+          />
         )}
 
         <Ticker />
@@ -59,7 +62,7 @@ export default async function Home({
 
 /* ------------------------------- Dark hero -------------------------------- */
 
-function CountdownHero({ launchAtMs }: { launchAtMs: number }) {
+function CountdownHero({ launchAtMs, name }: { launchAtMs: number; name: string }) {
   const t = useTranslations('Countdown');
   const ts = useTranslations('Storefront');
   return (
@@ -72,7 +75,7 @@ function CountdownHero({ launchAtMs }: { launchAtMs: number }) {
       <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
       <div className="relative pt-8">
         <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
-          {t('eyebrow')}
+          {name} — {t('eyebrow')}
         </div>
         <h1 className="text-[clamp(40px,9vw,72px)] font-bold tracking-[-0.02em] leading-[0.98] mb-3">
           {t('title')}

@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 import type { ProductView } from '@/lib/products';
 
 // Light-theme add-to-cart: size chips + quantity stepper + CTA.
 export default function AddToCart({ product }: { product: ProductView }) {
   const t = useTranslations('Product');
-  const router = useRouter();
   const { add } = useCart();
   const [size, setSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -33,8 +32,9 @@ export default function AddToCart({ product }: { product: ProductView }) {
       },
       qty,
     );
+    // Notify, but stay on the page so they can keep shopping.
     setAdded(true);
-    setTimeout(() => router.push('/cart'), 450);
+    setTimeout(() => setAdded(false), 2500);
   }
 
   return (
@@ -93,11 +93,11 @@ export default function AddToCart({ product }: { product: ProductView }) {
 
       <button
         onClick={handleAdd}
-        disabled={!canAdd || added}
+        disabled={!canAdd}
         className="w-full bg-coal text-paper font-bold text-[12px] tracking-[0.18em] uppercase py-4 transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {added
-          ? t('added')
+          ? `✓ ${t('added')}`
           : !size
             ? t('selectSize')
             : !canAdd
@@ -105,9 +105,18 @@ export default function AddToCart({ product }: { product: ProductView }) {
               : t('addToCart')}
       </button>
 
-      <div className="font-mono text-[9px] text-coal/40 mt-3 text-center">
-        {t('vatIncluded')}
-      </div>
+      {added ? (
+        <Link
+          href="/cart"
+          className="block mt-3 text-center font-mono text-[10px] uppercase tracking-wide text-coal underline hover:no-underline"
+        >
+          {t('viewCart')}
+        </Link>
+      ) : (
+        <div className="font-mono text-[9px] text-coal/40 mt-3 text-center">
+          {t('vatIncluded')}
+        </div>
+      )}
     </div>
   );
 }

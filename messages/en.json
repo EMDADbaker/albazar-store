@@ -21,7 +21,7 @@
     "switchTo": "عربي"
   },
   "Countdown": {
-    "eyebrow": "Drop 001 — Loading",
+    "eyebrow": "Dropping soon",
     "title": "SOMETHING IS COMING.",
     "subtitle": "Limited pieces. No restocks. You either move first or you watch.",
     "days": "Days",
@@ -31,7 +31,7 @@
     "teaserTag": "Piece 01 — Classified"
   },
   "Live": {
-    "eyebrow": "Drop 001 — Live now",
+    "eyebrow": "Live now",
     "title": "IT'S LIVE.",
     "subtitle": "When it's gone, it's gone.",
     "remaining": "{count} left",
@@ -79,7 +79,11 @@
     "related": "More from the drop",
     "added": "Added",
     "save": "Save to wishlist",
-    "saved": "Saved"
+    "saved": "Saved",
+    "viewCart": "View cart →",
+    "quickView": "Quick view",
+    "close": "Close",
+    "fullDetails": "Full details →"
   },
   "Cart": {
     "title": "Cart",
