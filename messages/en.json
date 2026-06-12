@@ -1,0 +1,100 @@
+{
+  "Meta": {
+    "title": "ALBAZAR — Riyadh Streetwear. Limited Drops.",
+    "description": "Limited pieces. No restocks. Numbered drops from Riyadh."
+  },
+  "Entrance": {
+    "eyebrow": "ALBAZAR · البازار",
+    "hint": "Tap to enter"
+  },
+  "Nav": {
+    "drop": "Drop 001",
+    "archive": "Archive",
+    "lookbook": "Lookbook",
+    "about": "About",
+    "cart": "Cart",
+    "switchTo": "عربي"
+  },
+  "Countdown": {
+    "eyebrow": "Drop 001 — Loading",
+    "title": "SOMETHING IS COMING.",
+    "subtitle": "Limited pieces. No restocks. You either move first or you watch.",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "teaserTag": "Piece 01 — Classified"
+  },
+  "Live": {
+    "eyebrow": "Drop 001 — Live now",
+    "title": "IT'S LIVE.",
+    "subtitle": "When it's gone, it's gone.",
+    "remaining": "{count} left",
+    "soldOut": "Sold out",
+    "view": "View piece"
+  },
+  "Vault": {
+    "title": "Join the Vault",
+    "titleAccent": "the Vault",
+    "subtitle": "Early access 1 hour before everyone. WhatsApp only. No spam.",
+    "phonePlaceholder": "5X XXX XXXX",
+    "join": "Join",
+    "success": "You're in. Early access secured.",
+    "invalidPhone": "Enter a valid Saudi number."
+  },
+  "Ticker": {
+    "items": [
+      "Drop 001 — 150 pieces only",
+      "Limited pieces. No restocks.",
+      "Mada · Apple Pay · STC Pay · Tabby",
+      "Riyadh to the world"
+    ]
+  },
+  "Archive": {
+    "title": "The archive — Drop 000",
+    "meta": "Sold out in 3 days",
+    "soldOut": "Sold out",
+    "claimed": "{claimed} / {total} claimed"
+  },
+  "Product": {
+    "addToCart": "Add to cart",
+    "size": "Size",
+    "sizeGuide": "Size guide",
+    "remaining": "{count} of {total} left",
+    "vatIncluded": "VAT 15% included",
+    "soldOut": "Sold out",
+    "selectSize": "Select a size"
+  },
+  "Cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "vat": "VAT (15%)",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "email": "Email (optional)",
+    "city": "City",
+    "district": "District",
+    "street": "Street",
+    "building": "Building",
+    "postalCode": "Postal code",
+    "pay": "Pay now",
+    "whatsappOptIn": "Get order updates on WhatsApp"
+  },
+  "Footer": {
+    "verified": "Verified Store",
+    "vatNumber": "VAT No.: [TBD]",
+    "crNumber": "CR No.: [TBD]",
+    "muthooq": "Muthooq Certified"
+  },
+  "Currency": {
+    "symbol": "SAR"
+  }
+}

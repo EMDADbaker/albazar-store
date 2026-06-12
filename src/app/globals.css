@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #080808;
+  color: #f0f0f0;
+}
+
+body {
+  font-family: var(--font-space-grotesk), var(--font-cairo), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+[dir='rtl'] body {
+  font-family: var(--font-cairo), var(--font-space-grotesk), sans-serif;
+}
+
+/* Hairline borders used everywhere in the reference */
+.hairline {
+  border-color: rgba(240, 240, 240, 0.08);
+}
+
+::selection {
+  background: rgba(200, 160, 80, 0.3);
+  color: #f0f0f0;
+}
+
+/* Thin scrollbar to match the dark, minimal aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 160, 80, 0.25);
+  border-radius: 4px;
+}

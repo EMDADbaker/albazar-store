@@ -1,0 +1,100 @@
+{
+  "Meta": {
+    "title": "البازار — ستريت وير من الرياض. دروبات محدودة.",
+    "description": "قطع محدودة. ما فيه إعادة. دروبات مرقّمة من الرياض."
+  },
+  "Entrance": {
+    "eyebrow": "ALBAZAR · البازار",
+    "hint": "اضغط للدخول"
+  },
+  "Nav": {
+    "drop": "دروب ٠٠١",
+    "archive": "الأرشيف",
+    "lookbook": "اللوك بوك",
+    "about": "من نحن",
+    "cart": "السلة",
+    "switchTo": "EN"
+  },
+  "Countdown": {
+    "eyebrow": "دروب ٠٠١ — قريب",
+    "title": "شي جاي.",
+    "subtitle": "قطع محدودة. ما فيه إعادة. يا تتحرك أول، يا تتفرج.",
+    "days": "يوم",
+    "hours": "ساعة",
+    "minutes": "دقيقة",
+    "seconds": "ثانية",
+    "teaserTag": "قطعة ٠١ — سرية"
+  },
+  "Live": {
+    "eyebrow": "دروب ٠٠١ — مباشر الحين",
+    "title": "صار مباشر.",
+    "subtitle": "لمن تخلص، تخلص.",
+    "remaining": "باقي {count}",
+    "soldOut": "نفدت",
+    "view": "شوف القطعة"
+  },
+  "Vault": {
+    "title": "انضم للخزنة",
+    "titleAccent": "للخزنة",
+    "subtitle": "وصول مبكر قبل الكل بساعة. واتساب بس. بدون إزعاج.",
+    "phonePlaceholder": "5X XXX XXXX",
+    "join": "انضم",
+    "success": "دخلت. الوصول المبكر محجوز لك.",
+    "invalidPhone": "اكتب رقم سعودي صحيح."
+  },
+  "Ticker": {
+    "items": [
+      "دروب ٠٠١ — ١٥٠ قطعة بس",
+      "قطع محدودة. ما فيه إعادة",
+      "مدى · Apple Pay · STC Pay · تابي",
+      "الرياض إلى العالم"
+    ]
+  },
+  "Archive": {
+    "title": "الأرشيف — دروب ٠٠٠",
+    "meta": "نفدت في ٣ أيام",
+    "soldOut": "نفدت",
+    "claimed": "{claimed} / {total} انحجزت"
+  },
+  "Product": {
+    "addToCart": "أضف للسلة",
+    "size": "المقاس",
+    "sizeGuide": "دليل المقاسات",
+    "remaining": "باقي {count} من {total}",
+    "vatIncluded": "شامل ضريبة القيمة المضافة ١٥٪",
+    "soldOut": "نفدت",
+    "selectSize": "اختر المقاس"
+  },
+  "Cart": {
+    "title": "السلة",
+    "empty": "سلتك فاضية.",
+    "subtotal": "المجموع",
+    "vat": "ضريبة القيمة المضافة (١٥٪)",
+    "shipping": "الشحن",
+    "total": "الإجمالي",
+    "checkout": "الدفع",
+    "remove": "احذف"
+  },
+  "Checkout": {
+    "title": "الدفع",
+    "fullName": "الاسم الكامل",
+    "phone": "الجوال",
+    "email": "الإيميل (اختياري)",
+    "city": "المدينة",
+    "district": "الحي",
+    "street": "الشارع",
+    "building": "المبنى",
+    "postalCode": "الرمز البريدي",
+    "pay": "ادفع الحين",
+    "whatsappOptIn": "وصلني تحديثات الطلب على واتساب"
+  },
+  "Footer": {
+    "verified": "متجر موثوق",
+    "vatNumber": "الرقم الضريبي: [TBD]",
+    "crNumber": "السجل التجاري: [TBD]",
+    "muthooq": "موثوق"
+  },
+  "Currency": {
+    "symbol": "ر.س"
+  }
+}

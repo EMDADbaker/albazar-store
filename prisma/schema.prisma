@@ -1,0 +1,152 @@
+// ALBAZAR — Drop Machine schema (Phase 1)
+// Prices stored EXCL. VAT, in halalas (integers). VAT 15% applied at display/checkout.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DropStatus {
+  TEASER // homepage = countdown
+  LIVE // homepage = shop the drop
+  SOLDOUT // pieces gone, pre-archive
+  ARCHIVED // lives on /archive forever
+}
+
+enum OrderStatus {
+  PENDING // checkout started, awaiting payment
+  PAID // payment webhook confirmed
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  INITIATED
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Drop {
+  id          String     @id @default(cuid())
+  nameAr      String
+  nameEn      String
+  slug        String     @unique
+  status      DropStatus @default(TEASER)
+  launchAt    DateTime
+  teaserImage String?
+  heroImage   String?
+  products    Product[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  dropId      String
+  drop        Drop             @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  nameAr      String
+  nameEn      String
+  storyAr     String?
+  storyEn     String?
+  price       Int // EXCL VAT, in halalas
+  sku         String           @unique
+  totalPieces Int
+  images      String[]
+  isActive    Boolean          @default(true)
+  variants    ProductVariant[]
+  orderItems  OrderItem[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([dropId])
+}
+
+model ProductVariant {
+  id        String          @id @default(cuid())
+  productId String
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  stock     Int             @default(0)
+  holds     InventoryHold[]
+  orderItems OrderItem[]
+
+  @@unique([productId, size])
+  @@index([productId])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  email         String?
+  phone         String
+  status        OrderStatus   @default(PENDING)
+  subtotal      Int // excl VAT, halalas
+  shippingCost  Int           @default(0)
+  vatAmount     Int
+  total         Int // incl VAT + shipping
+  paymentId     String?
+  paymentStatus PaymentStatus @default(INITIATED)
+  paymentMethod String?
+  addressJson   Json
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([paymentId])
+}
+
+model OrderItem {
+  id          String          @id @default(cuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product         @relation(fields: [productId], references: [id])
+  variantId   String
+  variant     ProductVariant  @relation(fields: [variantId], references: [id])
+  quantity    Int
+  unitPrice   Int // excl VAT, halalas
+  pieceNumber Int? // assigned ONLY on confirmed payment webhook
+
+  @@index([orderId])
+}
+
+model InventoryHold {
+  id                String         @id @default(cuid())
+  variantId         String
+  variant           ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  quantity          Int
+  expiresAt         DateTime
+  checkoutSessionId String
+  createdAt         DateTime       @default(now())
+
+  @@index([checkoutSessionId])
+  @@index([expiresAt])
+}
+
+model VaultMember {
+  id            String   @id @default(cuid())
+  phone         String   @unique
+  email         String?
+  whatsappOptIn Boolean  @default(true)
+  source        String? // entrance | sellout | confirmation
+  joinedAt      DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value Json
+}
