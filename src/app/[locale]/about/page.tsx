@@ -36,7 +36,7 @@ function AboutBody() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-bg/20" aria-hidden />
         <div className="relative px-6 pb-10 max-w-3xl">
-          <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3">
+          <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3">
             {t('eyebrow')}
           </div>
           <h1 className="text-[clamp(36px,8vw,64px)] font-bold tracking-[-0.02em] leading-[1]">
@@ -65,13 +65,13 @@ function AboutBody() {
           />
         </div>
         <div className="px-6 py-12 md:py-16 flex flex-col justify-center">
-          <div className="font-mono text-[11px] tracking-label uppercase text-gold/80 mb-6">
+          <div className="font-mono text-[11px] tracking-label uppercase text-accent/80 mb-6">
             {t('valuesTitle')}
           </div>
           <ul className="space-y-4">
             {values.map((v, i) => (
               <li key={i} className="flex items-baseline gap-3">
-                <span className="font-mono text-[11px] text-gold/70 tabular-nums">
+                <span className="font-mono text-[11px] text-accent/70 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className="text-[15px] text-ink/80">{v}</span>

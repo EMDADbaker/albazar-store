@@ -27,8 +27,8 @@ body {
 }
 
 ::selection {
-  background: rgba(200, 160, 80, 0.3);
-  color: #f0f0f0;
+  background: rgba(240, 240, 240, 0.22);
+  color: #ffffff;
 }
 
 /* Thin scrollbar to match the dark, minimal aesthetic */
@@ -40,6 +40,6 @@ body {
   background: #080808;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(200, 160, 80, 0.25);
+  background: rgba(240, 240, 240, 0.18);
   border-radius: 4px;
 }

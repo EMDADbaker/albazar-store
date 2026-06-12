@@ -9,8 +9,12 @@ const config: Config = {
       colors: {
         bg: '#080808',
         ink: '#f0f0f0',
-        gold: '#C8A050',
-        'gold-bright': '#dcb464',
+        // Monochrome system — the interface is black/white/grey so product
+        // photography carries all the colour. `accent` marks live/interactive
+        // elements; CTAs use it as a high-contrast bone fill on black.
+        accent: '#f5f5f5',
+        'accent-bright': '#ffffff',
+        smoke: '#8a8a88', // mid-grey for secondary labels (was the gold tint)
       },
       fontFamily: {
         display: ['var(--font-space-grotesk)', 'var(--font-cairo)', 'sans-serif'],

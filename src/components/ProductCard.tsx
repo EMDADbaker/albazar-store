@@ -37,7 +37,7 @@ export default function ProductCard({ product }: { product: ProductView }) {
           {formatPrice(inclVat(product.price), locale)}
         </div>
       </div>
-      <div className="font-mono text-[9px] text-gold/70 mt-0.5 tracking-[0.1em]">
+      <div className="font-mono text-[9px] text-accent/70 mt-0.5 tracking-[0.1em]">
         {soldOut
           ? t('soldOut')
           : t('remaining', { count: left }) + ` / ${product.totalPieces}`}

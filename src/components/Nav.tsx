@@ -16,7 +16,7 @@ export default function Nav() {
   return (
     <nav className="flex items-center justify-between px-6 py-[18px] border-b border-ink/[0.08]">
       <Link href="/" className="font-display font-bold text-[17px] tracking-[0.06em]">
-        ALBAZAR<span className="text-gold">.</span>
+        ALBAZAR<span className="text-accent">.</span>
       </Link>
 
       <ul className="hidden sm:flex gap-[22px] list-none">

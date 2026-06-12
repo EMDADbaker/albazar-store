@@ -78,13 +78,13 @@ export default function Entrance({ live }: { live: boolean }) {
               scale: { duration: 1.2, ease: 'easeOut' },
             }}
           >
-            <span className="font-display font-bold text-[clamp(40px,12vw,120px)] tracking-[-0.02em] text-gold/90">
+            <span className="font-display font-bold text-[clamp(40px,12vw,120px)] tracking-[-0.02em] text-accent/90">
               ALBAZAR
             </span>
           </motion.div>
 
           <div className="relative z-10 text-center">
-            <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3">
+            <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3">
               {t('eyebrow')}
             </div>
             <div className="font-mono text-[9px] tracking-[0.3em] text-ink/35 uppercase animate-hint">

@@ -63,7 +63,16 @@
     "remaining": "{count} of {total} left",
     "vatIncluded": "VAT 15% included",
     "soldOut": "Sold out",
-    "selectSize": "Select a size"
+    "selectSize": "Select a size",
+    "inStock": "In stock",
+    "quantity": "Quantity",
+    "description": "Description",
+    "shippingReturns": "Shipping & Returns",
+    "shippingBody": "Free shipping inside Saudi Arabia on orders over SAR 500. Gulf and international rates calculated at checkout. Returns within 3 days of delivery for unworn pieces with tags. No exchanges on sold-out sizes — when it's gone, it's gone.",
+    "fitTitle": "Fit & care",
+    "fitBody": "Designed in Riyadh. True to size, boxy fit. Cold wash, hang dry, no tumble.",
+    "related": "More from the drop",
+    "added": "Added"
   },
   "Cart": {
     "title": "Cart",

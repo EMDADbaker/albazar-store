@@ -38,12 +38,12 @@ export default function Vault({ source = 'home' }: { source?: string }) {
     <div className="max-w-[380px] mx-auto">
       <div className="text-[15px] font-bold mb-1">
         {t('title').split(t('titleAccent'))[0]}
-        <span className="text-gold">{t('titleAccent')}</span>
+        <span className="text-accent">{t('titleAccent')}</span>
       </div>
       <div className="text-[11px] text-ink/40 mb-4">{t('subtitle')}</div>
 
       {done ? (
-        <div className="flex items-center justify-center gap-2 border border-gold/35 py-3.5 text-[12px] text-gold">
+        <div className="flex items-center justify-center gap-2 border border-accent/35 py-3.5 text-[12px] text-accent">
           {t('success')}
         </div>
       ) : (
@@ -59,13 +59,13 @@ export default function Vault({ source = 'home' }: { source?: string }) {
               placeholder={t('phonePlaceholder')}
               maxLength={9}
               className={`flex-1 bg-ink/[0.04] border text-ink font-mono text-[12px] p-3 outline-none min-w-0 transition-colors ${
-                error ? 'border-red-500/70' : 'border-ink/[0.12] focus:border-gold/50'
+                error ? 'border-red-500/70' : 'border-ink/[0.12] focus:border-accent/50'
               }`}
             />
             <button
               onClick={join}
               disabled={submitting}
-              className="bg-gold text-bg font-bold text-[10px] tracking-[0.18em] uppercase px-[18px] disabled:opacity-60 transition-colors hover:bg-gold-bright"
+              className="bg-accent text-bg font-bold text-[10px] tracking-[0.18em] uppercase px-[18px] disabled:opacity-60 transition-colors hover:bg-accent-bright"
             >
               {t('join')}
             </button>

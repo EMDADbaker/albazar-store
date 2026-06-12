@@ -54,7 +54,7 @@ export default function ConfirmationView() {
         <p className="text-[14px] text-ink/40 mb-6">{t('notFound')}</p>
         <Link
           href="/"
-          className="font-mono text-[11px] tracking-wide uppercase text-gold border border-gold/30 px-5 py-2.5 inline-block hover:bg-gold/10 transition-colors"
+          className="font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-5 py-2.5 inline-block hover:bg-accent/10 transition-colors"
         >
           {t('continue')}
         </Link>
@@ -64,7 +64,7 @@ export default function ConfirmationView() {
 
   return (
     <div className="flex-1 px-6 py-14 max-w-xl mx-auto w-full text-center">
-      <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-4">
+      <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
         {t('eyebrow')}
       </div>
       <h1 className="text-[clamp(32px,7vw,48px)] font-bold tracking-[-0.02em] leading-[1.02] mb-3">
@@ -74,7 +74,7 @@ export default function ConfirmationView() {
 
       <div className="inline-flex items-center gap-2 font-mono text-[12px] text-ink/70 border border-ink/[0.12] px-4 py-2 mt-4">
         <span className="text-ink/40 uppercase tracking-wide">{t('orderNumber')}</span>
-        <span className="text-gold">{order.orderNumber}</span>
+        <span className="text-accent">{order.orderNumber}</span>
       </div>
 
       {/* Items */}
@@ -94,7 +94,7 @@ export default function ConfirmationView() {
                   </div>
                 </div>
                 {/* Piece number assigned on payment webhook — shown pending for now */}
-                <div className="font-mono text-[11px] text-gold/60 whitespace-nowrap">
+                <div className="font-mono text-[11px] text-accent/60 whitespace-nowrap">
                   — / {it.qty}
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { resolveVariants } from '@/lib/products';
+import { resolveVariants, type ResolvedVariant } from '@/lib/products';
 import { normalizeSaudiPhone } from '@/lib/phone';
 import { vatOf } from '@/lib/money';
 import { shippingFor } from '@/lib/shipping';
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
   // Authoritative pricing — never trust client amounts.
   const resolved = await resolveVariants(lines.map((l) => l.variantId));
-  const items = [];
+  const items: { resolved: ResolvedVariant; qty: number; unitPrice: number }[] = [];
   let subtotal = 0;
   for (const line of lines) {
     const v = resolved.get(line.variantId);

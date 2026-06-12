@@ -23,7 +23,7 @@ export default async function ArchivePage({
       <Nav />
 
       <section className="px-6 pt-14 pb-10 text-center">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
           {t('eyebrow')}
         </div>
         <h1 className="text-[clamp(34px,7vw,56px)] font-bold tracking-[-0.02em] leading-[1.02] mb-3">
@@ -44,7 +44,7 @@ export default async function ArchivePage({
                     {dateFmt.format(new Date(drop.droppedAt))}
                   </div>
                 </div>
-                <div className="font-mono text-[10px] text-gold/70 tracking-[0.12em] text-right">
+                <div className="font-mono text-[10px] text-accent/70 tracking-[0.12em] text-right">
                   {t('soldIn', { days: drop.soldOutDays })}
                 </div>
               </div>
@@ -68,7 +68,7 @@ export default async function ArchivePage({
                         </div>
                       </div>
                       <div className="text-[12px] font-medium">{pname}</div>
-                      <div className="font-mono text-[9px] text-gold/70 mt-0.5 tracking-[0.1em]">
+                      <div className="font-mono text-[9px] text-accent/70 mt-0.5 tracking-[0.1em]">
                         {t('claimed', { total: p.total })}
                       </div>
                     </div>

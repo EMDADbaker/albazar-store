@@ -19,7 +19,7 @@ export default function Ticker() {
             key={i}
             className="font-mono text-[10px] tracking-wide uppercase text-ink/25 inline-flex items-center gap-2.5"
           >
-            <span className="w-[3px] h-[3px] rounded-full bg-gold/50 inline-block" />
+            <span className="w-[3px] h-[3px] rounded-full bg-accent/50 inline-block" />
             {item}
           </span>
         ))}

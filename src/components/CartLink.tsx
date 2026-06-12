@@ -14,7 +14,7 @@ export default function CartLink() {
       className="text-[11px] tracking-wide uppercase text-ink/50 transition-colors hover:text-ink flex items-center gap-1.5"
     >
       {t('cart')}
-      <span className="font-mono text-gold tabular-nums">[{count}]</span>
+      <span className="font-mono text-accent tabular-nums">[{count}]</span>
     </Link>
   );
 }

@@ -42,7 +42,7 @@ function DropHeader({ name, count }: { name: string; count: number }) {
   const t = useTranslations('Live');
   return (
     <section className="px-6 pt-12 pb-8 text-center">
-      <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3">
+      <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3">
         {name}
       </div>
       <h1 className="text-[34px] font-bold tracking-[-0.02em] leading-[1.05] mb-2">

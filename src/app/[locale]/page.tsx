@@ -49,7 +49,7 @@ function CountdownHero({
   const t = useTranslations('Countdown');
   return (
     <section className="relative px-6 pt-14 pb-11 text-center flex-1 overflow-hidden">
-      {/* Cinematic desert backdrop — heavily darkened so the gold/ink stays law */}
+      {/* Cinematic desert backdrop — heavily darkened so the accent/ink stays law */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-[0.16]"
         style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
@@ -58,7 +58,7 @@ function CountdownHero({
       <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-transparent to-bg" aria-hidden />
 
       <div className="relative">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
           {t('eyebrow')}
         </div>
         <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
@@ -80,7 +80,7 @@ async function LiveHero({ dropSlug }: { dropSlug: string }) {
   return (
     <section className="px-6 pt-14 pb-11 flex-1">
       <div className="text-center mb-10">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
           {t('eyebrow')}
         </div>
         <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
@@ -108,7 +108,7 @@ async function LookbookStrip() {
 
   return (
     <section className="py-11">
-      <div className="px-6 font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 mb-[22px] before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-gold/50">
+      <div className="px-6 font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 mb-[22px] before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-accent/50">
         {t('lookbook')}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4">
@@ -150,10 +150,10 @@ async function ArchiveTeaser() {
   return (
     <section className="px-6 py-11">
       <div className="flex items-baseline justify-between mb-[22px]">
-        <div className="font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-gold/50">
+        <div className="font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-accent/50">
           {t('title')}
         </div>
-        <div className="font-mono text-[9px] text-gold/60 tracking-[0.12em]">
+        <div className="font-mono text-[9px] text-accent/60 tracking-[0.12em]">
           {t('meta')}
         </div>
       </div>
@@ -174,7 +174,7 @@ async function ArchiveTeaser() {
               </div>
             </div>
             <div className="text-[12px] font-medium">{p.label}</div>
-            <div className="font-mono text-[9px] text-gold/70 mt-0.5 tracking-[0.1em]">
+            <div className="font-mono text-[9px] text-accent/70 mt-0.5 tracking-[0.1em]">
               {p.name}
             </div>
           </div>

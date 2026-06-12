@@ -16,7 +16,7 @@ export default function CartView() {
         <p className="text-[14px] text-ink/40 mb-6">{t('empty')}</p>
         <Link
           href="/drop/drop-001"
-          className="font-mono text-[11px] tracking-wide uppercase text-gold border border-gold/30 px-5 py-2.5 inline-block hover:bg-gold/10 transition-colors"
+          className="font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-5 py-2.5 inline-block hover:bg-accent/10 transition-colors"
         >
           Drop 001
         </Link>
@@ -92,7 +92,7 @@ export default function CartView() {
 
       <Link
         href="/checkout"
-        className="mt-8 w-full bg-gold text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 block text-center hover:bg-gold-bright transition-colors"
+        className="mt-8 w-full bg-accent text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 block text-center hover:bg-accent-bright transition-colors"
       >
         {t('checkout')}
       </Link>

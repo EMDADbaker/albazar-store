@@ -43,7 +43,7 @@ export default function Countdown({ launchAtMs }: { launchAtMs: number }) {
           <div className="font-mono text-[30px] text-ink leading-none tabular-nums">
             {c.num}
           </div>
-          <div className="font-mono text-[8px] tracking-label uppercase text-gold/80 mt-2">
+          <div className="font-mono text-[8px] tracking-label uppercase text-accent/80 mt-2">
             {c.label}
           </div>
         </div>

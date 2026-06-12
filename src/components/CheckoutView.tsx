@@ -48,7 +48,7 @@ export default function CheckoutView() {
         <p className="text-[14px] text-ink/40 mb-6">{t('empty')}</p>
         <Link
           href="/drop/drop-001"
-          className="font-mono text-[11px] tracking-wide uppercase text-gold border border-gold/30 px-5 py-2.5 inline-block hover:bg-gold/10 transition-colors"
+          className="font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-5 py-2.5 inline-block hover:bg-accent/10 transition-colors"
         >
           Drop 001
         </Link>
@@ -129,7 +129,7 @@ export default function CheckoutView() {
                 onChange={(e) => set('phone', e.target.value.replace(/[^\d]/g, ''))}
                 maxLength={9}
                 placeholder="5X XXX XXXX"
-                className="flex-1 bg-ink/[0.04] border border-ink/[0.12] focus:border-gold/50 text-ink font-mono text-[13px] p-3 outline-none transition-colors"
+                className="flex-1 bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink font-mono text-[13px] p-3 outline-none transition-colors"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export default function CheckoutView() {
             <select
               value={form.city}
               onChange={(e) => set('city', e.target.value)}
-              className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-gold/50 text-ink text-[13px] p-3 outline-none transition-colors"
+              className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink text-[13px] p-3 outline-none transition-colors"
             >
               <option value="">{t('cityPlaceholder')}</option>
               {SAUDI_CITIES.map((c) => (
@@ -170,7 +170,7 @@ export default function CheckoutView() {
             type="checkbox"
             checked={whatsappOptIn}
             onChange={(e) => setWhatsappOptIn(e.target.checked)}
-            className="accent-gold w-4 h-4"
+            className="accent-accent w-4 h-4"
           />
           <span className="text-[12px] text-ink/60">{t('whatsappOptIn')}</span>
         </label>
@@ -215,7 +215,7 @@ export default function CheckoutView() {
         <button
           onClick={submit}
           disabled={submitting}
-          className="mt-5 w-full bg-gold text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 hover:bg-gold-bright transition-colors disabled:opacity-50"
+          className="mt-5 w-full bg-accent text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 hover:bg-accent-bright transition-colors disabled:opacity-50"
         >
           {submitting ? t('placing') : t('placeOrder')}
         </button>
@@ -230,7 +230,7 @@ export default function CheckoutView() {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-8">
-      <div className="font-mono text-[10px] tracking-label uppercase text-gold/80 mb-4">{label}</div>
+      <div className="font-mono text-[10px] tracking-label uppercase text-accent/80 mb-4">{label}</div>
       <div className="space-y-3">{children}</div>
     </div>
   );
@@ -263,7 +263,7 @@ function Field({
         value={value}
         maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-gold/50 text-ink text-[13px] p-3 outline-none transition-colors"
+        className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink text-[13px] p-3 outline-none transition-colors"
         required={!optional}
       />
     </div>

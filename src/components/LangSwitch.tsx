@@ -14,7 +14,7 @@ export default function LangSwitch() {
   return (
     <button
       onClick={() => router.replace(pathname, { locale: next })}
-      className="font-mono text-[10px] text-gold/85 border border-gold/30 px-2.5 py-1 rounded-sm transition-colors hover:bg-gold/10"
+      className="font-mono text-[10px] text-accent/85 border border-accent/30 px-2.5 py-1 rounded-sm transition-colors hover:bg-accent/10"
       aria-label="Switch language"
     >
       {t('switchTo')}

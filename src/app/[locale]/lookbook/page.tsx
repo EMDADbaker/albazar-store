@@ -58,7 +58,7 @@ function LookbookHero() {
   const t = useTranslations('Lookbook');
   return (
     <section className="px-6 pt-14 pb-10 text-center">
-      <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
+      <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
         {t('eyebrow')}
       </div>
       <h1 className="text-[clamp(34px,7vw,56px)] font-bold tracking-[-0.02em] leading-[1.02] mb-3">

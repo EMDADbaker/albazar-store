@@ -10,15 +10,15 @@ export default function Footer() {
       <div className="flex justify-between items-start gap-6 flex-wrap">
         <div>
           <div className="font-display font-bold text-[18px] tracking-[0.05em] mb-2">
-            ALBAZAR<span className="text-gold">.</span>
+            ALBAZAR<span className="text-accent">.</span>
           </div>
           <div className="font-mono text-[9px] text-ink/20 leading-[2] tracking-[0.04em]">
             {t('verified')}
             <br />
             {t('vatNumber')} · {t('crNumber')}
           </div>
-          <div className="inline-flex items-center gap-1.5 border border-gold/25 px-[11px] py-[5px] rounded-sm mt-2.5">
-            <span className="font-mono text-[8px] tracking-[0.1em] text-gold/70">
+          <div className="inline-flex items-center gap-1.5 border border-accent/25 px-[11px] py-[5px] rounded-sm mt-2.5">
+            <span className="font-mono text-[8px] tracking-[0.1em] text-accent/70">
               {t('muthooq')}
             </span>
           </div>
