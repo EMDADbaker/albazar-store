@@ -88,6 +88,36 @@
     "pay": "Pay now",
     "whatsappOptIn": "Get order updates on WhatsApp"
   },
+  "Lookbook": {
+    "eyebrow": "Drop 001 — Campaign",
+    "title": "RIYADH AFTER DARK.",
+    "subtitle": "Shot in the city. Worn in the city. The street is the runway.",
+    "credit": "ALBAZAR — Drop 001"
+  },
+  "About": {
+    "eyebrow": "Who we are",
+    "title": "BORN IN RIYADH.",
+    "lead": "ALBAZAR isn't a store. It's a drop machine. Limited pieces, numbered, dropped, gone.",
+    "body1": "We started with one idea: exclusivity is the brand. No restocks. No discounts. No second chances. When a piece sells out, it lives in the archive forever — and you either moved first, or you watched.",
+    "body2": "Every piece is designed in Riyadh and numbered by hand at checkout. 07 / 150 means there are only 150, and you hold number seven. That number is yours.",
+    "valuesTitle": "The rules",
+    "values": [
+      "Limited pieces. Always numbered.",
+      "No restocks. No discounts. Ever.",
+      "Drops, not collections.",
+      "Riyadh first. The world next."
+    ],
+    "ctaTitle": "Don't miss the next one.",
+    "ctaSub": "The Vault gets the drop link 1 hour early. WhatsApp only."
+  },
+  "ArchivePage": {
+    "eyebrow": "The Archive",
+    "title": "WHAT'S GONE IS GONE.",
+    "subtitle": "Past drops. Sold out. Numbered and never repeated.",
+    "soldOut": "Sold out",
+    "soldIn": "Sold out in {days} days",
+    "claimed": "{total} pieces claimed"
+  },
   "Footer": {
     "verified": "Verified Store",
     "vatNumber": "VAT No.: [TBD]",
