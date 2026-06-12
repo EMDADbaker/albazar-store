@@ -4,6 +4,7 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { spaceGrotesk, spaceMono, cairo } from '@/lib/fonts';
+import { CartProvider } from '@/components/CartProvider';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -45,7 +46,7 @@ export default async function LocaleLayout({
     >
       <body className="bg-bg text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <CartProvider>{children}</CartProvider>
         </NextIntlClientProvider>
       </body>
     </html>

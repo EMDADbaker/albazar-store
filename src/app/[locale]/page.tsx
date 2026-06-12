@@ -1,6 +1,8 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveDrop } from '@/lib/drop';
+import { getDropProducts } from '@/lib/products';
+import ProductCard from '@/components/ProductCard';
 import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
@@ -24,7 +26,7 @@ export default async function Home({
       <div className="animate-reveal min-h-screen flex flex-col">
         <Nav />
         {live ? (
-          <LiveHero />
+          <LiveHero dropSlug={drop.slug} />
         ) : (
           <CountdownHero launchAtMs={new Date(drop.launchAt).getTime()} teaser={drop.teaserImage} />
         )}
@@ -61,18 +63,25 @@ function CountdownHero({
   );
 }
 
-function LiveHero() {
-  const t = useTranslations('Live');
+async function LiveHero({ dropSlug }: { dropSlug: string }) {
+  const t = await getTranslations('Live');
+  const products = await getDropProducts(dropSlug);
   return (
-    <section className="px-6 pt-14 pb-11 text-center flex-1">
-      <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
-        {t('eyebrow')}
+    <section className="px-6 pt-14 pb-11 flex-1">
+      <div className="text-center mb-10">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-gold/90 uppercase mb-3.5">
+          {t('eyebrow')}
+        </div>
+        <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
+          {t('title')}
+        </h1>
+        <p className="text-[13px] text-ink/40 max-w-md mx-auto">{t('subtitle')}</p>
       </div>
-      <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
-        {t('title')}
-      </h1>
-      <p className="text-[13px] text-ink/40 mb-9 max-w-md mx-auto">{t('subtitle')}</p>
-      {/* Product grid wired in the Drop page step. */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 max-w-5xl mx-auto">
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
     </section>
   );
 }

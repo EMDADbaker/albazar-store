@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import LangSwitch from './LangSwitch';
+import CartLink from './CartLink';
 
 export default function Nav() {
   const t = useTranslations('Nav');
@@ -31,7 +32,10 @@ export default function Nav() {
         ))}
       </ul>
 
-      <LangSwitch />
+      <div className="flex items-center gap-4">
+        <CartLink />
+        <LangSwitch />
+      </div>
     </nav>
   );
 }
