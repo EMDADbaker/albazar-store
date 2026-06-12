@@ -15,6 +15,19 @@ function slugify(s: string) {
     .replace(/-+/g, '-');
 }
 
+// Ensure the slug is unique — append -2, -3… if the base is taken, so creating
+// a drop never crashes on the unique constraint.
+async function uniqueDropSlug(base: string): Promise<string> {
+  const root = slugify(base) || 'drop';
+  let candidate = root;
+  let n = 2;
+  // eslint-disable-next-line no-await-in-loop
+  while (await prisma.drop.findUnique({ where: { slug: candidate } })) {
+    candidate = `${root}-${n++}`;
+  }
+  return candidate;
+}
+
 /* ---------------------------------- Drops --------------------------------- */
 
 const dropSchema = z.object({
@@ -34,11 +47,12 @@ export async function createDrop(formData: FormData) {
     launchAt: formData.get('launchAt'),
     status: formData.get('status'),
   });
+  const slug = await uniqueDropSlug(data.slug || data.nameEn);
   await prisma.drop.create({
     data: {
       nameEn: data.nameEn,
       nameAr: data.nameAr,
-      slug: data.slug ? slugify(data.slug) : slugify(data.nameEn),
+      slug,
       launchAt: new Date(data.launchAt),
       status: data.status as DropStatus,
     },
