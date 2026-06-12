@@ -117,6 +117,71 @@ export async function getProductBySlug(slug: string): Promise<ProductView | null
   }
 }
 
+export type ResolvedVariant = {
+  variantId: string;
+  productId: string;
+  productSlug: string;
+  size: string;
+  nameAr: string;
+  nameEn: string;
+  price: number; // EXCL VAT, halalas — authoritative
+  stock: number;
+};
+
+/**
+ * Resolve cart variant ids to authoritative pricing/stock. Used at checkout so
+ * totals never trust client-sent prices. DB-first, demo-catalogue fallback.
+ */
+export async function resolveVariants(
+  variantIds: string[],
+): Promise<Map<string, ResolvedVariant>> {
+  const out = new Map<string, ResolvedVariant>();
+  if (variantIds.length === 0) return out;
+
+  try {
+    const variants = await prisma.productVariant.findMany({
+      where: { id: { in: variantIds } },
+      include: { product: { include: { drop: true } } },
+    });
+    if (variants.length > 0) {
+      for (const v of variants) {
+        out.set(v.id, {
+          variantId: v.id,
+          productId: v.productId,
+          productSlug: v.product.sku,
+          size: v.size,
+          nameAr: v.product.nameAr,
+          nameEn: v.product.nameEn,
+          price: v.product.price,
+          stock: v.stock,
+        });
+      }
+      return out;
+    }
+  } catch {
+    /* fall through to demo */
+  }
+
+  // Demo fallback
+  for (const p of DEMO_PRODUCTS) {
+    for (const v of p.variants) {
+      if (variantIds.includes(v.id)) {
+        out.set(v.id, {
+          variantId: v.id,
+          productId: p.id,
+          productSlug: p.slug,
+          size: v.size,
+          nameAr: p.nameAr,
+          nameEn: p.nameEn,
+          price: p.price,
+          stock: v.stock,
+        });
+      }
+    }
+  }
+  return out;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toView(p: any): ProductView {
   return {
