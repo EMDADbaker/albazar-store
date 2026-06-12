@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { assertAdmin } from '@/lib/admin-auth';
@@ -76,6 +77,45 @@ export async function setDropLaunch(id: string, launchAt: string) {
   revalidatePath('/', 'layout');
 }
 
+export async function setDropPublished(id: string, published: boolean) {
+  await assertAdmin();
+  await prisma.drop.update({ where: { id }, data: { published } });
+  revalidatePath('/admin/drops');
+  revalidatePath('/', 'layout');
+}
+
+export async function updateDrop(id: string, formData: FormData) {
+  await assertAdmin();
+  const data = dropSchema.parse({
+    nameEn: formData.get('nameEn'),
+    nameAr: formData.get('nameAr'),
+    slug: formData.get('slug') || undefined,
+    launchAt: formData.get('launchAt'),
+    status: formData.get('status'),
+  });
+  await prisma.drop.update({
+    where: { id },
+    data: {
+      nameEn: data.nameEn,
+      nameAr: data.nameAr,
+      slug: data.slug ? slugify(data.slug) : undefined,
+      launchAt: new Date(data.launchAt),
+      status: data.status as DropStatus,
+      published: formData.get('published') === 'on',
+    },
+  });
+  revalidatePath('/admin/drops');
+  revalidatePath('/', 'layout');
+  redirect('/admin/drops');
+}
+
+export async function deleteDrop(id: string) {
+  await assertAdmin();
+  await prisma.drop.delete({ where: { id } }); // cascades to products + variants
+  revalidatePath('/admin/drops');
+  revalidatePath('/', 'layout');
+}
+
 /* -------------------------------- Products -------------------------------- */
 
 const productSchema = z.object({
@@ -135,6 +175,53 @@ export async function createProduct(formData: FormData) {
     },
   });
   revalidatePath('/admin/products');
+}
+
+const productEditSchema = z.object({
+  nameEn: z.string().min(1),
+  nameAr: z.string().min(1),
+  storyEn: z.string().optional(),
+  storyAr: z.string().optional(),
+  sku: z.string().min(1),
+  priceSar: z.coerce.number().positive(),
+  totalPieces: z.coerce.number().int().positive(),
+  images: z.string().optional(),
+});
+
+export async function updateProduct(id: string, formData: FormData) {
+  await assertAdmin();
+  const data = productEditSchema.parse({
+    nameEn: formData.get('nameEn'),
+    nameAr: formData.get('nameAr'),
+    storyEn: formData.get('storyEn') || undefined,
+    storyAr: formData.get('storyAr') || undefined,
+    sku: formData.get('sku'),
+    priceSar: formData.get('priceSar'),
+    totalPieces: formData.get('totalPieces'),
+    images: formData.get('images') || undefined,
+  });
+  const images = (data.images ?? '')
+    .split(/[\n,]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  await prisma.product.update({
+    where: { id },
+    data: {
+      nameEn: data.nameEn,
+      nameAr: data.nameAr,
+      storyEn: data.storyEn,
+      storyAr: data.storyAr,
+      sku: data.sku,
+      price: Math.round(data.priceSar * 100),
+      totalPieces: data.totalPieces,
+      images,
+      isActive: formData.get('isActive') === 'on',
+    },
+  });
+  revalidatePath('/admin/products');
+  revalidatePath('/', 'layout');
+  redirect('/admin/products');
 }
 
 export async function setVariantStock(variantId: string, stock: number) {

@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { formatPrice, inclVat } from '@/lib/money';
-import { createProduct } from '@/app/admin/actions';
+import { createProduct, deleteProduct } from '@/app/admin/actions';
 import VariantStockControl from '@/components/admin/VariantStockControl';
+import DeleteButton from '@/components/admin/DeleteButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +75,15 @@ export default async function ProductsAdmin() {
                   {p.sku} · {p.drop.nameEn} · {formatPrice(inclVat(p.price), 'en')} incl VAT
                   {!p.isActive && <span className="text-red-400/70"> · hidden</span>}
                 </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Link
+                  href={`/admin/products/${p.id}`}
+                  className="font-mono text-[9px] uppercase tracking-wide text-ink/40 border border-ink/15 px-2 py-1 hover:text-ink hover:border-ink/30 transition-colors"
+                >
+                  Edit
+                </Link>
+                <DeleteButton action={deleteProduct.bind(null, p.id)} />
               </div>
             </div>
             <div className="flex flex-wrap gap-3 pt-3 border-t border-ink/[0.06]">

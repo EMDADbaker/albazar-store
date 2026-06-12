@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { createDrop } from '@/app/admin/actions';
+import { createDrop, deleteDrop } from '@/app/admin/actions';
 import DropStatusControl from '@/components/admin/DropStatusControl';
+import PublishToggle from '@/components/admin/PublishToggle';
+import DeleteButton from '@/components/admin/DeleteButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,16 +58,26 @@ export default async function DropsAdmin() {
         {drops.map((d) => (
           <div
             key={d.id}
-            className="flex items-center justify-between gap-4 py-4 border-b border-ink/[0.08]"
+            className="flex flex-wrap items-center justify-between gap-3 py-4 border-b border-ink/[0.08]"
           >
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="text-[14px] font-medium">{d.nameEn}</div>
               <div className="font-mono text-[10px] text-ink/40 mt-0.5">
                 /{d.slug} · {d._count.products} pieces ·{' '}
                 {new Date(d.launchAt).toLocaleString('en-GB')}
               </div>
             </div>
-            <DropStatusControl id={d.id} status={d.status} />
+            <div className="flex items-center gap-2">
+              <PublishToggle id={d.id} published={d.published} />
+              <DropStatusControl id={d.id} status={d.status} />
+              <Link
+                href={`/admin/drops/${d.id}`}
+                className="font-mono text-[9px] uppercase tracking-wide text-ink/40 border border-ink/15 px-2 py-1 hover:text-ink hover:border-ink/30 transition-colors"
+              >
+                Edit
+              </Link>
+              <DeleteButton action={deleteDrop.bind(null, d.id)} />
+            </div>
           </div>
         ))}
       </div>

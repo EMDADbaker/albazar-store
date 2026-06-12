@@ -40,9 +40,11 @@ model Drop {
   nameEn      String
   slug        String     @unique
   status      DropStatus @default(TEASER)
+  published   Boolean    @default(false) // draft until published; hidden publicly while false
   launchAt    DateTime
   teaserImage String?
   heroImage   String?
+  sortOrder   Int        @default(0) // manual ordering of drops on the homepage
   products    Product[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Drop" ADD COLUMN     "published" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "sortOrder" INTEGER NOT NULL DEFAULT 0;

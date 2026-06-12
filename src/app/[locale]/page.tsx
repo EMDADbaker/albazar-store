@@ -1,8 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveDrop } from '@/lib/drop';
-import { getDropProducts } from '@/lib/products';
-import ProductCard from '@/components/ProductCard';
+import { getStorefrontDrops } from '@/lib/storefront';
 import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
@@ -10,6 +9,7 @@ import Countdown from '@/components/Countdown';
 import Vault from '@/components/Vault';
 import Teaser from '@/components/Teaser';
 import Entrance from '@/components/Entrance';
+import DropSection from '@/components/DropSection';
 
 export default async function Home({
   params: { locale },
@@ -17,7 +17,7 @@ export default async function Home({
   params: { locale: string };
 }) {
   setRequestLocale(locale);
-  const drop = await getActiveDrop();
+  const [drop, drops] = await Promise.all([getActiveDrop(), getStorefrontDrops()]);
   const live = drop.status === 'LIVE';
 
   return (
@@ -25,19 +25,43 @@ export default async function Home({
       <Entrance live={live} />
       <div className="animate-reveal min-h-screen flex flex-col">
         <Nav />
+
+        {/* DARK cinematic hero */}
         {live ? (
-          <LiveHero dropSlug={drop.slug} />
+          <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} />
         ) : (
-          <CountdownHero launchAtMs={new Date(drop.launchAt).getTime()} teaser={drop.teaserImage} />
+          <CountdownHero
+            launchAtMs={new Date(drop.launchAt).getTime()}
+            teaser={drop.teaserImage}
+          />
         )}
+
         <Ticker />
+
+        {/* WHITE storefront — all published drops, clearly separated */}
+        <StorefrontIntro />
+        {drops.length === 0 ? (
+          <EmptyStore />
+        ) : (
+          drops.map((d, i) => (
+            <div key={d.id}>
+              {i > 0 && <DarkStrip />}
+              <DropSection drop={d} band={i % 2 === 1} locale={locale} />
+            </div>
+          ))
+        )}
+
+        {/* DARK closers */}
+        <DarkStrip />
         <LookbookStrip />
-        <ArchiveTeaser />
+        <VaultBand />
         <Footer />
       </div>
     </>
   );
 }
+
+/* ------------------------------- Dark hero -------------------------------- */
 
 function CountdownHero({
   launchAtMs,
@@ -48,24 +72,21 @@ function CountdownHero({
 }) {
   const t = useTranslations('Countdown');
   return (
-    <section className="relative px-6 pt-14 pb-11 text-center flex-1 overflow-hidden">
-      {/* Cinematic desert backdrop — heavily darkened so the accent/ink stays law */}
+    <section className="relative px-6 pt-14 pb-12 text-center overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-[0.16]"
         style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
         aria-hidden
       />
       <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-transparent to-bg" aria-hidden />
-
       <div className="relative">
         <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
           {t('eyebrow')}
         </div>
-        <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
+        <h1 className="text-[clamp(36px,8vw,56px)] font-bold tracking-[-0.02em] leading-[1.02] mb-2.5">
           {t('title')}
         </h1>
         <p className="text-[13px] text-ink/40 mb-9 max-w-md mx-auto">{t('subtitle')}</p>
-
         <Countdown launchAtMs={launchAtMs} />
         <Teaser image={teaser} />
         <Vault source="home" />
@@ -74,28 +95,69 @@ function CountdownHero({
   );
 }
 
-async function LiveHero({ dropSlug }: { dropSlug: string }) {
-  const t = await getTranslations('Live');
-  const products = await getDropProducts(dropSlug);
+function LiveHero({ name }: { name: string }) {
+  const t = useTranslations('Live');
   return (
-    <section className="px-6 pt-14 pb-11 flex-1">
-      <div className="text-center mb-10">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
-          {t('eyebrow')}
+    <section className="relative px-6 pt-16 pb-14 text-center overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-[0.2]"
+        style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-bg/50 via-transparent to-bg" aria-hidden />
+      <div className="relative">
+        <div className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          {name} — {t('eyebrow')}
         </div>
-        <h1 className="text-[40px] font-bold tracking-[-0.02em] leading-[1.05] mb-2.5">
+        <h1 className="text-[clamp(40px,9vw,68px)] font-bold tracking-[-0.02em] leading-[1] mb-3">
           {t('title')}
         </h1>
-        <p className="text-[13px] text-ink/40 max-w-md mx-auto">{t('subtitle')}</p>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 max-w-5xl mx-auto">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+        <p className="text-[13px] text-ink/45 max-w-md mx-auto">{t('subtitle')}</p>
       </div>
     </section>
   );
 }
+
+/* ----------------------------- Storefront --------------------------------- */
+
+function StorefrontIntro() {
+  const t = useTranslations('Storefront');
+  return (
+    <section className="bg-paper text-coal">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-2 text-center">
+        <h2 className="text-[clamp(26px,5vw,40px)] font-bold tracking-[-0.02em] mb-2">
+          {t('shopTitle')}
+        </h2>
+        <p className="font-mono text-[11px] text-coal/50 tracking-wide uppercase">
+          {t('shopSubtitle')}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function EmptyStore() {
+  const t = useTranslations('Storefront');
+  return (
+    <section className="bg-paper text-coal">
+      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
+        <p className="text-[14px] text-coal/50">{t('empty')}</p>
+      </div>
+    </section>
+  );
+}
+
+// Slim dark band that separates the cinematic hero and each white drop.
+function DarkStrip() {
+  return (
+    <div className="bg-bg py-3 flex items-center justify-center">
+      <span className="w-1 h-1 rounded-full bg-accent/50" />
+    </div>
+  );
+}
+
+/* ------------------------------ Dark closers ------------------------------ */
 
 async function LookbookStrip() {
   const t = await getTranslations('Nav');
@@ -105,9 +167,8 @@ async function LookbookStrip() {
     '/img/lookbook/yellow-wall-duo.jpg',
     '/img/lookbook/ocean-duo.jpg',
   ];
-
   return (
-    <section className="py-11">
+    <section className="bg-bg py-11">
       <div className="px-6 font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 mb-[22px] before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-accent/50">
         {t('lookbook')}
       </div>
@@ -127,59 +188,13 @@ async function LookbookStrip() {
   );
 }
 
-async function ArchiveTeaser() {
-  const t = await getTranslations('Archive');
-  const pieces = [
-    {
-      image: '/img/archive/bw-supreme.jpg',
-      name: t('claimed', { claimed: 150, total: 150 }),
-      label: 'Bazar Hoodie — Black',
-    },
-    {
-      image: '/img/archive/city-cap.jpg',
-      name: t('claimed', { claimed: 200, total: 200 }),
-      label: 'Souq Tee — Bone',
-    },
-    {
-      image: '/img/archive/brick-duo.jpg',
-      name: t('claimed', { claimed: 120, total: 120 }),
-      label: 'Night Cargo — Ash',
-    },
-  ];
-
+function VaultBand() {
+  const t = useTranslations('About');
   return (
-    <section className="px-6 py-11">
-      <div className="flex items-baseline justify-between mb-[22px]">
-        <div className="font-mono text-[11px] tracking-label uppercase text-ink/35 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-accent/50">
-          {t('title')}
-        </div>
-        <div className="font-mono text-[9px] text-accent/60 tracking-[0.12em]">
-          {t('meta')}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-        {pieces.map((p, i) => (
-          <div key={i}>
-            <div className="aspect-square border border-ink/[0.06] relative mb-2 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={p.image}
-                alt={p.label}
-                className="w-full h-full object-cover grayscale-[60%] brightness-[0.8]"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-mono text-[9px] tracking-label uppercase text-ink/80 border border-ink/50 px-3 py-1.5 -rotate-[8deg] bg-bg/65">
-                  {t('soldOut')}
-                </span>
-              </div>
-            </div>
-            <div className="text-[12px] font-medium">{p.label}</div>
-            <div className="font-mono text-[9px] text-accent/70 mt-0.5 tracking-[0.1em]">
-              {p.name}
-            </div>
-          </div>
-        ))}
-      </div>
+    <section className="bg-bg px-6 py-16 text-center border-t border-ink/[0.06]">
+      <h2 className="text-[24px] font-bold mb-2">{t('ctaTitle')}</h2>
+      <p className="text-[12px] text-ink/40 mb-7">{t('ctaSub')}</p>
+      <Vault source="home-foot" />
     </section>
   );
 }

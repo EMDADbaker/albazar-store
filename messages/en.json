@@ -126,6 +126,20 @@
     "vaultTitle": "Don't miss the next drop.",
     "notFound": "Order not found."
   },
+  "Storefront": {
+    "shopTitle": "SHOP THE DROPS",
+    "shopSubtitle": "Every piece, every drop. Numbered. No restocks.",
+    "browse": "Browse",
+    "pieces": "{count} pieces",
+    "viewDrop": "View drop",
+    "empty": "Drops land here. Join the Vault to get the first link."
+  },
+  "DropBadge": {
+    "live": "Live now",
+    "teaser": "Dropping soon",
+    "soldout": "Sold out",
+    "archived": "Archive"
+  },
   "Lookbook": {
     "eyebrow": "Drop 001 — Campaign",
     "title": "RIYADH AFTER DARK.",

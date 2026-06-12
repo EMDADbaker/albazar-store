@@ -15,6 +15,10 @@ const config: Config = {
         accent: '#f5f5f5',
         'accent-bright': '#ffffff',
         smoke: '#8a8a88', // mid-grey for secondary labels (was the gold tint)
+        // Light "white sections" for the storefront body (dark hero, white shop)
+        paper: '#ffffff',
+        'paper-2': '#f4f2ec', // warm off-white for alternating bands
+        coal: '#0d0d0d', // near-black text on light sections
       },
       fontFamily: {
         display: ['var(--font-space-grotesk)', 'var(--font-cairo)', 'sans-serif'],

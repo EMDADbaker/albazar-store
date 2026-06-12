@@ -34,7 +34,7 @@ const DEMO_DROP: ActiveDrop = {
 export async function getActiveDrop(): Promise<ActiveDrop> {
   try {
     const drop = await prisma.drop.findFirst({
-      where: { status: { in: ['LIVE', 'TEASER', 'SOLDOUT'] } },
+      where: { published: true, status: { in: ['LIVE', 'TEASER', 'SOLDOUT'] } },
       orderBy: [{ status: 'asc' }, { launchAt: 'asc' }],
     });
     if (!drop) return DEMO_DROP;
