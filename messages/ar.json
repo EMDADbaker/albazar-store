@@ -15,6 +15,9 @@
     "lookbook": "اللوك بوك",
     "about": "من نحن",
     "cart": "السلة",
+    "account": "حسابي",
+    "signin": "دخول",
+    "adminLink": "الإدارة",
     "switchTo": "EN"
   },
   "Countdown": {
@@ -74,7 +77,9 @@
     "fitTitle": "المقاس والعناية",
     "fitBody": "مصمم في الرياض. مطابق للمقاس، قصّة واسعة. غسيل بارد، نشر بالهواء، بدون مجفف.",
     "related": "أكثر من الدروب",
-    "added": "انضاف"
+    "added": "انضاف",
+    "save": "احفظ للمفضلة",
+    "saved": "محفوظ"
   },
   "Cart": {
     "title": "السلة",
@@ -171,6 +176,50 @@
     "soldOut": "نفدت",
     "soldIn": "نفدت في {days} أيام",
     "claimed": "{total} قطعة انحجزت"
+  },
+  "Auth": {
+    "signIn": "تسجيل الدخول",
+    "createAccount": "إنشاء حساب",
+    "register": "تسجيل",
+    "name": "الاسم الكامل",
+    "email": "الإيميل",
+    "password": "كلمة المرور",
+    "invalid": "إيميل أو كلمة مرور غير صحيحة.",
+    "emailTaken": "هذا الإيميل مسجّل من قبل.",
+    "checkFields": "تأكد من بياناتك وحاول مرة ثانية.",
+    "noAccount": "جديد هنا؟",
+    "haveAccount": "عندك حساب؟"
+  },
+  "Account": {
+    "title": "حسابي",
+    "greeting": "هلا {name}",
+    "logout": "تسجيل الخروج",
+    "tabsOrders": "الطلبات",
+    "tabsProfile": "الملف",
+    "tabsVault": "الخزنة",
+    "tabsWishlist": "المفضلة",
+    "noOrders": "ما فيه طلبات بعد.",
+    "shopNow": "تسوّق الدروبات",
+    "orderStatus": "الحالة",
+    "orderTotal": "الإجمالي",
+    "orderItems": "{count} قطعة",
+    "profileName": "الاسم الكامل",
+    "profilePhone": "الجوال",
+    "profileEmail": "الإيميل",
+    "saveProfile": "حفظ الملف",
+    "saved": "تم الحفظ",
+    "address": "العنوان المحفوظ (يعبّي الدفع تلقائياً)",
+    "city": "المدينة",
+    "district": "الحي",
+    "street": "الشارع",
+    "building": "المبنى",
+    "postal": "الرمز البريدي",
+    "vaultIn": "أنت في الخزنة — وصول مبكر لكل دروب.",
+    "vaultOut": "انضم للخزنة عشان وصول مبكر للدروبات.",
+    "vaultJoin": "انضم للخزنة",
+    "vaultLeave": "اخرج من الخزنة",
+    "wishlistEmpty": "ما فيه قطع محفوظة بعد.",
+    "removeWish": "احذف"
   },
   "Footer": {
     "verified": "متجر موثوق",

@@ -15,6 +15,9 @@
     "lookbook": "Lookbook",
     "about": "About",
     "cart": "Cart",
+    "account": "Account",
+    "signin": "Sign in",
+    "adminLink": "Admin",
     "switchTo": "عربي"
   },
   "Countdown": {
@@ -74,7 +77,9 @@
     "fitTitle": "Fit & care",
     "fitBody": "Designed in Riyadh. True to size, boxy fit. Cold wash, hang dry, no tumble.",
     "related": "More from the drop",
-    "added": "Added"
+    "added": "Added",
+    "save": "Save to wishlist",
+    "saved": "Saved"
   },
   "Cart": {
     "title": "Cart",
@@ -171,6 +176,50 @@
     "soldOut": "Sold out",
     "soldIn": "Sold out in {days} days",
     "claimed": "{total} pieces claimed"
+  },
+  "Auth": {
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "register": "Register",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "invalid": "Invalid email or password.",
+    "emailTaken": "That email is already registered.",
+    "checkFields": "Check your details and try again.",
+    "noAccount": "New here?",
+    "haveAccount": "Already have an account?"
+  },
+  "Account": {
+    "title": "My account",
+    "greeting": "Hey {name}",
+    "logout": "Log out",
+    "tabsOrders": "Orders",
+    "tabsProfile": "Profile",
+    "tabsVault": "Vault",
+    "tabsWishlist": "Wishlist",
+    "noOrders": "No orders yet.",
+    "shopNow": "Shop the drops",
+    "orderStatus": "Status",
+    "orderTotal": "Total",
+    "orderItems": "{count} pieces",
+    "profileName": "Full name",
+    "profilePhone": "Phone",
+    "profileEmail": "Email",
+    "saveProfile": "Save profile",
+    "saved": "Saved",
+    "address": "Saved address (autofills checkout)",
+    "city": "City",
+    "district": "District",
+    "street": "Street",
+    "building": "Building",
+    "postal": "Postal code",
+    "vaultIn": "You're in the Vault — early access to every drop.",
+    "vaultOut": "Join the Vault for early access to drops.",
+    "vaultJoin": "Join the Vault",
+    "vaultLeave": "Leave the Vault",
+    "wishlistEmpty": "No saved pieces yet.",
+    "removeWish": "Remove"
   },
   "Footer": {
     "verified": "Verified Store",

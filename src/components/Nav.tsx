@@ -1,13 +1,15 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getCategories } from '@/lib/categories';
+import { getCurrentUser } from '@/lib/admin-auth';
 import LangSwitch from './LangSwitch';
 import CartLink from './CartLink';
 
 export default async function Nav() {
   const t = await getTranslations('Nav');
   const locale = await getLocale();
-  const categories = await getCategories();
+  const [categories, user] = await Promise.all([getCategories(), getCurrentUser()]);
+  const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
 
   const links = [
     { href: '/', label: t('shop') },
@@ -37,6 +39,21 @@ export default async function Nav() {
         </ul>
 
         <div className="flex items-center gap-4">
+          {isStaff ? (
+            <a
+              href="/admin"
+              className="text-[11px] tracking-wide uppercase text-accent transition-colors hover:text-accent-bright"
+            >
+              {t('adminLink')}
+            </a>
+          ) : (
+            <Link
+              href={user ? '/account' : '/login'}
+              className="text-[11px] tracking-wide uppercase text-ink/70 transition-colors hover:text-accent"
+            >
+              {user ? t('account') : t('signin')}
+            </Link>
+          )}
           <CartLink />
           <LangSwitch />
         </div>

@@ -3,40 +3,47 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
 
-// Admin-only auth (Hard rule 10). Credentials checked against AdminUser +
-// bcrypt; JWT sessions so no session table is needed.
+// Unified credential auth for all roles (ADMIN / EMPLOYEE / CLIENT).
+// JWT sessions carry the role + user id so pages can gate by role and the
+// login can redirect to the right place.
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
-  pages: { signIn: '/admin/login' },
+  pages: { signIn: '/login' },
   providers: [
     CredentialsProvider({
-      name: 'Admin',
+      name: 'Albazar',
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null;
-        const user = await prisma.adminUser.findUnique({
+        const user = await prisma.user.findUnique({
           where: { email: credentials.email.toLowerCase() },
         });
         if (!user) return null;
         const ok = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!ok) return null;
-        return { id: user.id, email: user.email, name: user.role };
+        return { id: user.id, email: user.email, name: user.name ?? undefined, role: user.role };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = (user as { name?: string }).name ?? 'admin';
+      if (user) {
+        token.role = (user as { role?: string }).role ?? 'CLIENT';
+        token.uid = (user as { id?: string }).id;
+      }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as { role?: string }).role = token.role as string;
+        (session.user as { id?: string }).id = token.uid as string;
       }
       return session;
     },
   },
 };
+
+export type SessionRole = 'ADMIN' | 'EMPLOYEE' | 'CLIENT';

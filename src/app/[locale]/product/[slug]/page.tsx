@@ -8,6 +8,9 @@ import AddToCart from '@/components/AddToCart';
 import ProductGallery from '@/components/ProductGallery';
 import Accordion from '@/components/Accordion';
 import ShopProductCard from '@/components/ShopProductCard';
+import WishlistButton from '@/components/WishlistButton';
+import { getCurrentUser } from '@/lib/admin-auth';
+import { prisma } from '@/lib/prisma';
 
 export default async function ProductPage({
   params: { locale, slug },
@@ -27,6 +30,15 @@ export default async function ProductPage({
   const related = (await getDropProducts(product.dropSlug)).filter(
     (p) => p.slug !== product.slug,
   );
+
+  // Wishlist state (only meaningful for real DB products + logged-in users)
+  const user = await getCurrentUser();
+  let saved = false;
+  if (user?.id) {
+    saved = !!(await prisma.wishlistItem.findUnique({
+      where: { userId_productId: { userId: user.id, productId: product.id } },
+    }).catch(() => null));
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-coal">
@@ -63,6 +75,7 @@ export default async function ProductPage({
           <div className="font-mono text-[9px] text-coal/40 mb-8">{t('vatIncluded')}</div>
 
           <AddToCart product={product} />
+          <WishlistButton productId={product.id} initialSaved={saved} loggedIn={!!user} />
 
           <div className="mt-10">
             <Accordion title={t('description')} defaultOpen>

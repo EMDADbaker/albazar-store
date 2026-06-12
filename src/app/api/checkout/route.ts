@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { resolveVariants, type ResolvedVariant } from '@/lib/products';
+import { getCurrentUser } from '@/lib/admin-auth';
 import { normalizeSaudiPhone } from '@/lib/phone';
 import { vatOf } from '@/lib/money';
 import { shippingFor } from '@/lib/shipping';
@@ -70,9 +71,11 @@ export async function POST(req: Request) {
   let persisted = false;
   try {
     const expiresAt = new Date(Date.now() + HOLD_MINUTES * 60_000);
+    const sessionUser = await getCurrentUser();
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
         data: {
+          userId: sessionUser?.id ?? null,
           phone,
           email: address.email || null,
           status: 'PENDING',

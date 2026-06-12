@@ -68,12 +68,21 @@ async function main() {
   const email = (process.env.ADMIN_EMAIL ?? 'admin@albazar.sa').toLowerCase();
   const password = process.env.ADMIN_PASSWORD ?? 'albazar-admin';
   const passwordHash = await bcrypt.hash(password, 10);
-  await prisma.adminUser.upsert({
+  await prisma.user.upsert({
     where: { email },
-    create: { email, passwordHash, role: 'admin' },
-    update: { passwordHash },
+    create: { email, passwordHash, role: 'ADMIN', name: 'Albazar Admin' },
+    update: { passwordHash, role: 'ADMIN' },
   });
   console.log(`✓ Admin: ${email} / ${password}`);
+
+  // Demo client account
+  const clientHash = await bcrypt.hash('client-demo', 10);
+  await prisma.user.upsert({
+    where: { email: 'client@albazar.sa' },
+    create: { email: 'client@albazar.sa', passwordHash: clientHash, role: 'CLIENT', name: 'Demo Client', phone: '+966512345678' },
+    update: {},
+  });
+  console.log('✓ Client: client@albazar.sa / client-demo');
 
   // Clean slate (demo): remove orders → products → drops → categories.
   await prisma.order.deleteMany({});

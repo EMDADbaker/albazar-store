@@ -34,6 +34,12 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum Role {
+  ADMIN
+  EMPLOYEE
+  CLIENT
+}
+
 model Drop {
   id          String     @id @default(cuid())
   nameAr      String
@@ -77,6 +83,7 @@ model Product {
   isActive    Boolean          @default(true)
   variants    ProductVariant[]
   orderItems  OrderItem[]
+  wishlist    WishlistItem[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
@@ -99,6 +106,8 @@ model ProductVariant {
 
 model Order {
   id            String        @id @default(cuid())
+  userId        String? // null for guest checkout
+  user          User?         @relation(fields: [userId], references: [id])
   email         String?
   phone         String
   status        OrderStatus   @default(PENDING)
@@ -154,12 +163,30 @@ model VaultMember {
   joinedAt      DateTime @default(now())
 }
 
-model AdminUser {
-  id           String   @id @default(cuid())
-  email        String   @unique
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
   passwordHash String
-  role         String   @default("admin")
-  createdAt    DateTime @default(now())
+  name         String?
+  phone        String?
+  role         Role           @default(CLIENT)
+  addressJson  Json? // saved Saudi shipping address, autofills checkout
+  vaultOptIn   Boolean        @default(false)
+  orders       Order[]
+  wishlist     WishlistItem[]
+  createdAt    DateTime       @default(now())
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
 }
 
 model Setting {
