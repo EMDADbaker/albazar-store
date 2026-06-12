@@ -30,7 +30,7 @@ const DEMO_PRODUCTS: ProductView[] = [
     price: 34900, // 349 SAR excl VAT
     sku: 'AZ001-HOODIE-BLK',
     totalPieces: 150,
-    images: [],
+    images: ['/img/products/hoodie-black-1.jpg', '/img/products/hoodie-black-2.jpg'],
     variants: [
       { id: 'd1-s', size: 'S', stock: 30 },
       { id: 'd1-m', size: 'M', stock: 45 },
@@ -49,7 +49,7 @@ const DEMO_PRODUCTS: ProductView[] = [
     price: 14900,
     sku: 'AZ001-TEE-BONE',
     totalPieces: 200,
-    images: [],
+    images: ['/img/products/tee-bone-1.jpg', '/img/products/tee-bone-2.jpg'],
     variants: [
       { id: 'd2-s', size: 'S', stock: 0 },
       { id: 'd2-m', size: 'M', stock: 60 },
@@ -68,7 +68,7 @@ const DEMO_PRODUCTS: ProductView[] = [
     price: 44900,
     sku: 'AZ001-CARGO-ASH',
     totalPieces: 120,
-    images: [],
+    images: ['/img/products/cargo-ash-1.jpg', '/img/products/cargo-ash-2.jpg'],
     variants: [
       { id: 'd3-s', size: 'S', stock: 20 },
       { id: 'd3-m', size: 'M', stock: 35 },
