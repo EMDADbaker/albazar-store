@@ -9,6 +9,8 @@
   },
   "Nav": {
     "drop": "Drop 001",
+    "shop": "Shop",
+    "all": "All",
     "archive": "Archive",
     "lookbook": "Lookbook",
     "about": "About",

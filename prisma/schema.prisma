@@ -50,10 +50,22 @@ model Drop {
   updatedAt   DateTime   @updatedAt
 }
 
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  nameAr    String
+  nameEn    String
+  sortOrder Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
 model Product {
   id          String           @id @default(cuid())
   dropId      String
   drop        Drop             @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  category    Category?        @relation(fields: [categoryId], references: [id])
   nameAr      String
   nameEn      String
   storyAr     String?
@@ -69,6 +81,7 @@ model Product {
   updatedAt   DateTime         @updatedAt
 
   @@index([dropId])
+  @@index([categoryId])
 }
 
 model ProductVariant {

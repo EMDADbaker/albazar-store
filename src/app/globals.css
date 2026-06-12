@@ -31,6 +31,15 @@ body {
   color: #ffffff;
 }
 
+/* Hide scrollbar on the horizontal category bar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Thin scrollbar to match the dark, minimal aesthetic */
 ::-webkit-scrollbar {
   width: 8px;
