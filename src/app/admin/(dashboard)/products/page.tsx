@@ -24,10 +24,15 @@ export default async function ProductsAdmin() {
       </p>
 
       {/* Create */}
-      <form
-        action={createProduct}
-        className="border border-ink/[0.08] p-5 mb-10 grid sm:grid-cols-2 gap-3"
-      >
+      <details className="mb-10 group">
+        <summary className="cursor-pointer list-none font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-4 py-2.5 inline-flex items-center gap-2 hover:bg-accent/10 transition-colors">
+          <span className="group-open:hidden">+ New product</span>
+          <span className="hidden group-open:inline">− Close</span>
+        </summary>
+        <form
+          action={createProduct}
+          className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3"
+        >
         <div className="sm:col-span-2">
           <Label>Drop</Label>
           <select
@@ -59,7 +64,8 @@ export default async function ProductsAdmin() {
             Create product
           </button>
         </div>
-      </form>
+        </form>
+      </details>
 
       {/* List */}
       <div className="space-y-4">

@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import AddToCart from '@/components/AddToCart';
 import ProductGallery from '@/components/ProductGallery';
 import Accordion from '@/components/Accordion';
-import ProductCard from '@/components/ProductCard';
+import ShopProductCard from '@/components/ShopProductCard';
 
 export default async function ProductPage({
   params: { locale, slug },
@@ -24,57 +24,51 @@ export default async function ProductPage({
   const left = piecesLeft(product);
   const soldOut = left === 0;
 
-  // "More from the drop" — sibling pieces, current one excluded.
   const related = (await getDropProducts(product.dropSlug)).filter(
     (p) => p.slug !== product.slug,
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-paper text-coal">
       <Nav />
 
-      <section className="flex-1 px-5 sm:px-6 py-8 max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-8 lg:gap-14">
+      <section className="flex-1 px-5 sm:px-8 py-10 max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-8 lg:gap-16">
         <ProductGallery
           images={product.images}
           name={name}
           badge={soldOut ? t('soldOut') : undefined}
         />
 
-        {/* Info column */}
         <div className="md:py-2">
-          <div className="font-mono text-[10px] tracking-label uppercase text-ink/40 mb-3">
+          <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-3">
             {product.sku}
           </div>
-          <h1 className="text-[26px] sm:text-[30px] font-bold tracking-[-0.02em] leading-tight mb-3">
+          <h1 className="text-[28px] sm:text-[34px] font-bold tracking-[-0.02em] leading-[1.05] mb-3">
             {name}
           </h1>
 
-          {/* Stock badge */}
-          <div className="flex items-center gap-2 mb-4">
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${soldOut ? 'bg-ink/30' : 'bg-accent'}`}
-            />
-            <span className="font-mono text-[10px] tracking-wide uppercase text-ink/50">
+          <div className="flex items-center gap-2 mb-5">
+            <span className={`w-1.5 h-1.5 rounded-full ${soldOut ? 'bg-coal/30' : 'bg-coal'}`} />
+            <span className="font-mono text-[10px] tracking-wide uppercase text-coal/55">
               {soldOut ? t('soldOut') : t('inStock')}
             </span>
-            <span className="font-mono text-[10px] text-ink/30">
+            <span className="font-mono text-[10px] text-coal/35">
               · {t('remaining', { count: left, total: product.totalPieces })}
             </span>
           </div>
 
-          <div className="font-mono text-[20px] text-ink mb-1">
+          <div className="font-mono text-[22px] text-coal mb-1">
             {formatPrice(inclVat(product.price), locale)}
           </div>
-          <div className="font-mono text-[9px] text-ink/35 mb-7">{t('vatIncluded')}</div>
+          <div className="font-mono text-[9px] text-coal/40 mb-8">{t('vatIncluded')}</div>
 
           <AddToCart product={product} />
 
-          {/* Accordions */}
-          <div className="mt-9">
+          <div className="mt-10">
             <Accordion title={t('description')} defaultOpen>
               {story && <p>{story}</p>}
-              <p className="text-ink/40">
-                <span className="text-ink/60">{t('fitTitle')}: </span>
+              <p className="text-coal/45">
+                <span className="text-coal/65">{t('fitTitle')}: </span>
                 {t('fitBody')}
               </p>
             </Accordion>
@@ -85,16 +79,17 @@ export default async function ProductPage({
         </div>
       </section>
 
-      {/* Related */}
       {related.length > 0 && (
-        <section className="px-5 sm:px-6 pb-16 max-w-6xl mx-auto w-full">
-          <div className="font-mono text-[11px] tracking-label uppercase text-ink/40 mb-6 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-accent/50">
-            {t('related')}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+        <section className="bg-paper-2 text-coal">
+          <div className="px-5 sm:px-8 py-14 max-w-6xl mx-auto w-full">
+            <div className="font-mono text-[11px] tracking-label uppercase text-coal/50 mb-7 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-coal/40">
+              {t('related')}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-9">
+              {related.map((p) => (
+                <ShopProductCard key={p.id} product={p} />
+              ))}
+            </div>
           </div>
         </section>
       )}

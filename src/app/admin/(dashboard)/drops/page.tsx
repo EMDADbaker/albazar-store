@@ -21,10 +21,15 @@ export default async function DropsAdmin() {
       </p>
 
       {/* Create */}
-      <form
-        action={createDrop}
-        className="border border-ink/[0.08] p-5 mb-10 grid sm:grid-cols-2 gap-3"
-      >
+      <details className="mb-10 group">
+        <summary className="cursor-pointer list-none font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-4 py-2.5 inline-flex items-center gap-2 hover:bg-accent/10 transition-colors">
+          <span className="group-open:hidden">+ New drop</span>
+          <span className="hidden group-open:inline">− Close</span>
+        </summary>
+        <form
+          action={createDrop}
+          className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3"
+        >
         <Input name="nameEn" label="Name (EN)" required />
         <Input name="nameAr" label="Name (AR)" required dir="rtl" />
         <Input name="slug" label="Slug (optional)" placeholder="drop-002" />
@@ -48,7 +53,8 @@ export default async function DropsAdmin() {
             Create drop
           </button>
         </div>
-      </form>
+        </form>
+      </details>
 
       {/* List */}
       <div className="border-t border-ink/[0.08]">

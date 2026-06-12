@@ -10,7 +10,7 @@ export default function CartPage({
 }) {
   setRequestLocale(locale);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-paper text-coal">
       <Nav />
       <CartView />
       <Footer />

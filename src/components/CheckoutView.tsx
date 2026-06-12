@@ -5,8 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 import { formatPrice, vatOf, inclVat } from '@/lib/money';
-import { shippingFor } from '@/lib/shipping';
-import { SAUDI_CITIES } from '@/lib/shipping';
+import { shippingFor, SAUDI_CITIES } from '@/lib/shipping';
 import { isValidSaudiPhone } from '@/lib/phone';
 
 type Form = {
@@ -45,10 +44,10 @@ export default function CheckoutView() {
   if (lines.length === 0) {
     return (
       <div className="flex-1 px-6 py-24 text-center">
-        <p className="text-[14px] text-ink/40 mb-6">{t('empty')}</p>
+        <p className="text-[14px] text-coal/50 mb-6">{t('empty')}</p>
         <Link
           href="/drop/drop-001"
-          className="font-mono text-[11px] tracking-wide uppercase text-accent border border-accent/30 px-5 py-2.5 inline-block hover:bg-accent/10 transition-colors"
+          className="font-mono text-[11px] tracking-wide uppercase text-coal border border-coal/30 px-5 py-2.5 inline-block hover:bg-coal hover:text-paper transition-colors"
         >
           Drop 001
         </Link>
@@ -66,17 +65,10 @@ export default function CheckoutView() {
 
   async function submit() {
     setError(null);
-    if (!isValidSaudiPhone(`+966${form.phone}`)) {
-      setError(t('errorPhone'));
-      return;
-    }
-    if (!/^\d{5}$/.test(form.postalCode)) {
-      setError(t('errorPostal'));
-      return;
-    }
+    if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
+    if (!/^\d{5}$/.test(form.postalCode)) return setError(t('errorPostal'));
     if (!form.fullName || !form.city || !form.district || !form.street || !form.building) {
-      setError(t('errorGeneric'));
-      return;
+      return setError(t('errorGeneric'));
     }
 
     setSubmitting(true);
@@ -96,7 +88,6 @@ export default function CheckoutView() {
         setSubmitting(false);
         return;
       }
-      // Stash a snapshot so the confirmation renders even without a DB.
       sessionStorage.setItem(
         `albazar_order_${data.orderId}`,
         JSON.stringify({ orderNumber: data.orderNumber, ...data.summary }),
@@ -110,17 +101,16 @@ export default function CheckoutView() {
   }
 
   return (
-    <div className="flex-1 px-6 py-10 max-w-4xl mx-auto w-full grid md:grid-cols-[1fr_360px] gap-10">
-      {/* Form */}
+    <div className="flex-1 px-5 sm:px-6 py-12 max-w-4xl mx-auto w-full grid md:grid-cols-[1fr_360px] gap-10">
       <div>
-        <h1 className="text-[24px] font-bold mb-8">{t('title')}</h1>
+        <h1 className="text-[26px] font-bold mb-8">{t('title')}</h1>
 
         <Section label={t('contact')}>
           <Field label={t('fullName')} value={form.fullName} onChange={(v) => set('fullName', v)} />
           <div>
             <FieldLabel>{t('phone')}</FieldLabel>
             <div className="flex gap-2">
-              <div className="font-mono text-[13px] text-ink/50 border border-ink/[0.12] flex items-center px-3 bg-ink/[0.03]">
+              <div className="font-mono text-[13px] text-coal/50 border border-coal/15 flex items-center px-3 bg-paper-2">
                 +966
               </div>
               <input
@@ -129,7 +119,7 @@ export default function CheckoutView() {
                 onChange={(e) => set('phone', e.target.value.replace(/[^\d]/g, ''))}
                 maxLength={9}
                 placeholder="5X XXX XXXX"
-                className="flex-1 bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink font-mono text-[13px] p-3 outline-none transition-colors"
+                className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors"
               />
             </div>
           </div>
@@ -142,11 +132,11 @@ export default function CheckoutView() {
             <select
               value={form.city}
               onChange={(e) => set('city', e.target.value)}
-              className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink text-[13px] p-3 outline-none transition-colors"
+              className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none transition-colors"
             >
               <option value="">{t('cityPlaceholder')}</option>
               {SAUDI_CITIES.map((c) => (
-                <option key={c} value={c} className="bg-bg">
+                <option key={c} value={c}>
                   {c}
                 </option>
               ))}
@@ -170,15 +160,14 @@ export default function CheckoutView() {
             type="checkbox"
             checked={whatsappOptIn}
             onChange={(e) => setWhatsappOptIn(e.target.checked)}
-            className="accent-accent w-4 h-4"
+            className="accent-coal w-4 h-4"
           />
-          <span className="text-[12px] text-ink/60">{t('whatsappOptIn')}</span>
+          <span className="text-[12px] text-coal/65">{t('whatsappOptIn')}</span>
         </label>
       </div>
 
-      {/* Summary */}
-      <aside className="md:sticky md:top-6 h-fit border border-ink/[0.08] p-5">
-        <div className="font-mono text-[10px] tracking-label uppercase text-ink/40 mb-4">
+      <aside className="md:sticky md:top-20 h-fit border border-coal/15 p-5 bg-paper-2/40">
+        <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-4">
           {t('summary')}
         </div>
         <div className="space-y-3 mb-5">
@@ -186,10 +175,10 @@ export default function CheckoutView() {
             const name = locale === 'ar' ? l.nameAr : l.nameEn;
             return (
               <div key={l.variantId} className="flex justify-between gap-3 text-[12px]">
-                <span className="text-ink/70 truncate">
-                  {name} <span className="text-ink/35">· {l.size} × {l.qty}</span>
+                <span className="text-coal/70 truncate">
+                  {name} <span className="text-coal/35">· {l.size} × {l.qty}</span>
                 </span>
-                <span className="font-mono text-ink/70 whitespace-nowrap">
+                <span className="font-mono text-coal/70 whitespace-nowrap">
                   {formatPrice(inclVat(l.price * l.qty), locale)}
                 </span>
               </div>
@@ -197,29 +186,29 @@ export default function CheckoutView() {
           })}
         </div>
 
-        <div className="space-y-2 font-mono text-[12px] border-t border-ink/[0.08] pt-4">
+        <div className="space-y-2 font-mono text-[12px] border-t border-coal/12 pt-4">
           <Row label={t('subtotal')} value={formatPrice(subtotal, locale)} />
           <Row label={t('vat')} value={formatPrice(vat, locale)} />
           <Row
             label={t('shipping')}
             value={shipping === 0 ? t('freeShipping') : formatPrice(shipping, locale)}
           />
-          <div className="flex justify-between pt-3 border-t border-ink/[0.08] text-[15px] text-ink">
+          <div className="flex justify-between pt-3 border-t border-coal/12 text-[15px] text-coal">
             <span>{t('total')}</span>
             <span>{formatPrice(total, locale)}</span>
           </div>
         </div>
 
-        {error && <div className="text-[11px] text-red-400/80 mt-4 font-mono">{error}</div>}
+        {error && <div className="text-[11px] text-red-600 mt-4 font-mono">{error}</div>}
 
         <button
           onClick={submit}
           disabled={submitting}
-          className="mt-5 w-full bg-accent text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 hover:bg-accent-bright transition-colors disabled:opacity-50"
+          className="mt-5 w-full bg-coal text-paper font-bold text-[12px] tracking-[0.18em] uppercase py-4 hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {submitting ? t('placing') : t('placeOrder')}
         </button>
-        <p className="font-mono text-[9px] text-ink/30 mt-3 text-center leading-relaxed">
+        <p className="font-mono text-[9px] text-coal/40 mt-3 text-center leading-relaxed">
           {t('paymentNote')}
         </p>
       </aside>
@@ -230,14 +219,14 @@ export default function CheckoutView() {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-8">
-      <div className="font-mono text-[10px] tracking-label uppercase text-accent/80 mb-4">{label}</div>
+      <div className="font-mono text-[10px] tracking-label uppercase text-coal/55 mb-4">{label}</div>
       <div className="space-y-3">{children}</div>
     </div>
   );
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">{children}</div>;
+  return <div className="font-mono text-[9px] uppercase tracking-wide text-coal/40 mb-1.5">{children}</div>;
 }
 
 function Field({
@@ -263,7 +252,7 @@ function Field({
         value={value}
         maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] focus:border-accent/50 text-ink text-[13px] p-3 outline-none transition-colors"
+        className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none transition-colors"
         required={!optional}
       />
     </div>
@@ -272,7 +261,7 @@ function Field({
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between text-ink/50">
+    <div className="flex justify-between text-coal/55">
       <span>{label}</span>
       <span>{value}</span>
     </div>

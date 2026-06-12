@@ -11,7 +11,7 @@ export default function ConfirmationPage({
 }) {
   setRequestLocale(locale);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-paper text-coal">
       <Nav />
       <Suspense fallback={<div className="flex-1" />}>
         <ConfirmationView />

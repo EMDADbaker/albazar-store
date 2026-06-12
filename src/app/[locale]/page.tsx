@@ -7,7 +7,6 @@ import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Countdown from '@/components/Countdown';
 import Vault from '@/components/Vault';
-import Teaser from '@/components/Teaser';
 import Entrance from '@/components/Entrance';
 import DropSection from '@/components/DropSection';
 
@@ -30,10 +29,7 @@ export default async function Home({
         {live ? (
           <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} />
         ) : (
-          <CountdownHero
-            launchAtMs={new Date(drop.launchAt).getTime()}
-            teaser={drop.teaserImage}
-          />
+          <CountdownHero launchAtMs={new Date(drop.launchAt).getTime()} />
         )}
 
         <Ticker />
@@ -63,34 +59,34 @@ export default async function Home({
 
 /* ------------------------------- Dark hero -------------------------------- */
 
-function CountdownHero({
-  launchAtMs,
-  teaser,
-}: {
-  launchAtMs: number;
-  teaser: string | null;
-}) {
+function CountdownHero({ launchAtMs }: { launchAtMs: number }) {
   const t = useTranslations('Countdown');
+  const ts = useTranslations('Storefront');
   return (
-    <section className="relative px-6 pt-14 pb-12 text-center overflow-hidden">
+    <section className="relative px-6 min-h-[78vh] flex flex-col items-center justify-center text-center overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-[0.16]"
+        className="absolute inset-0 bg-cover bg-center opacity-[0.22]"
         style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
         aria-hidden
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-transparent to-bg" aria-hidden />
-      <div className="relative">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-3.5">
+      <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
+      <div className="relative pt-8">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
           {t('eyebrow')}
         </div>
-        <h1 className="text-[clamp(36px,8vw,56px)] font-bold tracking-[-0.02em] leading-[1.02] mb-2.5">
+        <h1 className="text-[clamp(40px,9vw,72px)] font-bold tracking-[-0.02em] leading-[0.98] mb-3">
           {t('title')}
         </h1>
-        <p className="text-[13px] text-ink/40 mb-9 max-w-md mx-auto">{t('subtitle')}</p>
+        <p className="text-[13px] text-ink/45 mb-10 max-w-md mx-auto">{t('subtitle')}</p>
         <Countdown launchAtMs={launchAtMs} />
-        <Teaser image={teaser} />
-        <Vault source="home" />
       </div>
+      <a
+        href="#shop"
+        className="relative mt-2 inline-flex flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
+      >
+        {ts('shopTitle')}
+        <span className="animate-bounce">↓</span>
+      </a>
     </section>
   );
 }
@@ -124,7 +120,7 @@ function LiveHero({ name }: { name: string }) {
 function StorefrontIntro() {
   const t = useTranslations('Storefront');
   return (
-    <section className="bg-paper text-coal">
+    <section id="shop" className="bg-paper text-coal scroll-mt-16">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-2 text-center">
         <h2 className="text-[clamp(26px,5vw,40px)] font-bold tracking-[-0.02em] mb-2">
           {t('shopTitle')}

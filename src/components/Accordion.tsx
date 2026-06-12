@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+// Light-theme collapsible (product detail accordions).
 export default function Accordion({
   title,
   children,
@@ -14,21 +15,21 @@ export default function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-ink/[0.08]">
+    <div className="border-b border-coal/15">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between py-4 text-start"
         aria-expanded={open}
       >
-        <span className="font-mono text-[11px] tracking-label uppercase text-ink/80">
+        <span className="font-mono text-[11px] tracking-label uppercase text-coal/80">
           {title}
         </span>
-        <span className="font-mono text-[16px] text-ink/50 leading-none">
+        <span className="font-mono text-[16px] text-coal/50 leading-none">
           {open ? '−' : '+'}
         </span>
       </button>
       {open && (
-        <div className="pb-5 text-[13px] text-ink/55 leading-relaxed space-y-3">
+        <div className="pb-5 text-[13px] text-coal/60 leading-relaxed space-y-3">
           {children}
         </div>
       )}

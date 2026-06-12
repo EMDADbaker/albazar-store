@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 import type { ProductView } from '@/lib/products';
 
+// Light-theme add-to-cart: size chips + quantity stepper + CTA.
 export default function AddToCart({ product }: { product: ProductView }) {
   const t = useTranslations('Product');
   const router = useRouter();
@@ -38,8 +39,7 @@ export default function AddToCart({ product }: { product: ProductView }) {
 
   return (
     <div>
-      {/* Size */}
-      <div className="font-mono text-[10px] tracking-label uppercase text-ink/40 mb-2.5">
+      <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-2.5">
         {t('size')}
       </div>
       <div className="flex flex-wrap gap-2 mb-6">
@@ -56,8 +56,8 @@ export default function AddToCart({ product }: { product: ProductView }) {
               }}
               className={`min-w-[48px] h-12 px-3 font-mono text-[12px] border transition-colors ${
                 active
-                  ? 'border-accent bg-accent text-bg'
-                  : 'border-ink/15 text-ink/70 hover:border-ink/40'
+                  ? 'border-coal bg-coal text-paper'
+                  : 'border-coal/20 text-coal/80 hover:border-coal'
               } ${out ? 'opacity-30 line-through cursor-not-allowed' : ''}`}
             >
               {v.size}
@@ -66,16 +66,15 @@ export default function AddToCart({ product }: { product: ProductView }) {
         })}
       </div>
 
-      {/* Quantity */}
-      <div className="font-mono text-[10px] tracking-label uppercase text-ink/40 mb-2.5">
+      <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-2.5">
         {t('quantity')}
       </div>
       <div className="flex items-center gap-3 mb-7">
-        <div className="flex items-center border border-ink/15 font-mono text-[14px]">
+        <div className="flex items-center border border-coal/20 font-mono text-[14px] text-coal">
           <button
             onClick={() => setQty((q) => Math.max(1, q - 1))}
             disabled={qty <= 1}
-            className="w-10 h-11 text-ink/60 hover:text-ink disabled:opacity-30"
+            className="w-10 h-11 text-coal/60 hover:text-coal disabled:opacity-30"
             aria-label="decrease quantity"
           >
             −
@@ -84,7 +83,7 @@ export default function AddToCart({ product }: { product: ProductView }) {
           <button
             onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
             disabled={qty >= maxQty}
-            className="w-10 h-11 text-ink/60 hover:text-ink disabled:opacity-30"
+            className="w-10 h-11 text-coal/60 hover:text-coal disabled:opacity-30"
             aria-label="increase quantity"
           >
             +
@@ -92,11 +91,10 @@ export default function AddToCart({ product }: { product: ProductView }) {
         </div>
       </div>
 
-      {/* CTA */}
       <button
         onClick={handleAdd}
         disabled={!canAdd || added}
-        className="w-full bg-accent text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-4 transition-colors hover:bg-accent-bright disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-accent"
+        className="w-full bg-coal text-paper font-bold text-[12px] tracking-[0.18em] uppercase py-4 transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {added
           ? t('added')
@@ -107,7 +105,7 @@ export default function AddToCart({ product }: { product: ProductView }) {
               : t('addToCart')}
       </button>
 
-      <div className="font-mono text-[9px] text-ink/35 mt-3 text-center">
+      <div className="font-mono text-[9px] text-coal/40 mt-3 text-center">
         {t('vatIncluded')}
       </div>
     </div>
