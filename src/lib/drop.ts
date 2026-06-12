@@ -22,7 +22,7 @@ const DEMO_DROP: ActiveDrop = {
   launchAt: new Date(
     Date.now() + 2 * 86400000 + 14 * 3600000 + 33 * 60000,
   ).toISOString(),
-  teaserImage: '/img/campaign/orange-sky.jpg',
+  teaserImage: '/img/campaign/king-01.jpg',
   heroImage: '/img/campaign/desert-dune.jpg',
 };
 

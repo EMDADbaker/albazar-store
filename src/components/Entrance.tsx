@@ -58,6 +58,18 @@ export default function Entrance({ live }: { live: boolean }) {
           }}
         >
           <motion.div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 0.22, scale: 1 }}
+            transition={{ duration: 3.5, ease: 'easeOut' }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-bg/70 via-transparent to-bg/90"
+            aria-hidden
+          />
+          <motion.div
             className="absolute inset-0 flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: [0.5, 1, 0.5], scale: 1 }}
