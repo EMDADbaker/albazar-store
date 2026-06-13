@@ -252,3 +252,43 @@ export async function setOrderStatus(id: string, status: OrderStatus) {
   await prisma.order.update({ where: { id }, data: { status } });
   revalidatePath('/admin/orders');
 }
+
+/* ------------------------------- Hero slides ------------------------------ */
+
+const heroSchema = z.object({
+  image: z.string().min(1),
+  titleEn: z.string().min(1),
+  titleAr: z.string().min(1),
+  subtitleEn: z.string().optional(),
+  subtitleAr: z.string().optional(),
+  sortOrder: z.coerce.number().int().default(0),
+});
+
+export async function createHeroSlide(formData: FormData) {
+  await assertAdmin();
+  const data = heroSchema.parse({
+    image: formData.get('image'),
+    titleEn: formData.get('titleEn'),
+    titleAr: formData.get('titleAr'),
+    subtitleEn: formData.get('subtitleEn') || undefined,
+    subtitleAr: formData.get('subtitleAr') || undefined,
+    sortOrder: formData.get('sortOrder') || 0,
+  });
+  await prisma.heroSlide.create({ data });
+  revalidatePath('/admin/hero');
+  revalidatePath('/', 'layout');
+}
+
+export async function toggleHeroSlide(id: string, active: boolean) {
+  await assertAdmin();
+  await prisma.heroSlide.update({ where: { id }, data: { active } });
+  revalidatePath('/admin/hero');
+  revalidatePath('/', 'layout');
+}
+
+export async function deleteHeroSlide(id: string) {
+  await assertAdmin();
+  await prisma.heroSlide.delete({ where: { id } });
+  revalidatePath('/admin/hero');
+  revalidatePath('/', 'layout');
+}

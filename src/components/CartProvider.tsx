@@ -50,6 +50,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+    // Debounced fire-and-forget sync — server stores it only for logged-in
+    // users (admin abandoned-cart visibility); guests are ignored server-side.
+    const id = setTimeout(() => {
+      fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lines }),
+      }).catch(() => {});
+    }, 800);
+    return () => clearTimeout(id);
   }, [lines, hydrated]);
 
   const value = useMemo<CartContextValue>(() => {

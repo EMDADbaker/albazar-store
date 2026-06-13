@@ -8,6 +8,8 @@ const NAV = [
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/orders', label: 'Orders' },
   { href: '/admin/vault', label: 'Vault' },
+  { href: '/admin/members', label: 'Members' },
+  { href: '/admin/hero', label: 'Hero' },
 ];
 
 export default async function DashboardLayout({

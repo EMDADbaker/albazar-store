@@ -2,11 +2,19 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+// The Vault has two entry points: the homepage phone capture (VaultMember)
+// and registered accounts toggling vault opt-in (User.vaultOptIn). Show both.
 export default async function VaultAdmin() {
-  const members = await prisma.vaultMember.findMany({
-    orderBy: { joinedAt: 'desc' },
-    take: 500,
-  });
+  const [members, optInUsers] = await Promise.all([
+    prisma.vaultMember.findMany({ orderBy: { joinedAt: 'desc' }, take: 500 }),
+    prisma.user.findMany({
+      where: { vaultOptIn: true },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, email: true, name: true, phone: true, createdAt: true },
+      take: 500,
+    }),
+  ]);
+  const total = members.length + optInUsers.length;
 
   return (
     <div>
@@ -20,12 +28,42 @@ export default async function VaultAdmin() {
         </a>
       </div>
       <p className="font-mono text-[11px] text-ink/40 mb-8">
-        {members.length} members · early-access list for drop broadcasts.
+        {total} members · early-access list for drop broadcasts.
       </p>
 
+      {/* Registered accounts opted in */}
+      <div className="font-mono text-[10px] tracking-wide uppercase text-accent/70 mb-2">
+        Account members ({optInUsers.length})
+      </div>
+      <div className="border-t border-ink/[0.08] mb-8">
+        {optInUsers.length === 0 && (
+          <p className="text-[13px] text-ink/40 py-4">None yet.</p>
+        )}
+        {optInUsers.map((u) => (
+          <div
+            key={u.id}
+            className="flex items-center justify-between gap-4 py-3 border-b border-ink/[0.08]"
+          >
+            <div>
+              <div className="font-mono text-[13px]">{u.name ?? u.email}</div>
+              <div className="font-mono text-[10px] text-ink/40">
+                {u.email} {u.phone ? `· ${u.phone}` : ''}
+              </div>
+            </div>
+            <div className="font-mono text-[10px] text-ink/40">
+              {new Date(u.createdAt).toLocaleDateString('en-GB')}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Phone-only captures from the homepage / confirmation forms */}
+      <div className="font-mono text-[10px] tracking-wide uppercase text-accent/70 mb-2">
+        Phone captures ({members.length})
+      </div>
       <div className="border-t border-ink/[0.08]">
         {members.length === 0 && (
-          <p className="text-[13px] text-ink/40 py-6">No members yet.</p>
+          <p className="text-[13px] text-ink/40 py-4">None yet.</p>
         )}
         {members.map((m) => (
           <div

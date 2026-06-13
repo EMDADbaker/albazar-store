@@ -174,7 +174,31 @@ model User {
   vaultOptIn   Boolean        @default(false)
   orders       Order[]
   wishlist     WishlistItem[]
+  cart         Cart?
   createdAt    DateTime       @default(now())
+}
+
+// Server-synced cart for logged-in users — gives admin visibility into
+// members who have items in cart but never finished checkout.
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemsJson Json // CartLine[] snapshot from the client
+  updatedAt DateTime @updatedAt
+}
+
+// Owner-controlled homepage hero slides (image + bilingual copy).
+model HeroSlide {
+  id         String   @id @default(cuid())
+  image      String
+  titleAr    String
+  titleEn    String
+  subtitleAr String?
+  subtitleEn String?
+  active     Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
 }
 
 model WishlistItem {

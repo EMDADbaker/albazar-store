@@ -2,6 +2,8 @@ import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getActiveDrop } from '@/lib/drop';
 import { getStorefrontDrops } from '@/lib/storefront';
+import { getHeroSlides } from '@/lib/hero';
+import HeroCarousel, { type Slide } from '@/components/HeroCarousel';
 import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
@@ -16,8 +18,17 @@ export default async function Home({
   params: { locale: string };
 }) {
   setRequestLocale(locale);
-  const [drop, drops] = await Promise.all([getActiveDrop(), getStorefrontDrops()]);
+  const [drop, drops, heroSlides] = await Promise.all([
+    getActiveDrop(),
+    getStorefrontDrops(),
+    getHeroSlides(),
+  ]);
   const live = drop.status === 'LIVE';
+  const slides: Slide[] = heroSlides.map((s) => ({
+    image: s.image,
+    title: locale === 'ar' ? s.titleAr : s.titleEn,
+    subtitle: locale === 'ar' ? s.subtitleAr : s.subtitleEn,
+  }));
 
   return (
     <>
@@ -32,6 +43,7 @@ export default async function Home({
           <CountdownHero
             launchAtMs={new Date(drop.launchAt).getTime()}
             name={locale === 'ar' ? drop.nameAr : drop.nameEn}
+            slides={slides}
           />
         )}
 
@@ -62,35 +74,40 @@ export default async function Home({
 
 /* ------------------------------- Dark hero -------------------------------- */
 
-function CountdownHero({ launchAtMs, name }: { launchAtMs: number; name: string }) {
+function CountdownHero({
+  launchAtMs,
+  name,
+  slides,
+}: {
+  launchAtMs: number;
+  name: string;
+  slides: Slide[];
+}) {
   const t = useTranslations('Countdown');
   const ts = useTranslations('Storefront');
+  // Owner-managed slides; sensible default if none are published.
+  const effective: Slide[] =
+    slides.length > 0
+      ? slides
+      : [
+          {
+            image: '/img/campaign/desert-dune.jpg',
+            title: t('title'),
+            subtitle: t('subtitle'),
+          },
+        ];
+
   return (
-    <section className="relative px-6 min-h-[78vh] flex flex-col items-center justify-center text-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-[0.22]"
-        style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
-      <div className="relative pt-8">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
-          {name} — {t('eyebrow')}
-        </div>
-        <h1 className="text-[clamp(40px,9vw,72px)] font-bold tracking-[-0.02em] leading-[0.98] mb-3">
-          {t('title')}
-        </h1>
-        <p className="text-[13px] text-ink/45 mb-10 max-w-md mx-auto">{t('subtitle')}</p>
-        <Countdown launchAtMs={launchAtMs} />
-      </div>
+    <HeroCarousel slides={effective} eyebrow={`${name} — ${t('eyebrow')}`}>
+      <Countdown launchAtMs={launchAtMs} />
       <a
         href="#shop"
-        className="relative mt-2 inline-flex flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
+        className="inline-flex flex-col items-center gap-2 mt-2 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
       >
         {ts('shopTitle')}
         <span className="animate-bounce">↓</span>
       </a>
-    </section>
+    </HeroCarousel>
   );
 }
 
