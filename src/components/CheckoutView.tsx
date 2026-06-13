@@ -8,7 +8,7 @@ import { formatPrice, vatOf, inclVat } from '@/lib/money';
 import { shippingFor, SAUDI_CITIES } from '@/lib/shipping';
 import { isValidSaudiPhone } from '@/lib/phone';
 
-type Form = {
+export type Prefill = {
   fullName: string;
   phone: string;
   email: string;
@@ -18,6 +18,8 @@ type Form = {
   building: string;
   postalCode: string;
 };
+
+type Form = Prefill;
 
 const EMPTY: Form = {
   fullName: '',
@@ -30,13 +32,13 @@ const EMPTY: Form = {
   postalCode: '',
 };
 
-export default function CheckoutView() {
+export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const t = useTranslations('Checkout');
   const locale = useLocale();
   const router = useRouter();
   const { lines, subtotal, clear } = useCart();
 
-  const [form, setForm] = useState<Form>(EMPTY);
+  const [form, setForm] = useState<Form>(prefill ?? EMPTY);
   const [whatsappOptIn, setWhatsappOptIn] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,8 +94,8 @@ export default function CheckoutView() {
         `albazar_order_${data.orderId}`,
         JSON.stringify({ orderNumber: data.orderNumber, ...data.summary }),
       );
-      clear();
-      router.push(`/checkout/confirmation?order=${data.orderId}`);
+      // Cart is cleared after payment confirms, not here.
+      router.push(`/checkout/payment?order=${data.orderId}`);
     } catch {
       setError(t('errorGeneric'));
       setSubmitting(false);

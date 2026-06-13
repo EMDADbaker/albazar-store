@@ -137,8 +137,21 @@
     "cityPlaceholder": "Select city",
     "paymentNote": "Payment is added next. This places your order on hold."
   },
+  "Payment": {
+    "securePayment": "Secure payment",
+    "title": "Choose how to pay",
+    "noOrder": "No order to pay for.",
+    "home": "Back home",
+    "cardNumber": "Card number",
+    "redirectNote": "You'll confirm with {method}.",
+    "failed": "Payment failed. Try again.",
+    "processing": "Processing…",
+    "pay": "Pay",
+    "demoNote": "Demo mode — no real charge. Any details work."
+  },
   "Confirmation": {
     "eyebrow": "Order placed",
+    "paid": "Payment confirmed",
     "title": "YOU MOVED FIRST.",
     "subtitle": "Your order is on hold. We'll confirm on WhatsApp.",
     "orderNumber": "Order",
