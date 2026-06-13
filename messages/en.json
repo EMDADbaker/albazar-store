@@ -145,6 +145,7 @@
     "home": "Back home",
     "cardNumber": "Card number",
     "redirectNote": "You'll confirm with {method}.",
+    "cashNote": "Pay in cash when your order is delivered.",
     "failed": "Payment failed. Try again.",
     "processing": "Processing…",
     "pay": "Pay",

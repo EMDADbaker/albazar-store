@@ -16,6 +16,7 @@ const METHODS = [
   { id: 'stcpay', label: 'STC Pay', card: false },
   { id: 'tabby', label: 'Tabby — 4 payments', card: false },
   { id: 'tamara', label: 'Tamara — split in 3', card: false },
+  { id: 'cash', label: 'Cash on delivery', card: false },
 ];
 
 function PaymentInner() {
@@ -139,7 +140,7 @@ function PaymentInner() {
       )}
       {!active?.card && (
         <div className="border border-coal/15 bg-paper-2 px-4 py-5 mb-5 text-center font-mono text-[11px] text-coal/55">
-          {t('redirectNote', { method: active?.label ?? '' })}
+          {method === 'cash' ? t('cashNote') : t('redirectNote', { method: active?.label ?? '' })}
         </div>
       )}
 
