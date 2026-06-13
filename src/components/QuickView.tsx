@@ -56,7 +56,9 @@ export default function QuickView({
       1,
     );
     setAdded(true);
-    setTimeout(() => setAdded(false), 2200);
+    // Fire the global toast, then close the popup shortly after.
+    window.dispatchEvent(new CustomEvent('albazar:added', { detail: { name } }));
+    setTimeout(() => onClose(), 700);
   }
 
   // Portal to <body> so the fixed overlay can't be trapped by any ancestor

@@ -34,6 +34,9 @@ export default function AddToCart({ product }: { product: ProductView }) {
     );
     // Notify, but stay on the page so they can keep shopping.
     setAdded(true);
+    window.dispatchEvent(
+      new CustomEvent('albazar:added', { detail: { name: product.nameEn } }),
+    );
     setTimeout(() => setAdded(false), 2500);
   }
 

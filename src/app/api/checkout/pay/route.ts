@@ -20,39 +20,54 @@ export async function POST(req: Request) {
   const { orderId, method } = parsed.data;
 
   try {
-    const result = await prisma.$transaction(async (tx) => {
-      const order = await tx.order.findUnique({
-        where: { id: orderId },
-        include: { items: true },
-      });
-      if (!order) throw new Error('not_found');
-      if (order.status !== 'PENDING') {
-        return { alreadyPaid: true };
-      }
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
+    if (!order) {
+      return NextResponse.json({ error: 'not_found' }, { status: 404 });
+    }
+    if (order.status !== 'PENDING') {
+      return NextResponse.json({ ok: true, alreadyPaid: true });
+    }
 
-      for (const item of order.items) {
-        // Decrement stock (never below zero).
-        const variant = await tx.productVariant.findUnique({ where: { id: item.variantId } });
-        const newStock = Math.max(0, (variant?.stock ?? 0) - item.quantity);
-        await tx.productVariant.update({
-          where: { id: item.variantId },
-          data: { stock: newStock },
-        });
+    // Read current stock + claimed-piece counts BEFORE building the write batch
+    // (a batched $transaction works on the Supabase pooler; an interactive one
+    // times out across many round-trips).
+    const variantIds = [...new Set(order.items.map((i) => i.variantId))];
+    const productIds = [...new Set(order.items.map((i) => i.productId))];
+    const [variants, counts] = await Promise.all([
+      prisma.productVariant.findMany({ where: { id: { in: variantIds } } }),
+      Promise.all(
+        productIds.map((pid) =>
+          prisma.orderItem.count({ where: { productId: pid, pieceNumber: { not: null } } }),
+        ),
+      ),
+    ]);
+    const stockOf: Record<string, number> = Object.fromEntries(variants.map((v) => [v.id, v.stock]));
+    const claimed: Record<string, number> = Object.fromEntries(
+      productIds.map((pid, idx) => [pid, counts[idx]]),
+    );
 
-        // Assign the next piece number for this product (07 / 150).
-        const claimed = await tx.orderItem.count({
-          where: { productId: item.productId, pieceNumber: { not: null } },
-        });
-        await tx.orderItem.update({
+    const ops = [];
+    for (const item of order.items) {
+      // Decrement stock (never below zero).
+      const newStock = Math.max(0, (stockOf[item.variantId] ?? 0) - item.quantity);
+      ops.push(
+        prisma.productVariant.update({ where: { id: item.variantId }, data: { stock: newStock } }),
+      );
+      // Assign the next piece number for this product (07 / 150).
+      claimed[item.productId] = (claimed[item.productId] ?? 0) + 1;
+      ops.push(
+        prisma.orderItem.update({
           where: { id: item.id },
-          data: { pieceNumber: claimed + 1 },
-        });
-      }
-
-      // Release the 10-min soft holds for this checkout.
-      await tx.inventoryHold.deleteMany({ where: { checkoutSessionId: order.id } });
-
-      await tx.order.update({
+          data: { pieceNumber: claimed[item.productId] },
+        }),
+      );
+    }
+    ops.push(prisma.inventoryHold.deleteMany({ where: { checkoutSessionId: order.id } }));
+    ops.push(
+      prisma.order.update({
         where: { id: order.id },
         data: {
           status: 'PAID',
@@ -60,13 +75,13 @@ export async function POST(req: Request) {
           paymentMethod: method,
           paymentId: `demo_${Date.now().toString(36)}`,
         },
-      });
-      return { alreadyPaid: false };
-    });
+      }),
+    );
 
-    return NextResponse.json({ ok: true, ...result });
+    await prisma.$transaction(ops);
+    return NextResponse.json({ ok: true, alreadyPaid: false });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'error';
-    return NextResponse.json({ error: msg }, { status: msg === 'not_found' ? 404 : 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
