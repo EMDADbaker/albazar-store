@@ -49,11 +49,22 @@
   },
   "Ticker": {
     "items": [
-      "Drop 001 — 150 pieces only",
-      "Limited pieces. No restocks.",
-      "Mada · Apple Pay · STC Pay · Tabby",
+      "Numbered pieces — yours has a number",
+      "No restocks. No reprints. Ever.",
+      "Free shipping over SAR 500",
+      "Mada · Apple Pay · STC Pay · Tabby · Tamara",
+      "Vault members get the drop 1 hour early",
       "Riyadh to the world"
     ]
+  },
+  "AccountMenu": {
+    "account": "My account",
+    "orders": "My orders",
+    "wishlist": "Wishlist",
+    "admin": "Admin panel",
+    "signOut": "Sign out",
+    "signIn": "Sign in",
+    "register": "Create account"
   },
   "Archive": {
     "title": "The archive — Drop 000",
@@ -93,7 +104,9 @@
     "shipping": "Shipping",
     "total": "Total",
     "checkout": "Checkout",
-    "remove": "Remove"
+    "remove": "Remove",
+    "fromWishlist": "From your wishlist",
+    "add": "Add"
   },
   "Checkout": {
     "title": "Checkout",

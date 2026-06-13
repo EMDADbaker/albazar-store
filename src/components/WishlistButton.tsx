@@ -35,7 +35,7 @@ export default function WishlistButton({
       disabled={pending}
       className="mt-3 w-full border border-coal/25 text-coal font-mono text-[11px] tracking-[0.15em] uppercase py-3 hover:bg-coal hover:text-paper transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
     >
-      <span>{saved ? '♥' : '♡'}</span>
+      <span className={saved ? 'text-red-500' : ''}>{saved ? '♥' : '♡'}</span>
       {saved ? t('saved') : t('save')}
     </button>
   );

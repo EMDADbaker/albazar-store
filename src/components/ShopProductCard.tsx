@@ -83,8 +83,10 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           <button
             onClick={toggleWish}
             aria-label={tp('save')}
-            className={`absolute top-2.5 ltr:left-2.5 rtl:right-2.5 w-8 h-8 flex items-center justify-center bg-paper/85 text-[14px] transition-all hover:bg-coal hover:text-paper ${
-              saved ? 'text-coal opacity-100' : 'text-coal/70 opacity-0 group-hover:opacity-100'
+            className={`absolute top-2.5 ltr:left-2.5 rtl:right-2.5 w-8 h-8 flex items-center justify-center bg-paper/85 text-[15px] transition-all ${
+              saved
+                ? 'text-red-500 opacity-100'
+                : 'text-coal/70 opacity-0 group-hover:opacity-100 hover:bg-coal hover:text-paper'
             }`}
           >
             {saved ? '♥' : '♡'}

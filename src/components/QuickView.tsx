@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useCart } from './CartProvider';
@@ -20,6 +21,9 @@ export default function QuickView({
   const { add } = useCart();
   const [size, setSize] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const name = locale === 'ar' ? product.nameAr : product.nameEn;
   const story = locale === 'ar' ? product.storyAr : product.storyEn;
@@ -55,9 +59,12 @@ export default function QuickView({
     setTimeout(() => setAdded(false), 2200);
   }
 
-  return (
+  // Portal to <body> so the fixed overlay can't be trapped by any ancestor
+  // transform/stacking context (the cause of the invisible-modal bug).
+  if (!mounted) return null;
+  return createPortal(
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-coal/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-coal/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -131,6 +138,7 @@ export default function QuickView({
           </Link>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

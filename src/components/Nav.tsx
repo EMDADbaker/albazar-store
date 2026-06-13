@@ -4,6 +4,7 @@ import { getCategories } from '@/lib/categories';
 import { getCurrentUser } from '@/lib/admin-auth';
 import LangSwitch from './LangSwitch';
 import CartLink from './CartLink';
+import AccountMenu from './AccountMenu';
 
 export default async function Nav() {
   const t = await getTranslations('Nav');
@@ -20,17 +21,21 @@ export default async function Nav() {
 
   return (
     <header className="sticky top-0 z-50 bg-bg/90 backdrop-blur-md border-b border-ink/10">
-      <nav className="flex items-center justify-between px-5 sm:px-6 py-4">
-        <Link href="/" className="font-display font-bold text-[17px] tracking-[0.06em] text-ink">
+      {/* dir=ltr pins logo left / icons right in BOTH languages — no jumping */}
+      <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
+        <Link
+          href="/"
+          className="justify-self-start font-display font-bold text-[17px] tracking-[0.06em] text-ink"
+        >
           ALBAZAR<span className="text-accent">.</span>
         </Link>
 
-        <ul className="hidden sm:flex gap-7 list-none">
+        <ul className="hidden md:flex gap-8 list-none">
           {links.map((l) => (
             <li key={l.href}>
               <Link
                 href={l.href}
-                className="text-[11px] tracking-wide uppercase text-ink/70 transition-colors hover:text-accent"
+                className="relative text-[11px] tracking-wide uppercase text-ink/70 transition-colors hover:text-accent after:absolute after:-bottom-1 after:start-0 after:h-px after:w-0 after:bg-accent after:transition-all hover:after:w-full"
               >
                 {l.label}
               </Link>
@@ -38,31 +43,17 @@ export default async function Nav() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-4">
-          {isStaff ? (
-            <a
-              href="/admin"
-              className="text-[11px] tracking-wide uppercase text-accent transition-colors hover:text-accent-bright"
-            >
-              {t('adminLink')}
-            </a>
-          ) : (
-            <Link
-              href={user ? '/account' : '/login'}
-              className="text-[11px] tracking-wide uppercase text-ink/70 transition-colors hover:text-accent"
-            >
-              {user ? t('account') : t('signin')}
-            </Link>
-          )}
+        <div className="justify-self-end flex items-center gap-2.5">
+          <AccountMenu loggedIn={!!user} isStaff={isStaff} name={user?.email} />
           <CartLink />
           <LangSwitch />
         </div>
       </nav>
 
-      {/* Category bar — Urbn-Lot style */}
+      {/* Centered category bar */}
       {categories.length > 0 && (
         <div className="border-t border-ink/[0.06] overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-5 px-5 sm:px-6 py-2.5 min-w-max">
+          <div className="flex items-center justify-center gap-6 px-5 py-2.5 min-w-max mx-auto">
             <Link
               href="/"
               className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/50 hover:text-accent whitespace-nowrap transition-colors"

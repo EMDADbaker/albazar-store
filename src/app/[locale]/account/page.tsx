@@ -49,7 +49,7 @@ export default async function AccountPage({
         </div>
 
         {/* Orders */}
-        <Section title={t('tabsOrders')}>
+        <Section id="orders" title={t('tabsOrders')}>
           {user.orders.length === 0 ? (
             <div className="text-[13px] text-coal/50">
               {t('noOrders')}{' '}
@@ -127,7 +127,7 @@ export default async function AccountPage({
         </Section>
 
         {/* Wishlist */}
-        <Section title={t('tabsWishlist')}>
+        <Section id="wishlist" title={t('tabsWishlist')}>
           {user.wishlist.length === 0 ? (
             <div className="text-[13px] text-coal/50">{t('wishlistEmpty')}</div>
           ) : (
@@ -166,9 +166,9 @@ export default async function AccountPage({
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
   return (
-    <section className="mb-10">
+    <section id={id} className="mb-10 scroll-mt-28">
       <div className="font-mono text-[11px] tracking-label uppercase text-coal/50 mb-4 flex items-center gap-2.5 before:content-[''] before:w-[22px] before:h-[0.5px] before:bg-coal/40">
         {title}
       </div>
