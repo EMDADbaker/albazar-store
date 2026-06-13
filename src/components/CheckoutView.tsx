@@ -36,7 +36,7 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const t = useTranslations('Checkout');
   const locale = useLocale();
   const router = useRouter();
-  const { lines, subtotal, clear } = useCart();
+  const { lines, subtotal, clear, remove } = useCart();
 
   const [form, setForm] = useState<Form>(prefill ?? EMPTY);
   const [whatsappOptIn, setWhatsappOptIn] = useState(true);
@@ -85,6 +85,13 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
         }),
       });
       const data = await res.json();
+      if (res.status === 409 && data.error === 'cart_changed') {
+        // Drop the no-longer-available lines and ask the user to review.
+        (data.removeVariantIds as string[]).forEach((id) => remove(id));
+        setError(t('cartChanged'));
+        setSubmitting(false);
+        return;
+      }
       if (!res.ok || !data.ok) {
         setError(t('errorGeneric'));
         setSubmitting(false);

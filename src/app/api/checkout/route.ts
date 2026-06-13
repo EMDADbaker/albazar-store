@@ -48,16 +48,20 @@ export async function POST(req: Request) {
   const resolved = await resolveVariants(lines.map((l) => l.variantId));
   const items: { resolved: ResolvedVariant; qty: number; unitPrice: number }[] = [];
   let subtotal = 0;
+  // Collect every unavailable line so the client can prune them in one pass
+  // (e.g. a cart with variant ids left over from before a catalogue reseed).
+  const removeVariantIds: string[] = [];
   for (const line of lines) {
     const v = resolved.get(line.variantId);
-    if (!v) {
-      return NextResponse.json({ error: 'unknown_variant', variantId: line.variantId }, { status: 400 });
-    }
-    if (v.stock < line.qty) {
-      return NextResponse.json({ error: 'insufficient_stock', variantId: line.variantId }, { status: 409 });
+    if (!v || v.stock < line.qty) {
+      removeVariantIds.push(line.variantId);
+      continue;
     }
     subtotal += v.price * line.qty;
     items.push({ resolved: v, qty: line.qty, unitPrice: v.price });
+  }
+  if (removeVariantIds.length > 0) {
+    return NextResponse.json({ error: 'cart_changed', removeVariantIds }, { status: 409 });
   }
 
   const shippingCost = shippingFor(subtotal);

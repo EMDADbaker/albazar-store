@@ -132,6 +132,7 @@
     "total": "Total",
     "empty": "Your cart is empty.",
     "errorGeneric": "Something went wrong. Try again.",
+    "cartChanged": "Some items are no longer available and were removed. Review your order and place it again.",
     "errorPhone": "Enter a valid Saudi number.",
     "errorPostal": "Postal code must be 5 digits.",
     "cityPlaceholder": "Select city",
