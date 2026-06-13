@@ -106,14 +106,16 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           )}
         </div>
 
+        {product.brandNameEn && (
+          <div className="font-mono text-[9px] text-coal/50 tracking-[0.08em] uppercase mb-0.5">
+            {product.brandNameEn}
+          </div>
+        )}
         <div className="flex items-baseline justify-between gap-2">
           <div className="text-[13px] font-medium text-coal leading-tight">{name}</div>
           <div className="font-mono text-[12px] text-coal whitespace-nowrap">
             {formatPrice(inclVat(product.price), locale)}
           </div>
-        </div>
-        <div className="font-mono text-[9px] text-coal/45 mt-1 tracking-[0.08em] uppercase">
-          {product.sku}
         </div>
       </div>
 

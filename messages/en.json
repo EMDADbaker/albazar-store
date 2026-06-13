@@ -166,12 +166,22 @@
     "notFound": "Order not found."
   },
   "Storefront": {
-    "shopTitle": "SHOP THE DROPS",
-    "shopSubtitle": "Every piece, every drop. Numbered. No restocks.",
+    "shopTitle": "SHOP",
+    "shopSubtitle": "Streetwear, skate and more — curated in Riyadh.",
     "browse": "Browse",
     "pieces": "{count} pieces",
     "viewDrop": "View drop",
-    "empty": "Drops land here. Join the Vault to get the first link."
+    "empty": "Nothing here yet. Check back soon.",
+    "newArrivals": "New Arrivals",
+    "shopByCategory": "Shop by Category",
+    "viewAll": "View all",
+    "shopBrand": "Shop the brand"
+  },
+  "Brands": {
+    "eyebrow": "All labels",
+    "title": "Brands",
+    "empty": "No brands yet.",
+    "nav": "Brands"
   },
   "DropBadge": {
     "live": "Live now",

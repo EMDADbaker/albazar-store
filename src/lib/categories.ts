@@ -7,11 +7,11 @@ export type CategoryNavItem = {
   nameEn: string;
 };
 
-// Categories that actually have a product in a published drop (for the nav).
+// Categories that carry an active product (for the nav).
 export async function getCategories(): Promise<CategoryNavItem[]> {
   try {
     const cats = await prisma.category.findMany({
-      where: { products: { some: { isActive: true, drop: { published: true } } } },
+      where: { products: { some: { isActive: true } } },
       orderBy: { sortOrder: 'asc' },
     });
     return cats.map((c) => ({ slug: c.slug, nameAr: c.nameAr, nameEn: c.nameEn }));
@@ -24,7 +24,7 @@ export type CategoryView = {
   slug: string;
   nameAr: string;
   nameEn: string;
-  products: (ProductView & { dropNameAr: string; dropNameEn: string; dropStatus: string })[];
+  products: ProductView[];
 };
 
 export async function getCategoryBySlug(slug: string): Promise<CategoryView | null> {
@@ -33,8 +33,8 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryView | nu
     if (!cat) return null;
 
     const products = await prisma.product.findMany({
-      where: { categoryId: cat.id, isActive: true, drop: { published: true } },
-      include: { variants: { orderBy: { size: 'asc' } }, drop: true },
+      where: { categoryId: cat.id, isActive: true },
+      include: { variants: { orderBy: { size: 'asc' } }, brand: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -45,7 +45,7 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryView | nu
       products: products.map((p) => ({
         id: p.id,
         slug: p.sku,
-        dropSlug: p.drop.slug,
+        dropSlug: '',
         nameAr: p.nameAr,
         nameEn: p.nameEn,
         storyAr: p.storyAr,
@@ -55,9 +55,8 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryView | nu
         totalPieces: p.totalPieces,
         images: p.images,
         variants: p.variants.map((v): Variant => ({ id: v.id, size: v.size, stock: v.stock })),
-        dropNameAr: p.drop.nameAr,
-        dropNameEn: p.drop.nameEn,
-        dropStatus: p.drop.status,
+        brandNameEn: p.brand?.nameEn ?? null,
+        brandSlug: p.brand?.slug ?? null,
       })),
     };
   } catch {

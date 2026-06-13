@@ -16,10 +16,10 @@ async function getWishlistProducts(): Promise<ProductView[]> {
     const items = await prisma.wishlistItem.findMany({
       where: {
         userId: user.id,
-        product: { isActive: true, drop: { published: true } },
+        product: { isActive: true },
       },
       include: {
-        product: { include: { variants: { orderBy: { size: 'asc' } }, drop: true } },
+        product: { include: { variants: { orderBy: { size: 'asc' } } } },
       },
       orderBy: { createdAt: 'desc' },
       take: 12,
@@ -27,7 +27,7 @@ async function getWishlistProducts(): Promise<ProductView[]> {
     return items.map(({ product: p }) => ({
       id: p.id,
       slug: p.sku,
-      dropSlug: p.drop.slug,
+      dropSlug: '',
       nameAr: p.nameAr,
       nameEn: p.nameEn,
       storyAr: p.storyAr,

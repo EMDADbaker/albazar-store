@@ -1,5 +1,6 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 import { getProductBySlug, getDropProducts, piecesLeft } from '@/lib/products';
 import { formatPrice, inclVat } from '@/lib/money';
 import Nav from '@/components/Nav';
@@ -52,9 +53,18 @@ export default async function ProductPage({
         />
 
         <div className="md:py-2">
-          <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-3">
-            {product.sku}
-          </div>
+          {product.brandSlug ? (
+            <Link
+              href={`/brand/${product.brandSlug}`}
+              className="font-mono text-[10px] tracking-label uppercase text-coal/60 hover:text-coal mb-3 inline-block"
+            >
+              {product.brandNameEn}
+            </Link>
+          ) : (
+            <div className="font-mono text-[10px] tracking-label uppercase text-coal/45 mb-3">
+              {product.sku}
+            </div>
+          )}
           <h1 className="text-[28px] sm:text-[34px] font-bold tracking-[-0.02em] leading-[1.05] mb-3">
             {name}
           </h1>

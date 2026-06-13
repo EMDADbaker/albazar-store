@@ -66,10 +66,23 @@ model Category {
   createdAt DateTime  @default(now())
 }
 
+model Brand {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  nameEn    String
+  nameAr    String?
+  logo      String?
+  sortOrder Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
 model Product {
   id          String           @id @default(cuid())
-  dropId      String
-  drop        Drop             @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  dropId      String? // legacy/optional — catalogue is organised by brand + category
+  drop        Drop?            @relation(fields: [dropId], references: [id], onDelete: SetNull)
+  brandId     String?
+  brand       Brand?           @relation(fields: [brandId], references: [id])
   categoryId  String?
   category    Category?        @relation(fields: [categoryId], references: [id])
   nameAr      String
@@ -89,6 +102,7 @@ model Product {
 
   @@index([dropId])
   @@index([categoryId])
+  @@index([brandId])
 }
 
 model ProductVariant {

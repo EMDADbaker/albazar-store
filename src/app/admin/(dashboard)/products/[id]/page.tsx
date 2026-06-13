@@ -13,7 +13,7 @@ export default async function EditProduct({
 }) {
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { drop: true },
+    include: { drop: true, brand: true },
   });
   if (!product) notFound();
 
@@ -30,7 +30,7 @@ export default async function EditProduct({
       </Link>
       <h1 className="text-[22px] font-bold mt-3 mb-1">Edit {product.nameEn}</h1>
       <p className="font-mono text-[10px] text-ink/40 mb-6">
-        {product.drop.nameEn} · stock is managed on the Products list.
+        {product.brand?.nameEn ?? product.drop?.nameEn ?? '—'} · stock is managed on the Products list.
       </p>
 
       <form action={save} className="grid sm:grid-cols-2 gap-3">

@@ -8,13 +8,14 @@ import AccountMenu from './AccountMenu';
 
 export default async function Nav() {
   const t = await getTranslations('Nav');
+  const tb = await getTranslations('Brands');
   const locale = await getLocale();
   const [categories, user] = await Promise.all([getCategories(), getCurrentUser()]);
   const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
 
   const links = [
     { href: '/', label: t('shop') },
-    { href: '/archive', label: t('archive') },
+    { href: '/brands', label: tb('nav') },
     { href: '/lookbook', label: t('lookbook') },
     { href: '/about', label: t('about') },
   ];

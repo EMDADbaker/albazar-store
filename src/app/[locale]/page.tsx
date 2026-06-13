@@ -1,16 +1,15 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getActiveDrop } from '@/lib/drop';
-import { getStorefrontDrops } from '@/lib/storefront';
 import { getHeroSlides } from '@/lib/hero';
+import { getNewArrivals, getCategoryCards } from '@/lib/catalog';
 import HeroCarousel, { type Slide } from '@/components/HeroCarousel';
 import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
-import Countdown from '@/components/Countdown';
 import Vault from '@/components/Vault';
 import Entrance from '@/components/Entrance';
-import DropSection from '@/components/DropSection';
+import ShopProductCard from '@/components/ShopProductCard';
+import { Link } from '@/i18n/routing';
 
 export default async function Home({
   params: { locale },
@@ -18,12 +17,11 @@ export default async function Home({
   params: { locale: string };
 }) {
   setRequestLocale(locale);
-  const [drop, drops, heroSlides] = await Promise.all([
-    getActiveDrop(),
-    getStorefrontDrops(),
+  const [heroSlides, newArrivals, categories] = await Promise.all([
     getHeroSlides(),
+    getNewArrivals(8),
+    getCategoryCards(),
   ]);
-  const live = drop.status === 'LIVE';
   const slides: Slide[] = heroSlides.map((s) => ({
     image: s.image,
     title: locale === 'ar' ? s.titleAr : s.titleEn,
@@ -32,38 +30,16 @@ export default async function Home({
 
   return (
     <>
-      <Entrance live={live} />
+      <Entrance live={false} />
       <div className="animate-reveal min-h-screen flex flex-col">
         <Nav />
 
-        {/* DARK cinematic hero */}
-        {live ? (
-          <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} slides={slides} />
-        ) : (
-          <CountdownHero
-            launchAtMs={new Date(drop.launchAt).getTime()}
-            name={locale === 'ar' ? drop.nameAr : drop.nameEn}
-            slides={slides}
-          />
-        )}
-
+        <Hero slides={slides} />
         <Ticker />
 
-        {/* WHITE storefront — all published drops, clearly separated */}
-        <StorefrontIntro />
-        {drops.length === 0 ? (
-          <EmptyStore />
-        ) : (
-          drops.map((d, i) => (
-            <div key={d.id}>
-              {i > 0 && <DarkStrip />}
-              <DropSection drop={d} band={i % 2 === 1} locale={locale} />
-            </div>
-          ))
-        )}
+        <NewArrivals products={newArrivals} />
+        <ShopByCategory categories={categories} locale={locale} />
 
-        {/* DARK closers */}
-        <DarkStrip />
         <LookbookStrip />
         <VaultBand />
         <Footer />
@@ -72,101 +48,116 @@ export default async function Home({
   );
 }
 
-/* ------------------------------- Dark hero -------------------------------- */
+/* --------------------------------- Hero ----------------------------------- */
 
-function CountdownHero({
-  launchAtMs,
-  name,
-  slides,
-}: {
-  launchAtMs: number;
-  name: string;
-  slides: Slide[];
-}) {
-  const t = useTranslations('Countdown');
-  const ts = useTranslations('Storefront');
-  // Owner-managed slides; sensible default if none are published.
+function Hero({ slides }: { slides: Slide[] }) {
+  const t = useTranslations('Storefront');
   const effective: Slide[] =
     slides.length > 0
       ? slides
       : [
           {
             image: '/img/campaign/desert-dune.jpg',
-            title: t('title'),
-            subtitle: t('subtitle'),
+            title: 'ALBAZAR',
+            subtitle: t('shopSubtitle'),
           },
         ];
-
   return (
-    <HeroCarousel slides={effective} eyebrow={`${name} — ${t('eyebrow')}`}>
-      <Countdown launchAtMs={launchAtMs} />
+    <HeroCarousel slides={effective} eyebrow="ALBAZAR · البازار">
       <a
         href="#shop"
-        className="inline-flex flex-col items-center gap-2 mt-2 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
+        className="inline-flex flex-col items-center gap-2 mt-3 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
       >
-        {ts('shopTitle')}
+        {t('shopTitle')}
         <span className="animate-bounce">↓</span>
       </a>
     </HeroCarousel>
   );
 }
 
-function LiveHero({ name, slides }: { name: string; slides: Slide[] }) {
-  const t = useTranslations('Live');
-  const ts = useTranslations('Storefront');
-  // Owner slides drive the cover; fall back to the live copy if none are set.
-  const effective: Slide[] =
-    slides.length > 0
-      ? slides
-      : [{ image: '/img/campaign/desert-dune.jpg', title: t('title'), subtitle: t('subtitle') }];
+/* ----------------------------- New Arrivals ------------------------------- */
 
-  return (
-    <HeroCarousel slides={effective} eyebrow={`${name} — ${t('eyebrow')}`}>
-      <a
-        href="#shop"
-        className="inline-flex flex-col items-center gap-2 mt-4 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
-      >
-        {ts('shopTitle')}
-        <span className="animate-bounce">↓</span>
-      </a>
-    </HeroCarousel>
-  );
-}
-
-/* ----------------------------- Storefront --------------------------------- */
-
-function StorefrontIntro() {
+function NewArrivals({
+  products,
+}: {
+  products: Awaited<ReturnType<typeof getNewArrivals>>;
+}) {
   const t = useTranslations('Storefront');
+  if (products.length === 0) {
+    return (
+      <section id="shop" className="bg-paper text-coal scroll-mt-28">
+        <div className="max-w-6xl mx-auto px-6 py-20 text-center text-[14px] text-coal/50">
+          {t('empty')}
+        </div>
+      </section>
+    );
+  }
   return (
-    <section id="shop" className="bg-paper text-coal scroll-mt-16">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-2 text-center">
-        <h2 className="text-[clamp(26px,5vw,40px)] font-bold tracking-[-0.02em] mb-2">
-          {t('shopTitle')}
-        </h2>
-        <p className="font-mono text-[11px] text-coal/50 tracking-wide uppercase">
-          {t('shopSubtitle')}
-        </p>
+    <section id="shop" className="bg-paper text-coal scroll-mt-28">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
+        <SectionHead title={t('newArrivals')} />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-9">
+          {products.map((p) => (
+            <ShopProductCard key={p.id} product={p} />
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-function EmptyStore() {
+/* --------------------------- Shop by Category ----------------------------- */
+
+function ShopByCategory({
+  categories,
+  locale,
+}: {
+  categories: Awaited<ReturnType<typeof getCategoryCards>>;
+  locale: string;
+}) {
   const t = useTranslations('Storefront');
+  if (categories.length === 0) return null;
   return (
-    <section className="bg-paper text-coal">
-      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <p className="text-[14px] text-coal/50">{t('empty')}</p>
+    <section className="bg-paper-2 text-coal">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
+        <SectionHead title={t('shopByCategory')} />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {categories.map((c) => (
+            <Link key={c.slug} href={`/category/${c.slug}`} className="group relative block aspect-[4/3] overflow-hidden bg-coal/5">
+              {c.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={c.image}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              )}
+              <div className="absolute inset-0 bg-coal/40 group-hover:bg-coal/30 transition-colors" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-display font-bold text-[clamp(18px,3vw,24px)] tracking-[0.04em] uppercase text-paper text-center px-2">
+                  {locale === 'ar' ? c.nameAr : c.nameEn}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-// Slim dark band that separates the cinematic hero and each white drop.
-function DarkStrip() {
+function SectionHead({ title, href, linkLabel }: { title: string; href?: string; linkLabel?: string }) {
   return (
-    <div className="bg-bg py-3 flex items-center justify-center">
-      <span className="w-1 h-1 rounded-full bg-accent/50" />
+    <div className="flex items-end justify-between mb-7">
+      <h2 className="text-[clamp(22px,4vw,34px)] font-bold tracking-[-0.02em]">{title}</h2>
+      {href && linkLabel && (
+        <Link
+          href={href}
+          className="font-mono text-[10px] tracking-wide uppercase text-coal/50 hover:text-coal border-b border-coal/30 pb-0.5"
+        >
+          {linkLabel} →
+        </Link>
+      )}
     </div>
   );
 }

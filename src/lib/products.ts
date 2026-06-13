@@ -15,6 +15,8 @@ export type ProductView = {
   totalPieces: number;
   images: string[];
   variants: Variant[];
+  brandNameEn?: string | null;
+  brandSlug?: string | null;
 };
 
 // Demo catalogue so Drop/Product pages render before the DB is seeded.
@@ -106,7 +108,7 @@ export async function getProductBySlug(slug: string): Promise<ProductView | null
   try {
     const product = await prisma.product.findFirst({
       where: { sku: slug, isActive: true },
-      include: { variants: { orderBy: { size: 'asc' } }, drop: true },
+      include: { variants: { orderBy: { size: 'asc' } }, drop: true, brand: true },
     });
     if (!product) {
       return DEMO_PRODUCTS.find((p) => p.slug === slug) ?? null;
@@ -201,5 +203,7 @@ function toView(p: any): ProductView {
       size: v.size,
       stock: v.stock,
     })),
+    brandNameEn: p.brand?.nameEn ?? null,
+    brandSlug: p.brand?.slug ?? null,
   };
 }

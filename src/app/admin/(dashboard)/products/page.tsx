@@ -13,7 +13,7 @@ export default async function ProductsAdmin() {
     prisma.drop.findMany({ orderBy: { launchAt: 'desc' } }),
     prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
-      include: { variants: { orderBy: { size: 'asc' } }, drop: true },
+      include: { variants: { orderBy: { size: 'asc' } }, drop: true, brand: true },
     }),
   ]);
 
@@ -82,7 +82,7 @@ export default async function ProductsAdmin() {
               <div>
                 <div className="text-[14px] font-medium">{p.nameEn}</div>
                 <div className="font-mono text-[10px] text-ink/40 mt-0.5">
-                  {p.sku} · {p.drop.nameEn} · {formatPrice(inclVat(p.price), 'en')} incl VAT
+                  {p.sku} · {p.brand?.nameEn ?? p.drop?.nameEn ?? '—'} · {formatPrice(inclVat(p.price), 'en')} incl VAT
                   {!p.isActive && <span className="text-red-400/70"> · hidden</span>}
                 </div>
               </div>
