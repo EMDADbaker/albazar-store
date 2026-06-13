@@ -25,6 +25,7 @@ export default function HeroCarousel({
   }, [n]);
 
   const current = slides[Math.min(i, n - 1)];
+  const go = (dir: number) => setI((x) => (x + dir + n) % n);
 
   return (
     <section className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">
@@ -57,22 +58,39 @@ export default function HeroCarousel({
       </div>
 
       {n > 1 && (
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setI(idx)}
-              aria-label={`Slide ${idx + 1}`}
-              className="group px-2 py-3"
-            >
+        <>
+          {/* Stable, fixed-position prev/next arrows — the slide control */}
+          <button
+            onClick={() => go(-1)}
+            aria-label="Previous slide"
+            className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-10 w-11 h-11 flex items-center justify-center border border-ink/20 bg-bg/40 backdrop-blur-sm text-ink/80 hover:bg-accent hover:text-bg hover:border-accent transition-colors"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => go(1)}
+            aria-label="Next slide"
+            className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-10 w-11 h-11 flex items-center justify-center border border-ink/20 bg-bg/40 backdrop-blur-sm text-ink/80 hover:bg-accent hover:text-bg hover:border-accent transition-colors"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Plain progress indicators (not interactive) */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5" aria-hidden>
+            {slides.map((_, idx) => (
               <span
+                key={idx}
                 className={`block h-[3px] transition-all ${
-                  idx === i ? 'w-9 bg-accent' : 'w-4 bg-ink/30 group-hover:bg-ink/60'
+                  idx === i ? 'w-9 bg-accent' : 'w-4 bg-ink/30'
                 }`}
               />
-            </button>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
     </section>
   );
