@@ -33,3 +33,6 @@ yarn-error.log*
 # prisma
 /prisma/*.db
 /prisma/migrations/dev.db*
+
+# admin-uploaded images (local demo)
+/public/img/uploads

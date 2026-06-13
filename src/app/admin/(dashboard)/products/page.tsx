@@ -4,6 +4,7 @@ import { formatPrice, inclVat } from '@/lib/money';
 import { createProduct, deleteProduct } from '@/app/admin/actions';
 import VariantStockControl from '@/components/admin/VariantStockControl';
 import DeleteButton from '@/components/admin/DeleteButton';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +56,10 @@ export default async function ProductsAdmin() {
         <Input name="totalPieces" label="Total pieces" type="number" required />
         <Input name="sizes" label="Sizes  (S:30,M:45,L:50)" placeholder="S:30,M:45,L:50" />
         <div className="sm:col-span-2">
-          <Input name="images" label="Image paths (comma separated)" placeholder="/img/products/tee-1.jpg, /img/products/tee-2.jpg" />
+          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+            Images
+          </div>
+          <ImageUpload name="images" multiple />
         </div>
         <Textarea name="storyEn" label="Story (EN)" />
         <Textarea name="storyAr" label="Story (AR)" dir="rtl" />

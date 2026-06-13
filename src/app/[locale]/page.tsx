@@ -38,7 +38,7 @@ export default async function Home({
 
         {/* DARK cinematic hero */}
         {live ? (
-          <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} />
+          <LiveHero name={locale === 'ar' ? drop.nameAr : drop.nameEn} slides={slides} />
         ) : (
           <CountdownHero
             launchAtMs={new Date(drop.launchAt).getTime()}
@@ -111,27 +111,25 @@ function CountdownHero({
   );
 }
 
-function LiveHero({ name }: { name: string }) {
+function LiveHero({ name, slides }: { name: string; slides: Slide[] }) {
   const t = useTranslations('Live');
+  const ts = useTranslations('Storefront');
+  // Owner slides drive the cover; fall back to the live copy if none are set.
+  const effective: Slide[] =
+    slides.length > 0
+      ? slides
+      : [{ image: '/img/campaign/desert-dune.jpg', title: t('title'), subtitle: t('subtitle') }];
+
   return (
-    <section className="relative px-6 pt-16 pb-14 text-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-[0.2]"
-        style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-bg/50 via-transparent to-bg" aria-hidden />
-      <div className="relative">
-        <div className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          {name} — {t('eyebrow')}
-        </div>
-        <h1 className="text-[clamp(40px,9vw,68px)] font-bold tracking-[-0.02em] leading-[1] mb-3">
-          {t('title')}
-        </h1>
-        <p className="text-[13px] text-ink/45 max-w-md mx-auto">{t('subtitle')}</p>
-      </div>
-    </section>
+    <HeroCarousel slides={effective} eyebrow={`${name} — ${t('eyebrow')}`}>
+      <a
+        href="#shop"
+        className="inline-flex flex-col items-center gap-2 mt-4 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
+      >
+        {ts('shopTitle')}
+        <span className="animate-bounce">↓</span>
+      </a>
+    </HeroCarousel>
   );
 }
 

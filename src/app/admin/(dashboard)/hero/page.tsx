@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { createHeroSlide, deleteHeroSlide } from '@/app/admin/actions';
 import HeroSlideToggle from '@/components/admin/HeroSlideToggle';
 import DeleteButton from '@/components/admin/DeleteButton';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,8 +28,8 @@ export default async function HeroAdmin() {
         </summary>
         <form action={createHeroSlide} className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3">
           <div className="sm:col-span-2">
-            <Lbl>Image path (e.g. /img/campaign/desert-dune.jpg)</Lbl>
-            <input name="image" required className={input} />
+            <Lbl>Cover image</Lbl>
+            <ImageUpload name="image" />
           </div>
           <div>
             <Lbl>Headline (EN)</Lbl>

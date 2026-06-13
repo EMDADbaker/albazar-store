@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { updateProduct } from '@/app/admin/actions';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,11 +44,10 @@ export default async function EditProduct({
           <span className="text-[12px] text-ink/70">Active (visible publicly)</span>
         </label>
         <div className="sm:col-span-2">
-          <Input
-            name="images"
-            label="Image paths (comma separated)"
-            defaultValue={product.images.join(', ')}
-          />
+          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+            Images
+          </div>
+          <ImageUpload name="images" multiple defaultValue={product.images.join(', ')} />
         </div>
         <Textarea name="storyEn" label="Story (EN)" defaultValue={product.storyEn ?? ''} />
         <Textarea name="storyAr" label="Story (AR)" defaultValue={product.storyAr ?? ''} dir="rtl" />
