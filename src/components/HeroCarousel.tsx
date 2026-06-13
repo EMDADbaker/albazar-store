@@ -40,21 +40,24 @@ export default function HeroCarousel({
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
 
-      <div className="relative pt-8">
+      <div className="relative pt-8 w-full max-w-2xl px-2">
         <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
           {eyebrow}
         </div>
-        <h1 className="text-[clamp(36px,8vw,64px)] font-bold tracking-[-0.02em] leading-[0.98] mb-3 transition-opacity duration-500">
-          {current?.title}
-        </h1>
-        {current?.subtitle && (
-          <p className="text-[13px] text-ink/45 mb-10 max-w-md mx-auto">{current.subtitle}</p>
-        )}
+        {/* Reserve constant space so varying slide copy never shifts the layout */}
+        <div className="min-h-[150px] sm:min-h-[180px] flex flex-col items-center justify-center mb-6">
+          <h1 className="text-[clamp(36px,8vw,64px)] font-bold tracking-[-0.02em] leading-[0.98] transition-opacity duration-500">
+            {current?.title}
+          </h1>
+          <p className="text-[13px] text-ink/45 max-w-md mx-auto mt-3 min-h-[36px] transition-opacity duration-500">
+            {current?.subtitle || ' '}
+          </p>
+        </div>
         {children}
       </div>
 
       {n > 1 && (
-        <div className="relative mt-8 flex gap-2.5">
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex gap-2.5">
           {slides.map((_, idx) => (
             <button
               key={idx}
