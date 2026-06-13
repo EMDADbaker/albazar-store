@@ -27,7 +27,7 @@ export default function HeroCarousel({
   const current = slides[Math.min(i, n - 1)];
 
   return (
-    <section className="relative px-6 min-h-[78vh] flex flex-col items-center justify-center text-center overflow-hidden">
+    <section className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">
       {slides.map((s, idx) => (
         <div
           key={idx}
@@ -57,16 +57,20 @@ export default function HeroCarousel({
       </div>
 
       {n > 1 && (
-        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex gap-2.5">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5">
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setI(idx)}
               aria-label={`Slide ${idx + 1}`}
-              className={`h-1 transition-all ${
-                idx === i ? 'w-7 bg-accent' : 'w-3 bg-ink/25 hover:bg-ink/50'
-              }`}
-            />
+              className="group px-2 py-3"
+            >
+              <span
+                className={`block h-[3px] transition-all ${
+                  idx === i ? 'w-9 bg-accent' : 'w-4 bg-ink/30 group-hover:bg-ink/60'
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}
