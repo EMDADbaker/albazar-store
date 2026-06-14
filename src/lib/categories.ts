@@ -20,6 +20,41 @@ export async function getCategories(): Promise<CategoryNavItem[]> {
   }
 }
 
+export type CategoryNavNode = {
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  brands: { slug: string; nameEn: string }[];
+};
+
+// Categories + the brands available within each (for the header dropdowns).
+export async function getCategoryNav(): Promise<CategoryNavNode[]> {
+  try {
+    const cats = await prisma.category.findMany({
+      where: { active: true, products: { some: { isActive: true } } },
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        products: {
+          where: { isActive: true, brand: { active: true } },
+          select: { brand: { select: { slug: true, nameEn: true } } },
+        },
+      },
+    });
+    return cats.map((c) => {
+      const seen = new Map<string, string>();
+      for (const p of c.products) if (p.brand) seen.set(p.brand.slug, p.brand.nameEn);
+      return {
+        slug: c.slug,
+        nameAr: c.nameAr,
+        nameEn: c.nameEn,
+        brands: [...seen.entries()].slice(0, 8).map(([slug, nameEn]) => ({ slug, nameEn })),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
 export type CategoryView = {
   slug: string;
   nameAr: string;

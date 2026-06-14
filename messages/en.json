@@ -108,7 +108,8 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "fromWishlist": "From your wishlist",
-    "add": "Add"
+    "add": "Add",
+    "change": "change"
   },
   "Checkout": {
     "title": "Checkout",
@@ -184,6 +185,16 @@
     "title": "Brands",
     "empty": "No brands yet.",
     "nav": "Brands"
+  },
+  "Reco": {
+    "title": "Recommended for you",
+    "add": "Add",
+    "together": "Often bought together",
+    "brand": "More from {x}",
+    "wishlist": "From your wishlist",
+    "category": "Pairs with your {x}",
+    "viewed": "Based on your browsing",
+    "popular": "Popular right now"
   },
   "DropBadge": {
     "live": "Live now",

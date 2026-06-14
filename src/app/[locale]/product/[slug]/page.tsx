@@ -10,6 +10,7 @@ import ProductGallery from '@/components/ProductGallery';
 import Accordion from '@/components/Accordion';
 import ShopProductCard from '@/components/ShopProductCard';
 import WishlistButton from '@/components/WishlistButton';
+import ProductViewTracker from '@/components/ProductViewTracker';
 import { getCurrentUser } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 
@@ -43,6 +44,7 @@ export default async function ProductPage({
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-coal">
+      <ProductViewTracker productId={product.id} />
       <Nav />
 
       <section className="flex-1 px-5 sm:px-8 py-10 max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-8 lg:gap-16">

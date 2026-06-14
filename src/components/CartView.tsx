@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 import { formatPrice, vatOf, inclVat } from '@/lib/money';
+import SizeChanger from './SizeChanger';
 
 // Light-theme cart.
 export default function CartView() {
@@ -50,8 +51,9 @@ export default function CartView() {
 
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-medium truncate">{name}</div>
-                <div className="font-mono text-[10px] text-coal/45 mt-0.5">
-                  {l.size} · {formatPrice(inclVat(l.price), locale)}
+                <div className="font-mono text-[10px] text-coal/45 mt-1 flex items-center gap-2 flex-wrap">
+                  <SizeChanger line={l} />
+                  <span>· {formatPrice(inclVat(l.price), locale)}</span>
                 </div>
               </div>
 

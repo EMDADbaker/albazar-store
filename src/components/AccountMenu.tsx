@@ -45,14 +45,14 @@ export default function AccountMenu({
         className={`p-1.5 transition-colors ${open ? 'text-accent' : 'text-ink/80 hover:text-accent'}`}
       >
         {/* user icon */}
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
           <circle cx="12" cy="8" r="3.5" />
           <path d="M4.5 20c1.2-3.4 4-5 7.5-5s6.3 1.6 7.5 5" />
         </svg>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-52 bg-bg border border-ink/15 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+        <div className="absolute right-0 top-full mt-2 w-52 bg-bg border border-ink/15 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.5)] z-[70]">
           {loggedIn ? (
             <>
               {name && (

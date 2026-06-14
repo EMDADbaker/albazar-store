@@ -233,3 +233,19 @@ model Setting {
   key   String @id
   value Json
 }
+
+// First-party behaviour signal for personalised recommendations.
+// anonId tracks logged-out visitors (cookie); merges to userId on login.
+model Event {
+  id        String   @id @default(cuid())
+  userId    String?
+  anonId    String?
+  type      String // view | search | add_to_cart
+  productId String?
+  query     String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([anonId])
+  @@index([productId])
+}

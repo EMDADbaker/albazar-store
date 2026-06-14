@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { getCategories } from '@/lib/categories';
+import { getCategoryNav } from '@/lib/categories';
 import { getBrandsWithProducts } from '@/lib/brands';
 import { getCurrentUser } from '@/lib/admin-auth';
 import LangSwitch from './LangSwitch';
@@ -12,7 +12,7 @@ export default async function Nav() {
   const tb = await getTranslations('Brands');
   const locale = await getLocale();
   const [categories, brands, user] = await Promise.all([
-    getCategories(),
+    getCategoryNav(),
     getBrandsWithProducts(),
     getCurrentUser(),
   ]);
@@ -20,7 +20,7 @@ export default async function Nav() {
   const featuredBrands = brands.slice(0, 14);
 
   const navItem =
-    'relative font-mono text-[10px] tracking-[0.15em] uppercase text-ink/60 hover:text-accent transition-colors whitespace-nowrap py-2';
+    'relative font-mono text-[12px] tracking-[0.14em] uppercase text-ink/75 hover:text-accent transition-colors whitespace-nowrap py-3';
 
   return (
     <header className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-ink/10">
@@ -94,9 +94,33 @@ export default async function Nav() {
           )}
 
           {categories.map((c) => (
-            <Link key={c.slug} href={`/category/${c.slug}`} className={navItem}>
-              {locale === 'ar' ? c.nameAr : c.nameEn}
-            </Link>
+            <div key={c.slug} className="relative group">
+              <Link href={`/category/${c.slug}`} className={navItem}>
+                {locale === 'ar' ? c.nameAr : c.nameEn}
+                {c.brands.length > 0 && <span className="text-[8px] ms-1">▾</span>}
+              </Link>
+              {c.brands.length > 0 && (
+                <div className="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block z-[60]">
+                  <div className="bg-bg border border-ink/15 p-3 w-[200px] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+                    {c.brands.map((b) => (
+                      <Link
+                        key={b.slug}
+                        href={`/brand/${b.slug}`}
+                        className="block text-[11px] text-ink/70 hover:text-accent transition-colors py-1 truncate"
+                      >
+                        {b.nameEn}
+                      </Link>
+                    ))}
+                    <Link
+                      href={`/category/${c.slug}`}
+                      className="block mt-1.5 pt-1.5 border-t border-ink/10 font-mono text-[9px] uppercase tracking-wide text-accent hover:text-accent-bright"
+                    >
+                      {locale === 'ar' ? c.nameAr : c.nameEn} →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
 
           <Link href="/lookbook" className={navItem}>{t('lookbook')}</Link>
