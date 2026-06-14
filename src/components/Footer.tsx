@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="flex justify-between items-start gap-6 flex-wrap">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/img/albazar-logo.png" alt="ALBAZAR" className="h-6 w-auto invert mb-3" />
+          <img src="/img/albazar-logo.png" alt="ALBAZAR" className="h-9 w-[200px] object-cover invert mb-3" />
           <div className="font-mono text-[9px] text-ink/20 leading-[2] tracking-[0.04em]">
             {t('verified')}
             <br />

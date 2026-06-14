@@ -48,9 +48,14 @@ export default async function Nav() {
       <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
         <span />
         <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
-          {/* black wordmark rendered white on the dark header via invert */}
+          {/* object-cover in a wide box crops the PNG's whitespace so the
+              wordmark reads big; invert renders the black art white on dark. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/img/albazar-logo.png" alt="ALBAZAR" className="h-7 sm:h-8 w-auto invert" />
+          <img
+            src="/img/albazar-logo.png"
+            alt="ALBAZAR"
+            className="h-9 sm:h-11 w-[180px] sm:w-[230px] object-cover invert"
+          />
         </Link>
         <div className="justify-self-end flex items-center gap-2.5">
           {isStaff ? (

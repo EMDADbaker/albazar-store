@@ -26,22 +26,26 @@ function LoginForm() {
       setLoading(false);
       return;
     }
-    // Read role from the fresh session and route accordingly.
     const session = await getSession();
     const role = (session?.user as { role?: string })?.role;
     const dest = next || (role === 'ADMIN' || role === 'EMPLOYEE' ? '/admin' : '/account');
     window.location.href = dest;
   }
 
+  const field =
+    'w-full bg-white/[0.06] border border-white/20 focus:border-accent text-ink text-[13px] p-3 outline-none mb-3 transition-colors placeholder:text-ink/30';
+
   return (
-    <form onSubmit={submit} className="w-full max-w-[340px]">
-      <Link
-        href="/"
-        className="block font-display font-bold text-[24px] tracking-[0.05em] mb-1 text-center text-coal"
-      >
-        ALBAZAR<span className="text-coal/50">.</span>
+    <form onSubmit={submit} className="w-full max-w-[360px]">
+      <Link href="/" className="block mb-6" aria-label="ALBAZAR">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/img/albazar-logo.png"
+          alt="ALBAZAR"
+          className="h-12 w-[260px] object-cover invert mx-auto"
+        />
       </Link>
-      <div className="font-mono text-[10px] tracking-label uppercase text-coal/40 text-center mb-8">
+      <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-accent/80 text-center mb-8">
         {t('signIn')}
       </div>
 
@@ -51,7 +55,7 @@ function LoginForm() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder={t('email')}
         autoComplete="username"
-        className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-3 transition-colors"
+        className={field}
       />
       <input
         type="password"
@@ -59,26 +63,24 @@ function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder={t('password')}
         autoComplete="current-password"
-        className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-4 transition-colors"
+        className={`${field} mb-4`}
       />
 
       {error && (
-        <div className="text-[11px] text-red-600 mb-4 font-mono text-center">
-          {t('invalid')}
-        </div>
+        <div className="text-[11px] text-red-400 mb-4 font-mono text-center">{t('invalid')}</div>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-coal text-paper font-bold text-[12px] tracking-[0.18em] uppercase py-3.5 hover:opacity-90 transition-opacity disabled:opacity-50"
+        className="w-full bg-accent text-bg font-bold text-[12px] tracking-[0.18em] uppercase py-3.5 hover:bg-accent-bright transition-colors disabled:opacity-50"
       >
         {loading ? '…' : t('signIn')}
       </button>
 
-      <div className="text-center mt-6 font-mono text-[11px] text-coal/50">
+      <div className="text-center mt-6 font-mono text-[11px] text-ink/50">
         {t('noAccount')}{' '}
-        <Link href="/register" className="text-coal underline hover:no-underline">
+        <Link href="/register" className="text-accent underline hover:no-underline">
           {t('register')}
         </Link>
       </div>
@@ -88,10 +90,20 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-paper text-coal">
-      <Suspense fallback={<div />}>
-        <LoginForm />
-      </Suspense>
+    <div className="relative min-h-screen flex items-center justify-center px-6 bg-bg text-ink overflow-hidden">
+      {/* Cinematic backdrop */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-[0.28]"
+        style={{ backgroundImage: "url('/img/campaign/riyadh-arch.jpg')" }}
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-bg/80 via-bg/50 to-bg" aria-hidden />
+      {/* Form card */}
+      <div className="relative w-full max-w-[420px] border border-white/10 bg-bg/60 backdrop-blur-md px-7 sm:px-10 py-12 flex justify-center">
+        <Suspense fallback={<div />}>
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }
