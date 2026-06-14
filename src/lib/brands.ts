@@ -7,7 +7,7 @@ export type BrandNav = { slug: string; nameEn: string };
 export async function getBrandsWithProducts(): Promise<BrandNav[]> {
   try {
     const brands = await prisma.brand.findMany({
-      where: { products: { some: { isActive: true } } },
+      where: { active: true, products: { some: { isActive: true } } },
       orderBy: { nameEn: 'asc' },
       select: { slug: true, nameEn: true },
     });

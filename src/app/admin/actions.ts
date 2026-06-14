@@ -119,7 +119,8 @@ export async function deleteDrop(id: string) {
 /* -------------------------------- Products -------------------------------- */
 
 const productSchema = z.object({
-  dropId: z.string().min(1),
+  brandId: z.string().optional(),
+  categoryId: z.string().optional(),
   nameEn: z.string().min(1),
   nameAr: z.string().min(1),
   storyEn: z.string().optional(),
@@ -134,7 +135,8 @@ const productSchema = z.object({
 export async function createProduct(formData: FormData) {
   await assertAdmin();
   const data = productSchema.parse({
-    dropId: formData.get('dropId'),
+    brandId: formData.get('brandId') || undefined,
+    categoryId: formData.get('categoryId') || undefined,
     nameEn: formData.get('nameEn'),
     nameAr: formData.get('nameAr'),
     storyEn: formData.get('storyEn') || undefined,
@@ -162,7 +164,8 @@ export async function createProduct(formData: FormData) {
 
   await prisma.product.create({
     data: {
-      dropId: data.dropId,
+      brandId: data.brandId || null,
+      categoryId: data.categoryId || null,
       nameEn: data.nameEn,
       nameAr: data.nameAr,
       storyEn: data.storyEn,
@@ -175,9 +178,12 @@ export async function createProduct(formData: FormData) {
     },
   });
   revalidatePath('/admin/products');
+  revalidatePath('/', 'layout');
 }
 
 const productEditSchema = z.object({
+  brandId: z.string().optional(),
+  categoryId: z.string().optional(),
   nameEn: z.string().min(1),
   nameAr: z.string().min(1),
   storyEn: z.string().optional(),
@@ -191,6 +197,8 @@ const productEditSchema = z.object({
 export async function updateProduct(id: string, formData: FormData) {
   await assertAdmin();
   const data = productEditSchema.parse({
+    brandId: formData.get('brandId') || undefined,
+    categoryId: formData.get('categoryId') || undefined,
     nameEn: formData.get('nameEn'),
     nameAr: formData.get('nameAr'),
     storyEn: formData.get('storyEn') || undefined,
@@ -208,6 +216,8 @@ export async function updateProduct(id: string, formData: FormData) {
   await prisma.product.update({
     where: { id },
     data: {
+      brandId: data.brandId || null,
+      categoryId: data.categoryId || null,
       nameEn: data.nameEn,
       nameAr: data.nameAr,
       storyEn: data.storyEn,
@@ -290,5 +300,66 @@ export async function deleteHeroSlide(id: string) {
   await assertAdmin();
   await prisma.heroSlide.delete({ where: { id } });
   revalidatePath('/admin/hero');
+  revalidatePath('/', 'layout');
+}
+
+/* --------------------------------- Brands --------------------------------- */
+
+function slugifyBrand(s: string) {
+  return s.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+}
+
+export async function createBrand(formData: FormData) {
+  await assertAdmin();
+  const nameEn = String(formData.get('nameEn') ?? '').trim();
+  if (!nameEn) return;
+  const nameAr = String(formData.get('nameAr') ?? '').trim() || null;
+  const logo = String(formData.get('logo') ?? '').trim() || null;
+  let base = slugifyBrand(nameEn) || 'brand';
+  let slug = base;
+  let n = 2;
+  // eslint-disable-next-line no-await-in-loop
+  while (await prisma.brand.findUnique({ where: { slug } })) slug = `${base}-${n++}`;
+  await prisma.brand.create({ data: { nameEn, nameAr, logo, slug } });
+  revalidatePath('/admin/brands');
+  revalidatePath('/', 'layout');
+}
+
+export async function updateBrand(id: string, formData: FormData) {
+  await assertAdmin();
+  await prisma.brand.update({
+    where: { id },
+    data: {
+      nameEn: String(formData.get('nameEn') ?? '').trim(),
+      nameAr: String(formData.get('nameAr') ?? '').trim() || null,
+      logo: String(formData.get('logo') ?? '').trim() || null,
+    },
+  });
+  revalidatePath('/admin/brands');
+  revalidatePath('/', 'layout');
+}
+
+export async function toggleBrandActive(id: string, active: boolean) {
+  await assertAdmin();
+  await prisma.brand.update({ where: { id }, data: { active } });
+  revalidatePath('/admin/brands');
+  revalidatePath('/', 'layout');
+}
+
+export async function deleteBrand(id: string) {
+  await assertAdmin();
+  // Unlink products first (don't delete the products).
+  await prisma.product.updateMany({ where: { brandId: id }, data: { brandId: null } });
+  await prisma.brand.delete({ where: { id } });
+  revalidatePath('/admin/brands');
+  revalidatePath('/', 'layout');
+}
+
+/* ------------------------------- Categories ------------------------------- */
+
+export async function toggleCategoryActive(id: string, active: boolean) {
+  await assertAdmin();
+  await prisma.category.update({ where: { id }, data: { active } });
+  revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
 }

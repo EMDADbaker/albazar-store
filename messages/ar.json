@@ -17,7 +17,9 @@
     "cart": "السلة",
     "account": "حسابي",
     "signin": "دخول",
+    "register": "تسجيل",
     "adminLink": "الإدارة",
+    "freeShip": "شحن مجاني فوق ٥٠٠ ر.س",
     "switchTo": "EN"
   },
   "Countdown": {

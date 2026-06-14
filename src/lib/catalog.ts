@@ -47,7 +47,7 @@ export type CategoryCard = {
 export async function getCategoryCards(): Promise<CategoryCard[]> {
   try {
     const cats = await prisma.category.findMany({
-      where: { products: { some: { isActive: true } } },
+      where: { active: true, products: { some: { isActive: true } } },
       orderBy: { sortOrder: 'asc' },
       include: {
         products: {

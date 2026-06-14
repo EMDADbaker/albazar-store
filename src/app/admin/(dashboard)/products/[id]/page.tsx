@@ -11,14 +11,17 @@ export default async function EditProduct({
 }: {
   params: { id: string };
 }) {
-  const product = await prisma.product.findUnique({
-    where: { id },
-    include: { drop: true, brand: true },
-  });
+  const [product, brands, categories] = await Promise.all([
+    prisma.product.findUnique({ where: { id }, include: { brand: true, category: true } }),
+    prisma.brand.findMany({ orderBy: { nameEn: 'asc' } }),
+    prisma.category.findMany({ orderBy: { sortOrder: 'asc' } }),
+  ]);
   if (!product) notFound();
 
   const save = updateProduct.bind(null, id);
   const priceSar = (product.price / 100).toString();
+  const selClass =
+    'w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50';
 
   return (
     <div className="max-w-2xl">
@@ -30,10 +33,28 @@ export default async function EditProduct({
       </Link>
       <h1 className="text-[22px] font-bold mt-3 mb-1">Edit {product.nameEn}</h1>
       <p className="font-mono text-[10px] text-ink/40 mb-6">
-        {product.brand?.nameEn ?? product.drop?.nameEn ?? '—'} · stock is managed on the Products list.
+        {product.brand?.nameEn ?? '—'} · {product.category?.nameEn ?? '—'} · stock is managed on the Products list.
       </p>
 
       <form action={save} className="grid sm:grid-cols-2 gap-3">
+        <div>
+          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">Brand</div>
+          <select name="brandId" defaultValue={product.brandId ?? ''} className={selClass}>
+            <option value="">— No brand —</option>
+            {brands.map((b) => (
+              <option key={b.id} value={b.id} className="bg-bg">{b.nameEn}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">Category</div>
+          <select name="categoryId" defaultValue={product.categoryId ?? ''} className={selClass}>
+            <option value="">— No category —</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id} className="bg-bg">{c.nameEn}</option>
+            ))}
+          </select>
+        </div>
         <Input name="nameEn" label="Name (EN)" defaultValue={product.nameEn} required />
         <Input name="nameAr" label="Name (AR)" defaultValue={product.nameAr} required dir="rtl" />
         <Input name="sku" label="SKU" defaultValue={product.sku} required />

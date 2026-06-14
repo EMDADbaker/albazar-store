@@ -4,11 +4,12 @@ import SignOutButton from '@/components/admin/SignOutButton';
 
 const NAV = [
   { href: '/admin', label: 'Overview' },
-  { href: '/admin/drops', label: 'Drops' },
   { href: '/admin/products', label: 'Products' },
+  { href: '/admin/brands', label: 'Brands' },
+  { href: '/admin/categories', label: 'Categories' },
   { href: '/admin/orders', label: 'Orders' },
-  { href: '/admin/vault', label: 'Vault' },
   { href: '/admin/members', label: 'Members' },
+  { href: '/admin/vault', label: 'Vault' },
   { href: '/admin/hero', label: 'Hero' },
 ];
 
@@ -21,37 +22,45 @@ export default async function DashboardLayout({
   await requireAdmin();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-ink/[0.08]">
+    <div className="min-h-screen flex flex-col bg-[#0c0c0e] text-white">
+      <header className="flex items-center justify-between px-6 py-4 border-b border-white/12 bg-[#101013]">
         <div className="flex items-center gap-8">
           <Link href="/admin" className="font-display font-bold text-[15px] tracking-[0.05em]">
             ALBAZAR<span className="text-accent">.</span>
-            <span className="font-mono text-[9px] text-ink/30 ms-2 tracking-label uppercase">
+            <span className="font-mono text-[9px] text-white/45 ms-2 tracking-label uppercase">
               Admin
             </span>
           </Link>
-          <nav className="hidden sm:flex gap-5">
+          <nav className="hidden md:flex gap-5">
             {NAV.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
-                className="font-mono text-[11px] tracking-wide uppercase text-ink/50 hover:text-ink transition-colors"
+                className="font-mono text-[11px] tracking-wide uppercase text-white/70 hover:text-white transition-colors"
               >
                 {n.label}
               </Link>
             ))}
           </nav>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            className="font-mono text-[10px] tracking-wide uppercase text-white/60 border border-white/20 px-3 py-1.5 hover:bg-white hover:text-black transition-colors"
+          >
+            View store ↗
+          </a>
+          <SignOutButton />
+        </div>
       </header>
 
       {/* Mobile nav */}
-      <nav className="sm:hidden flex gap-4 px-6 py-3 border-b border-ink/[0.08] overflow-x-auto">
+      <nav className="md:hidden flex gap-4 px-6 py-3 border-b border-white/12 overflow-x-auto bg-[#101013]">
         {NAV.map((n) => (
           <Link
             key={n.href}
             href={n.href}
-            className="font-mono text-[11px] tracking-wide uppercase text-ink/50 hover:text-ink whitespace-nowrap"
+            className="font-mono text-[11px] tracking-wide uppercase text-white/70 hover:text-white whitespace-nowrap"
           >
             {n.label}
           </Link>

@@ -11,7 +11,7 @@ export type CategoryNavItem = {
 export async function getCategories(): Promise<CategoryNavItem[]> {
   try {
     const cats = await prisma.category.findMany({
-      where: { products: { some: { isActive: true } } },
+      where: { active: true, products: { some: { isActive: true } } },
       orderBy: { sortOrder: 'asc' },
     });
     return cats.map((c) => ({ slug: c.slug, nameAr: c.nameAr, nameEn: c.nameEn }));

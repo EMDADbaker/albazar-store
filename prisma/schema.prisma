@@ -61,6 +61,7 @@ model Category {
   slug      String    @unique
   nameAr    String
   nameEn    String
+  active    Boolean   @default(true)
   sortOrder Int       @default(0)
   products  Product[]
   createdAt DateTime  @default(now())
@@ -72,6 +73,7 @@ model Brand {
   nameEn    String
   nameAr    String?
   logo      String?
+  active    Boolean   @default(true)
   sortOrder Int       @default(0)
   products  Product[]
   createdAt DateTime  @default(now())

@@ -17,7 +17,9 @@
     "cart": "Cart",
     "account": "Account",
     "signin": "Sign in",
+    "register": "Register",
     "adminLink": "Admin",
+    "freeShip": "Free shipping over SAR 500",
     "switchTo": "عربي"
   },
   "Countdown": {

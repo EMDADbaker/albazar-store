@@ -9,11 +9,12 @@ import ImageUpload from '@/components/admin/ImageUpload';
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsAdmin() {
-  const [drops, products] = await Promise.all([
-    prisma.drop.findMany({ orderBy: { launchAt: 'desc' } }),
+  const [brands, categories, products] = await Promise.all([
+    prisma.brand.findMany({ orderBy: { nameEn: 'asc' } }),
+    prisma.category.findMany({ orderBy: { sortOrder: 'asc' } }),
     prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
-      include: { variants: { orderBy: { size: 'asc' } }, drop: true, brand: true },
+      include: { variants: { orderBy: { size: 'asc' } }, brand: true, category: true },
     }),
   ]);
 
@@ -34,17 +35,30 @@ export default async function ProductsAdmin() {
           action={createProduct}
           className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3"
         >
-        <div className="sm:col-span-2">
-          <Label>Drop</Label>
+        <div>
+          <Label>Brand</Label>
           <select
-            name="dropId"
-            required
+            name="brandId"
             className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50"
           >
-            {drops.length === 0 && <option value="">Create a drop first</option>}
-            {drops.map((d) => (
-              <option key={d.id} value={d.id} className="bg-bg">
-                {d.nameEn} (/{d.slug})
+            <option value="">— No brand —</option>
+            {brands.map((b) => (
+              <option key={b.id} value={b.id} className="bg-bg">
+                {b.nameEn}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <Label>Category</Label>
+          <select
+            name="categoryId"
+            className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50"
+          >
+            <option value="">— No category —</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id} className="bg-bg">
+                {c.nameEn}
               </option>
             ))}
           </select>
@@ -82,7 +96,7 @@ export default async function ProductsAdmin() {
               <div>
                 <div className="text-[14px] font-medium">{p.nameEn}</div>
                 <div className="font-mono text-[10px] text-ink/40 mt-0.5">
-                  {p.sku} · {p.brand?.nameEn ?? p.drop?.nameEn ?? '—'} · {formatPrice(inclVat(p.price), 'en')} incl VAT
+                  {p.sku} · {p.brand?.nameEn ?? '—'} · {p.category?.nameEn ?? '—'} · {formatPrice(inclVat(p.price), 'en')} incl VAT
                   {!p.isActive && <span className="text-red-400/70"> · hidden</span>}
                 </div>
               </div>
