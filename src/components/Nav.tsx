@@ -47,8 +47,10 @@ export default async function Nav() {
       {/* ROW 2 — logo / actions */}
       <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
         <span />
-        <Link href="/" className="justify-self-center font-display font-bold text-[20px] tracking-[0.08em] text-ink">
-          ALBAZAR<span className="text-accent">.</span>
+        <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
+          {/* black wordmark rendered white on the dark header via invert */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/albazar-logo.png" alt="ALBAZAR" className="h-7 sm:h-8 w-auto invert" />
         </Link>
         <div className="justify-self-end flex items-center gap-2.5">
           {isStaff ? (

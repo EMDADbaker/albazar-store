@@ -16,7 +16,7 @@ export default async function DropsAdmin() {
   return (
     <div>
       <h1 className="text-[22px] font-bold mb-1">Drops</h1>
-      <p className="font-mono text-[11px] text-ink/40 mb-8">
+      <p className="font-mono text-[11px] text-white/60 mb-8">
         Status flips the public homepage instantly — no deploy.
       </p>
 
@@ -28,7 +28,7 @@ export default async function DropsAdmin() {
         </summary>
         <form
           action={createDrop}
-          className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3"
+          className="border border-white/12 p-5 mt-3 grid sm:grid-cols-2 gap-3"
         >
         <Input name="nameEn" label="Name (EN)" required />
         <Input name="nameAr" label="Name (AR)" required dir="rtl" />
@@ -39,7 +39,7 @@ export default async function DropsAdmin() {
           <select
             name="status"
             defaultValue="TEASER"
-            className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50"
+            className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50"
           >
             {['TEASER', 'LIVE', 'SOLDOUT', 'ARCHIVED'].map((s) => (
               <option key={s} value={s} className="bg-bg">
@@ -57,18 +57,18 @@ export default async function DropsAdmin() {
       </details>
 
       {/* List */}
-      <div className="border-t border-ink/[0.08]">
+      <div className="border-t border-white/12">
         {drops.length === 0 && (
-          <p className="text-[13px] text-ink/40 py-6">No drops yet.</p>
+          <p className="text-[13px] text-white/60 py-6">No drops yet.</p>
         )}
         {drops.map((d) => (
           <div
             key={d.id}
-            className="flex flex-wrap items-center justify-between gap-3 py-4 border-b border-ink/[0.08]"
+            className="flex flex-wrap items-center justify-between gap-3 py-4 border-b border-white/12"
           >
             <div className="min-w-0 flex-1">
               <div className="text-[14px] font-medium">{d.nameEn}</div>
-              <div className="font-mono text-[10px] text-ink/40 mt-0.5">
+              <div className="font-mono text-[10px] text-white/60 mt-0.5">
                 /{d.slug} · {d._count.products} pieces ·{' '}
                 {new Date(d.launchAt).toLocaleString('en-GB')}
               </div>
@@ -78,7 +78,7 @@ export default async function DropsAdmin() {
               <DropStatusControl id={d.id} status={d.status} />
               <Link
                 href={`/admin/drops/${d.id}`}
-                className="font-mono text-[9px] uppercase tracking-wide text-ink/40 border border-ink/15 px-2 py-1 hover:text-ink hover:border-ink/30 transition-colors"
+                className="font-mono text-[9px] uppercase tracking-wide text-white/60 border border-white/20 px-2 py-1 hover:text-white hover:border-white/30 transition-colors"
               >
                 Edit
               </Link>
@@ -93,7 +93,7 @@ export default async function DropsAdmin() {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+    <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">
       {children}
     </div>
   );
@@ -113,7 +113,7 @@ function Input({
       <input
         name={name}
         {...rest}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50 transition-colors"
+        className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50 transition-colors"
       />
     </div>
   );

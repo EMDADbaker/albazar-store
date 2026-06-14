@@ -25,7 +25,7 @@ export default async function EditDrop({
     <div className="max-w-xl">
       <Link
         href="/admin/drops"
-        className="font-mono text-[10px] uppercase tracking-wide text-ink/40 hover:text-ink"
+        className="font-mono text-[10px] uppercase tracking-wide text-white/60 hover:text-white"
       >
         ← Drops
       </Link>
@@ -47,7 +47,7 @@ export default async function EditDrop({
           <select
             name="status"
             defaultValue={drop.status}
-            className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50"
+            className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50"
           >
             {['TEASER', 'LIVE', 'SOLDOUT', 'ARCHIVED'].map((s) => (
               <option key={s} value={s} className="bg-bg">
@@ -63,7 +63,7 @@ export default async function EditDrop({
             defaultChecked={drop.published}
             className="accent-accent w-4 h-4"
           />
-          <span className="text-[12px] text-ink/70">Published (visible publicly)</span>
+          <span className="text-[12px] text-white/80">Published (visible publicly)</span>
         </label>
         <div className="sm:col-span-2 flex gap-3 mt-2">
           <button className="bg-accent text-bg font-bold text-[11px] tracking-[0.18em] uppercase px-6 py-3 hover:bg-accent-bright transition-colors">
@@ -71,7 +71,7 @@ export default async function EditDrop({
           </button>
           <Link
             href="/admin/drops"
-            className="font-mono text-[11px] uppercase tracking-wide text-ink/50 px-4 py-3 hover:text-ink"
+            className="font-mono text-[11px] uppercase tracking-wide text-white/65 px-4 py-3 hover:text-white"
           >
             Cancel
           </Link>
@@ -83,7 +83,7 @@ export default async function EditDrop({
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+    <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">
       {children}
     </div>
   );
@@ -96,7 +96,7 @@ function Input({ name, label, ...rest }: { name: string; label: string } & React
       <input
         name={name}
         {...rest}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50 transition-colors"
+        className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50 transition-colors"
       />
     </div>
   );

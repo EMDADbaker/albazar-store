@@ -27,7 +27,7 @@ export default async function VaultAdmin() {
           Export CSV
         </a>
       </div>
-      <p className="font-mono text-[11px] text-ink/40 mb-8">
+      <p className="font-mono text-[11px] text-white/60 mb-8">
         {total} members · early-access list for drop broadcasts.
       </p>
 
@@ -35,22 +35,22 @@ export default async function VaultAdmin() {
       <div className="font-mono text-[10px] tracking-wide uppercase text-accent/70 mb-2">
         Account members ({optInUsers.length})
       </div>
-      <div className="border-t border-ink/[0.08] mb-8">
+      <div className="border-t border-white/12 mb-8">
         {optInUsers.length === 0 && (
-          <p className="text-[13px] text-ink/40 py-4">None yet.</p>
+          <p className="text-[13px] text-white/60 py-4">None yet.</p>
         )}
         {optInUsers.map((u) => (
           <div
             key={u.id}
-            className="flex items-center justify-between gap-4 py-3 border-b border-ink/[0.08]"
+            className="flex items-center justify-between gap-4 py-3 border-b border-white/12"
           >
             <div>
               <div className="font-mono text-[13px]">{u.name ?? u.email}</div>
-              <div className="font-mono text-[10px] text-ink/40">
+              <div className="font-mono text-[10px] text-white/60">
                 {u.email} {u.phone ? `· ${u.phone}` : ''}
               </div>
             </div>
-            <div className="font-mono text-[10px] text-ink/40">
+            <div className="font-mono text-[10px] text-white/60">
               {new Date(u.createdAt).toLocaleDateString('en-GB')}
             </div>
           </div>
@@ -61,17 +61,17 @@ export default async function VaultAdmin() {
       <div className="font-mono text-[10px] tracking-wide uppercase text-accent/70 mb-2">
         Phone captures ({members.length})
       </div>
-      <div className="border-t border-ink/[0.08]">
+      <div className="border-t border-white/12">
         {members.length === 0 && (
-          <p className="text-[13px] text-ink/40 py-4">None yet.</p>
+          <p className="text-[13px] text-white/60 py-4">None yet.</p>
         )}
         {members.map((m) => (
           <div
             key={m.id}
-            className="flex items-center justify-between gap-4 py-3 border-b border-ink/[0.08]"
+            className="flex items-center justify-between gap-4 py-3 border-b border-white/12"
           >
             <div className="font-mono text-[13px]">{m.phone}</div>
-            <div className="flex items-center gap-4 font-mono text-[10px] text-ink/40">
+            <div className="flex items-center gap-4 font-mono text-[10px] text-white/60">
               <span>{m.source ?? '—'}</span>
               {m.whatsappOptIn && <span className="text-accent/70">WhatsApp</span>}
               <span>{new Date(m.joinedAt).toLocaleDateString('en-GB')}</span>

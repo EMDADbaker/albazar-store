@@ -3,6 +3,19 @@ import type { ProductView, Variant } from './products';
 
 export type BrandNav = { slug: string; nameEn: string };
 
+// Every active brand (even with no products yet) — for the /brands A–Z index.
+export async function getAllActiveBrands(): Promise<BrandNav[]> {
+  try {
+    return await prisma.brand.findMany({
+      where: { active: true },
+      orderBy: { nameEn: 'asc' },
+      select: { slug: true, nameEn: true },
+    });
+  } catch {
+    return [];
+  }
+}
+
 // Brands that actually carry an active product (for the Brands index + nav).
 export async function getBrandsWithProducts(): Promise<BrandNav[]> {
   try {

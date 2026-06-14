@@ -17,24 +17,24 @@ export default async function OrdersAdmin() {
   return (
     <div>
       <h1 className="text-[22px] font-bold mb-1">Orders</h1>
-      <p className="font-mono text-[11px] text-ink/40 mb-8">
+      <p className="font-mono text-[11px] text-white/60 mb-8">
         Latest 100 · {paid} paid · {pending} unfinished. Expand a row for items,
         piece numbers, and the shipping address.
       </p>
 
-      <div className="border-t border-ink/[0.08]">
+      <div className="border-t border-white/12">
         {orders.length === 0 && (
-          <p className="text-[13px] text-ink/40 py-6">No orders yet.</p>
+          <p className="text-[13px] text-white/60 py-6">No orders yet.</p>
         )}
         {orders.map((o) => {
           const addr = o.addressJson as Record<string, string> | null;
           return (
-            <details key={o.id} className="border-b border-ink/[0.08] group">
+            <details key={o.id} className="border-b border-white/12 group">
               <summary className="flex items-center justify-between gap-4 py-4 cursor-pointer list-none">
                 <div className="min-w-0">
                   <div className="text-[13px] font-medium flex items-center gap-2">
                     AZ{o.id.slice(-6).toUpperCase()}
-                    <span className="font-normal text-ink/60">
+                    <span className="font-normal text-white/70">
                       {addr?.fullName ?? o.user?.name ?? '—'}
                     </span>
                     {o.status === 'PENDING' && (
@@ -43,14 +43,14 @@ export default async function OrdersAdmin() {
                       </span>
                     )}
                   </div>
-                  <div className="font-mono text-[10px] text-ink/40 mt-0.5">
+                  <div className="font-mono text-[10px] text-white/60 mt-0.5">
                     {o.items.length} items · {o.phone} ·{' '}
                     {o.paymentMethod ? o.paymentMethod.toUpperCase() : 'unpaid'} ·{' '}
                     {new Date(o.createdAt).toLocaleString('en-GB')}
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="font-mono text-[12px] text-ink/80">
+                  <span className="font-mono text-[12px] text-white/90">
                     {formatPrice(o.total, 'en')}
                   </span>
                   <OrderStatusControl id={o.id} status={o.status} />
@@ -59,13 +59,13 @@ export default async function OrdersAdmin() {
 
               <div className="pb-4 pl-1 grid sm:grid-cols-2 gap-5">
                 <div>
-                  <div className="font-mono text-[9px] uppercase tracking-wide text-ink/30 mb-2">
+                  <div className="font-mono text-[9px] uppercase tracking-wide text-white/50 mb-2">
                     Pieces
                   </div>
                   <div className="space-y-1.5">
                     {o.items.map((it) => (
                       <div key={it.id} className="flex justify-between gap-3 font-mono text-[11px]">
-                        <span className="text-ink/70 truncate">
+                        <span className="text-white/80 truncate">
                           {it.product.nameEn} · {it.product.sku}
                         </span>
                         <span className="text-accent/90 whitespace-nowrap">
@@ -78,14 +78,14 @@ export default async function OrdersAdmin() {
                   </div>
                 </div>
                 <div>
-                  <div className="font-mono text-[9px] uppercase tracking-wide text-ink/30 mb-2">
+                  <div className="font-mono text-[9px] uppercase tracking-wide text-white/50 mb-2">
                     Ship to
                   </div>
-                  <div className="font-mono text-[11px] text-ink/60 leading-relaxed">
+                  <div className="font-mono text-[11px] text-white/70 leading-relaxed">
                     {addr
                       ? `${addr.building ?? ''} ${addr.street ?? ''}, ${addr.district ?? ''}, ${addr.city ?? ''} ${addr.postalCode ?? ''}`
                       : '—'}
-                    {o.user?.email && <div className="text-ink/40 mt-1">{o.user.email}</div>}
+                    {o.user?.email && <div className="text-white/60 mt-1">{o.user.email}</div>}
                   </div>
                 </div>
               </div>

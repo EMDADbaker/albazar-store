@@ -7,7 +7,7 @@ import ImageUpload from '@/components/admin/ImageUpload';
 export const dynamic = 'force-dynamic';
 
 const input =
-  'w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50 transition-colors';
+  'w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50 transition-colors';
 
 export default async function HeroAdmin() {
   const slides = await prisma.heroSlide.findMany({ orderBy: { sortOrder: 'asc' } });
@@ -15,7 +15,7 @@ export default async function HeroAdmin() {
   return (
     <div>
       <h1 className="text-[22px] font-bold mb-1">Hero slides</h1>
-      <p className="font-mono text-[11px] text-ink/40 mb-8">
+      <p className="font-mono text-[11px] text-white/60 mb-8">
         The homepage cover carousel — image, headline, and subtitle per slide.
         Active slides rotate every 6 seconds, ordered by sort.
       </p>
@@ -26,7 +26,7 @@ export default async function HeroAdmin() {
           <span className="group-open:hidden">+ New slide</span>
           <span className="hidden group-open:inline">− Close</span>
         </summary>
-        <form action={createHeroSlide} className="border border-ink/[0.08] p-5 mt-3 grid sm:grid-cols-2 gap-3">
+        <form action={createHeroSlide} className="border border-white/12 p-5 mt-3 grid sm:grid-cols-2 gap-3">
           <div className="sm:col-span-2">
             <Lbl>Cover image</Lbl>
             <ImageUpload name="image" />
@@ -62,20 +62,20 @@ export default async function HeroAdmin() {
       {/* List */}
       <div className="space-y-3">
         {slides.length === 0 && (
-          <p className="text-[13px] text-ink/40">No slides — the homepage falls back to the default cover.</p>
+          <p className="text-[13px] text-white/60">No slides — the homepage falls back to the default cover.</p>
         )}
         {slides.map((s) => (
           <div
             key={s.id}
-            className="flex flex-wrap items-center gap-4 border border-ink/[0.08] p-3"
+            className="flex flex-wrap items-center gap-4 border border-white/12 p-3"
           >
             <div
-              className="w-20 h-14 bg-cover bg-center border border-ink/10 shrink-0"
+              className="w-20 h-14 bg-cover bg-center border border-white/15 shrink-0"
               style={{ backgroundImage: `url('${s.image}')` }}
             />
             <div className="flex-1 min-w-[180px]">
               <div className="text-[13px] font-medium">{s.titleEn}</div>
-              <div className="font-mono text-[10px] text-ink/40 mt-0.5 truncate">
+              <div className="font-mono text-[10px] text-white/60 mt-0.5 truncate">
                 {s.titleAr} · {s.image} · sort {s.sortOrder}
               </div>
             </div>
@@ -92,7 +92,7 @@ export default async function HeroAdmin() {
 
 function Lbl({ children }: { children: React.ReactNode }) {
   return (
-    <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+    <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">
       {children}
     </div>
   );

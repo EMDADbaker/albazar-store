@@ -179,6 +179,7 @@ export async function createProduct(formData: FormData) {
   });
   revalidatePath('/admin/products');
   revalidatePath('/', 'layout');
+  redirect('/admin/products?created=Product');
 }
 
 const productEditSchema = z.object({
@@ -287,6 +288,7 @@ export async function createHeroSlide(formData: FormData) {
   await prisma.heroSlide.create({ data });
   revalidatePath('/admin/hero');
   revalidatePath('/', 'layout');
+  redirect('/admin/hero?created=Slide');
 }
 
 export async function toggleHeroSlide(id: string, active: boolean) {
@@ -323,6 +325,7 @@ export async function createBrand(formData: FormData) {
   await prisma.brand.create({ data: { nameEn, nameAr, logo, slug } });
   revalidatePath('/admin/brands');
   revalidatePath('/', 'layout');
+  redirect('/admin/brands?created=Brand');
 }
 
 export async function updateBrand(id: string, formData: FormData) {
@@ -378,6 +381,7 @@ export async function createCategory(formData: FormData) {
   await prisma.category.create({ data: { nameEn, nameAr, slug, sortOrder: count } });
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
+  redirect('/admin/categories?created=Category');
 }
 
 export async function updateCategory(id: string, formData: FormData) {

@@ -9,9 +9,8 @@ export default function Footer() {
     <footer className="bg-bg text-ink border-t border-ink/[0.06] px-6 pt-[30px] pb-[22px]">
       <div className="flex justify-between items-start gap-6 flex-wrap">
         <div>
-          <div className="font-display font-bold text-[18px] tracking-[0.05em] mb-2">
-            ALBAZAR<span className="text-accent">.</span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/albazar-logo.png" alt="ALBAZAR" className="h-6 w-auto invert mb-3" />
           <div className="font-mono text-[9px] text-ink/20 leading-[2] tracking-[0.04em]">
             {t('verified')}
             <br />

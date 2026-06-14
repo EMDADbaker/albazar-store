@@ -21,24 +21,24 @@ export default async function EditProduct({
   const save = updateProduct.bind(null, id);
   const priceSar = (product.price / 100).toString();
   const selClass =
-    'w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50';
+    'w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50';
 
   return (
     <div className="max-w-2xl">
       <Link
         href="/admin/products"
-        className="font-mono text-[10px] uppercase tracking-wide text-ink/40 hover:text-ink"
+        className="font-mono text-[10px] uppercase tracking-wide text-white/60 hover:text-white"
       >
         ← Products
       </Link>
       <h1 className="text-[22px] font-bold mt-3 mb-1">Edit {product.nameEn}</h1>
-      <p className="font-mono text-[10px] text-ink/40 mb-6">
+      <p className="font-mono text-[10px] text-white/60 mb-6">
         {product.brand?.nameEn ?? '—'} · {product.category?.nameEn ?? '—'} · stock is managed on the Products list.
       </p>
 
       <form action={save} className="grid sm:grid-cols-2 gap-3">
         <div>
-          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">Brand</div>
+          <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">Brand</div>
           <select name="brandId" defaultValue={product.brandId ?? ''} className={selClass}>
             <option value="">— No brand —</option>
             {brands.map((b) => (
@@ -47,7 +47,7 @@ export default async function EditProduct({
           </select>
         </div>
         <div>
-          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">Category</div>
+          <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">Category</div>
           <select name="categoryId" defaultValue={product.categoryId ?? ''} className={selClass}>
             <option value="">— No category —</option>
             {categories.map((c) => (
@@ -62,10 +62,10 @@ export default async function EditProduct({
         <Input name="totalPieces" label="Total pieces" type="number" defaultValue={product.totalPieces} required />
         <label className="flex items-center gap-2.5 self-end pb-2 cursor-pointer">
           <input type="checkbox" name="isActive" defaultChecked={product.isActive} className="accent-accent w-4 h-4" />
-          <span className="text-[12px] text-ink/70">Active (visible publicly)</span>
+          <span className="text-[12px] text-white/80">Active (visible publicly)</span>
         </label>
         <div className="sm:col-span-2">
-          <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+          <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">
             Images
           </div>
           <ImageUpload name="images" multiple defaultValue={product.images.join(', ')} />
@@ -78,7 +78,7 @@ export default async function EditProduct({
           </button>
           <Link
             href="/admin/products"
-            className="font-mono text-[11px] uppercase tracking-wide text-ink/50 px-4 py-3 hover:text-ink"
+            className="font-mono text-[11px] uppercase tracking-wide text-white/65 px-4 py-3 hover:text-white"
           >
             Cancel
           </Link>
@@ -90,7 +90,7 @@ export default async function EditProduct({
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div className="font-mono text-[9px] uppercase tracking-wide text-ink/35 mb-1.5">
+    <div className="font-mono text-[9px] uppercase tracking-wide text-white/55 mb-1.5">
       {children}
     </div>
   );
@@ -103,7 +103,7 @@ function Input({ name, label, ...rest }: { name: string; label: string } & React
       <input
         name={name}
         {...rest}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50 transition-colors"
+        className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50 transition-colors"
       />
     </div>
   );
@@ -117,7 +117,7 @@ function Textarea({ name, label, ...rest }: { name: string; label: string } & Re
         name={name}
         rows={2}
         {...rest}
-        className="w-full bg-ink/[0.04] border border-ink/[0.12] text-ink text-[13px] p-2.5 outline-none focus:border-accent/50 transition-colors resize-y"
+        className="w-full bg-white/[0.06] border border-white/20 text-white text-[13px] p-2.5 outline-none focus:border-white/50 transition-colors resize-y"
       />
     </div>
   );

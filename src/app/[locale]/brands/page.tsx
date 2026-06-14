@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { getBrandsWithProducts } from '@/lib/brands';
+import { getAllActiveBrands } from '@/lib/brands';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
@@ -13,7 +13,7 @@ export default async function BrandsPage({
 }) {
   setRequestLocale(locale);
   const t = await getTranslations('Brands');
-  const brands = await getBrandsWithProducts();
+  const brands = await getAllActiveBrands();
 
   // Group A–Z by first letter.
   const groups: Record<string, typeof brands> = {};

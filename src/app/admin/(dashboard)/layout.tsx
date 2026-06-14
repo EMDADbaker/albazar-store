@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin-auth';
 import SignOutButton from '@/components/admin/SignOutButton';
+import AdminFlash from '@/components/admin/AdminFlash';
 
 const NAV = [
   { href: '/admin', label: 'Overview' },
@@ -69,6 +70,7 @@ export default async function DashboardLayout({
       </nav>
 
       <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">{children}</main>
+      <AdminFlash />
     </div>
   );
 }
