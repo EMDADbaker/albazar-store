@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { formatPrice, inclVat } from '@/lib/money';
 
@@ -48,12 +49,17 @@ export default async function MembersAdmin() {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
               <div>
                 <div className="text-[14px] font-medium">
-                  {u.name ?? u.email}
+                  <Link href={`/admin/members/${u.id}`} className="hover:text-accent transition-colors">
+                    {u.name ?? u.email}
+                  </Link>
                   {abandoned && (
                     <span className="ms-2 font-mono text-[8px] tracking-wide uppercase bg-accent text-bg px-1.5 py-0.5 align-middle">
                       didn&apos;t finish
                     </span>
                   )}
+                  <Link href={`/admin/members/${u.id}`} className="ms-2 font-mono text-[9px] uppercase tracking-wide text-white/40 hover:text-white">
+                    history →
+                  </Link>
                 </div>
                 <div className="font-mono text-[10px] text-ink/40 mt-0.5">
                   {u.email} {u.phone ? `· ${u.phone}` : ''}{' '}

@@ -4,6 +4,7 @@ import SignOutButton from '@/components/admin/SignOutButton';
 
 const NAV = [
   { href: '/admin', label: 'Overview' },
+  { href: '/admin/customize', label: 'Customize' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/brands', label: 'Brands' },
   { href: '/admin/categories', label: 'Categories' },

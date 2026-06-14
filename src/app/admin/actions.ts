@@ -363,3 +363,41 @@ export async function toggleCategoryActive(id: string, active: boolean) {
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
 }
+
+export async function createCategory(formData: FormData) {
+  await assertAdmin();
+  const nameEn = String(formData.get('nameEn') ?? '').trim();
+  const nameAr = String(formData.get('nameAr') ?? '').trim();
+  if (!nameEn || !nameAr) return;
+  let base = slugify(nameEn) || 'category';
+  let slug = base;
+  let n = 2;
+  // eslint-disable-next-line no-await-in-loop
+  while (await prisma.category.findUnique({ where: { slug } })) slug = `${base}-${n++}`;
+  const count = await prisma.category.count();
+  await prisma.category.create({ data: { nameEn, nameAr, slug, sortOrder: count } });
+  revalidatePath('/admin/categories');
+  revalidatePath('/', 'layout');
+}
+
+export async function updateCategory(id: string, formData: FormData) {
+  await assertAdmin();
+  await prisma.category.update({
+    where: { id },
+    data: {
+      nameEn: String(formData.get('nameEn') ?? '').trim(),
+      nameAr: String(formData.get('nameAr') ?? '').trim(),
+    },
+  });
+  revalidatePath('/admin/categories');
+  revalidatePath('/', 'layout');
+}
+
+export async function deleteCategory(id: string) {
+  await assertAdmin();
+  // Unlink products, don't delete them.
+  await prisma.product.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+  await prisma.category.delete({ where: { id } });
+  revalidatePath('/admin/categories');
+  revalidatePath('/', 'layout');
+}

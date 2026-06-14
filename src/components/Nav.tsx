@@ -63,9 +63,9 @@ export default async function Nav() {
         </div>
       </nav>
 
-      {/* ROW 3 — category / brand nav */}
-      <div className="border-t border-ink/[0.06] overflow-x-auto no-scrollbar">
-        <div className="flex items-center justify-center gap-6 px-5 min-w-max mx-auto">
+      {/* ROW 3 — category / brand nav. No overflow clip so dropdowns escape. */}
+      <div className="border-t border-ink/[0.06]">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 px-5 mx-auto">
           <Link href="/" className={navItem}>{t('shop')}</Link>
 
           {/* Brands dropdown (CSS hover) */}
