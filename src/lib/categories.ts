@@ -1,6 +1,10 @@
-import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
 import type { ProductView, Variant } from './products';
+
+// Nav data is shown on every page and changes rarely — cache it across requests
+// (not just per-request) so page renders don't each pay a Supabase round-trip.
+// Admin category/brand mutations call revalidateTag('nav') to refresh instantly.
 
 export type CategoryNavItem = {
   slug: string;
@@ -9,17 +13,21 @@ export type CategoryNavItem = {
 };
 
 // Categories that carry an active product (for the nav).
-export const getCategories = cache(async (): Promise<CategoryNavItem[]> => {
-  try {
-    const cats = await prisma.category.findMany({
-      where: { active: true, products: { some: { isActive: true } } },
-      orderBy: { sortOrder: 'asc' },
-    });
-    return cats.map((c) => ({ slug: c.slug, nameAr: c.nameAr, nameEn: c.nameEn }));
-  } catch {
-    return [];
-  }
-});
+export const getCategories = unstable_cache(
+  async (): Promise<CategoryNavItem[]> => {
+    try {
+      const cats = await prisma.category.findMany({
+        where: { active: true, products: { some: { isActive: true } } },
+        orderBy: { sortOrder: 'asc' },
+      });
+      return cats.map((c) => ({ slug: c.slug, nameAr: c.nameAr, nameEn: c.nameEn }));
+    } catch {
+      return [];
+    }
+  },
+  ['categories-list'],
+  { revalidate: 300, tags: ['nav'] },
+);
 
 export type CategoryNavNode = {
   slug: string;
@@ -29,7 +37,8 @@ export type CategoryNavNode = {
 };
 
 // Categories + the brands available within each (for the header dropdowns).
-export const getCategoryNav = cache(async (): Promise<CategoryNavNode[]> => {
+export const getCategoryNav = unstable_cache(
+  async (): Promise<CategoryNavNode[]> => {
   try {
     const cats = await prisma.category.findMany({
       where: { active: true, products: { some: { isActive: true } } },
@@ -54,7 +63,10 @@ export const getCategoryNav = cache(async (): Promise<CategoryNavNode[]> => {
   } catch {
     return [];
   }
-});
+  },
+  ['category-nav'],
+  { revalidate: 300, tags: ['nav'] },
+);
 
 export type CategoryView = {
   slug: string;
@@ -63,7 +75,8 @@ export type CategoryView = {
   products: ProductView[];
 };
 
-export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryView | null> => {
+export const getCategoryBySlug = unstable_cache(
+  async (slug: string): Promise<CategoryView | null> => {
   try {
     const cat = await prisma.category.findUnique({ where: { slug } });
     if (!cat) return null;
@@ -98,4 +111,7 @@ export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryVie
   } catch {
     return null;
   }
-});
+  },
+  ['category-by-slug'],
+  { revalidate: 60, tags: ['nav', 'catalog'] },
+);

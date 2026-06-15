@@ -1,4 +1,4 @@
-import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
 import type { ProductView, Variant } from './products';
 
@@ -22,19 +22,23 @@ function toView(p: any): ProductView {
   };
 }
 
-export const getNewArrivals = cache(async (limit = 8): Promise<ProductView[]> => {
-  try {
-    const products = await prisma.product.findMany({
-      where: { isActive: true },
-      include: { variants: { orderBy: { size: 'asc' } }, brand: true },
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-    });
-    return products.map(toView);
-  } catch {
-    return [];
-  }
-});
+export const getNewArrivals = unstable_cache(
+  async (limit = 8): Promise<ProductView[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        where: { isActive: true },
+        include: { variants: { orderBy: { size: 'asc' } }, brand: true },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+      return products.map(toView);
+    } catch {
+      return [];
+    }
+  },
+  ['new-arrivals'],
+  { revalidate: 60, tags: ['catalog'] },
+);
 
 export type CategoryCard = {
   slug: string;
@@ -45,28 +49,32 @@ export type CategoryCard = {
 };
 
 // Category tiles for the "Shop by Category" homepage section.
-export const getCategoryCards = cache(async (): Promise<CategoryCard[]> => {
-  try {
-    const cats = await prisma.category.findMany({
-      where: { active: true, products: { some: { isActive: true } } },
-      orderBy: { sortOrder: 'asc' },
-      include: {
-        products: {
-          where: { isActive: true, images: { isEmpty: false } },
-          select: { images: true },
-          take: 1,
+export const getCategoryCards = unstable_cache(
+  async (): Promise<CategoryCard[]> => {
+    try {
+      const cats = await prisma.category.findMany({
+        where: { active: true, products: { some: { isActive: true } } },
+        orderBy: { sortOrder: 'asc' },
+        include: {
+          products: {
+            where: { isActive: true, images: { isEmpty: false } },
+            select: { images: true },
+            take: 1,
+          },
+          _count: { select: { products: true } },
         },
-        _count: { select: { products: true } },
-      },
-    });
-    return cats.map((c) => ({
-      slug: c.slug,
-      nameAr: c.nameAr,
-      nameEn: c.nameEn,
-      image: c.products[0]?.images[0] ?? null,
-      count: c._count.products,
-    }));
-  } catch {
-    return [];
-  }
-});
+      });
+      return cats.map((c) => ({
+        slug: c.slug,
+        nameAr: c.nameAr,
+        nameEn: c.nameEn,
+        image: c.products[0]?.images[0] ?? null,
+        count: c._count.products,
+      }));
+    } catch {
+      return [];
+    }
+  },
+  ['category-cards'],
+  { revalidate: 60, tags: ['catalog'] },
+);

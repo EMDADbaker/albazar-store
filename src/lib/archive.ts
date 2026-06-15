@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
 
 export type ArchivedPiece = {
@@ -33,7 +34,8 @@ const DEMO_ARCHIVE: ArchivedDrop[] = [
   },
 ];
 
-export async function getArchivedDrops(): Promise<ArchivedDrop[]> {
+export const getArchivedDrops = unstable_cache(
+  async (): Promise<ArchivedDrop[]> => {
   try {
     const drops = await prisma.drop.findMany({
       where: { status: 'ARCHIVED' },
@@ -57,4 +59,7 @@ export async function getArchivedDrops(): Promise<ArchivedDrop[]> {
   } catch {
     return DEMO_ARCHIVE;
   }
-}
+  },
+  ['archived-drops'],
+  { revalidate: 300, tags: ['catalog'] },
+);

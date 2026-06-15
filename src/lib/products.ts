@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
 
 export type Variant = { id: string; size: string; stock: number };
@@ -88,36 +89,46 @@ export function piecesLeft(p: ProductView): number {
   return remaining(p);
 }
 
-export async function getDropProducts(dropSlug: string): Promise<ProductView[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: { drop: { slug: dropSlug }, isActive: true },
-      include: { variants: { orderBy: { size: 'asc' } } },
-      orderBy: { createdAt: 'asc' },
-    });
-    if (products.length === 0) {
+// Browse-only catalogue reads — cached across requests (stale up to 60s is fine;
+// authoritative stock/price for checkout comes from resolveVariants, never cached).
+export const getDropProducts = unstable_cache(
+  async (dropSlug: string): Promise<ProductView[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        where: { drop: { slug: dropSlug }, isActive: true },
+        include: { variants: { orderBy: { size: 'asc' } } },
+        orderBy: { createdAt: 'asc' },
+      });
+      if (products.length === 0) {
+        return DEMO_PRODUCTS.filter((p) => p.dropSlug === dropSlug);
+      }
+      return products.map(toView);
+    } catch {
       return DEMO_PRODUCTS.filter((p) => p.dropSlug === dropSlug);
     }
-    return products.map(toView);
-  } catch {
-    return DEMO_PRODUCTS.filter((p) => p.dropSlug === dropSlug);
-  }
-}
+  },
+  ['drop-products'],
+  { revalidate: 60, tags: ['catalog'] },
+);
 
-export async function getProductBySlug(slug: string): Promise<ProductView | null> {
-  try {
-    const product = await prisma.product.findFirst({
-      where: { sku: slug, isActive: true },
-      include: { variants: { orderBy: { size: 'asc' } }, drop: true, brand: true },
-    });
-    if (!product) {
+export const getProductBySlug = unstable_cache(
+  async (slug: string): Promise<ProductView | null> => {
+    try {
+      const product = await prisma.product.findFirst({
+        where: { sku: slug, isActive: true },
+        include: { variants: { orderBy: { size: 'asc' } }, drop: true, brand: true },
+      });
+      if (!product) {
+        return DEMO_PRODUCTS.find((p) => p.slug === slug) ?? null;
+      }
+      return toView(product);
+    } catch {
       return DEMO_PRODUCTS.find((p) => p.slug === slug) ?? null;
     }
-    return toView(product);
-  } catch {
-    return DEMO_PRODUCTS.find((p) => p.slug === slug) ?? null;
-  }
-}
+  },
+  ['product-by-slug'],
+  { revalidate: 60, tags: ['catalog'] },
+);
 
 export type ResolvedVariant = {
   variantId: string;

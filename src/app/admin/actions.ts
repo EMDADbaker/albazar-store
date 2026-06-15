@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
@@ -60,6 +60,8 @@ export async function createDrop(formData: FormData) {
   });
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function setDropStatus(id: string, status: DropStatus) {
@@ -68,6 +70,8 @@ export async function setDropStatus(id: string, status: DropStatus) {
   // Homepage state lives in the DB and flips without a deploy (Hard rule 1).
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function setDropLaunch(id: string, launchAt: string) {
@@ -75,6 +79,8 @@ export async function setDropLaunch(id: string, launchAt: string) {
   await prisma.drop.update({ where: { id }, data: { launchAt: new Date(launchAt) } });
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function setDropPublished(id: string, published: boolean) {
@@ -82,6 +88,8 @@ export async function setDropPublished(id: string, published: boolean) {
   await prisma.drop.update({ where: { id }, data: { published } });
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function updateDrop(id: string, formData: FormData) {
@@ -106,6 +114,8 @@ export async function updateDrop(id: string, formData: FormData) {
   });
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/drops');
 }
 
@@ -114,6 +124,8 @@ export async function deleteDrop(id: string) {
   await prisma.drop.delete({ where: { id } }); // cascades to products + variants
   revalidatePath('/admin/drops');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 /* -------------------------------- Products -------------------------------- */
@@ -179,6 +191,8 @@ export async function createProduct(formData: FormData) {
   });
   revalidatePath('/admin/products');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/products?created=Product');
 }
 
@@ -232,6 +246,8 @@ export async function updateProduct(id: string, formData: FormData) {
   });
   revalidatePath('/admin/products');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/products');
 }
 
@@ -288,6 +304,8 @@ export async function createHeroSlide(formData: FormData) {
   await prisma.heroSlide.create({ data });
   revalidatePath('/admin/hero');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/hero?created=Slide');
 }
 
@@ -296,6 +314,8 @@ export async function toggleHeroSlide(id: string, active: boolean) {
   await prisma.heroSlide.update({ where: { id }, data: { active } });
   revalidatePath('/admin/hero');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function deleteHeroSlide(id: string) {
@@ -303,6 +323,8 @@ export async function deleteHeroSlide(id: string) {
   await prisma.heroSlide.delete({ where: { id } });
   revalidatePath('/admin/hero');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 /* --------------------------------- Brands --------------------------------- */
@@ -325,6 +347,8 @@ export async function createBrand(formData: FormData) {
   await prisma.brand.create({ data: { nameEn, nameAr, logo, slug } });
   revalidatePath('/admin/brands');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/brands?created=Brand');
 }
 
@@ -340,6 +364,8 @@ export async function updateBrand(id: string, formData: FormData) {
   });
   revalidatePath('/admin/brands');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function toggleBrandActive(id: string, active: boolean) {
@@ -347,6 +373,8 @@ export async function toggleBrandActive(id: string, active: boolean) {
   await prisma.brand.update({ where: { id }, data: { active } });
   revalidatePath('/admin/brands');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function deleteBrand(id: string) {
@@ -356,6 +384,8 @@ export async function deleteBrand(id: string) {
   await prisma.brand.delete({ where: { id } });
   revalidatePath('/admin/brands');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 /* ------------------------------- Categories ------------------------------- */
@@ -365,6 +395,8 @@ export async function toggleCategoryActive(id: string, active: boolean) {
   await prisma.category.update({ where: { id }, data: { active } });
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function createCategory(formData: FormData) {
@@ -381,6 +413,8 @@ export async function createCategory(formData: FormData) {
   await prisma.category.create({ data: { nameEn, nameAr, slug, sortOrder: count } });
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
   redirect('/admin/categories?created=Category');
 }
 
@@ -395,6 +429,8 @@ export async function updateCategory(id: string, formData: FormData) {
   });
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
 
 export async function deleteCategory(id: string) {
@@ -404,4 +440,6 @@ export async function deleteCategory(id: string) {
   await prisma.category.delete({ where: { id } });
   revalidatePath('/admin/categories');
   revalidatePath('/', 'layout');
+  revalidateTag('nav');
+  revalidateTag('catalog');
 }
