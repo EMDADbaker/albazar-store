@@ -82,7 +82,8 @@ export default function QuickView({
           ✕
         </button>
 
-        <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden">
+        {/* Capped height when stacked so the size picker stays in view; full 4:5 on desktop. */}
+        <div className="relative h-[34vh] sm:h-auto sm:aspect-[4/5] bg-paper-2 overflow-hidden">
           {product.images[0] && (
             <Image src={product.images[0]} alt={name} fill sizes="(max-width: 640px) 100vw, 384px" className="object-cover" />
           )}

@@ -7,6 +7,7 @@ import { getCurrentUser } from '@/lib/admin-auth';
 import LangSwitch from './LangSwitch';
 import CartLink from './CartLink';
 import AccountMenu from './AccountMenu';
+import MobileNav from './MobileNav';
 
 export default async function Nav() {
   const t = await getTranslations('Nav');
@@ -23,8 +24,22 @@ export default async function Nav() {
   const navItem =
     'relative font-mono text-[12px] tracking-[0.14em] uppercase text-ink/75 hover:text-accent transition-colors whitespace-nowrap py-3';
 
+  const mobileLabels = {
+    shop: t('shop'),
+    brands: tb('nav'),
+    allBrands: tb('title'),
+    lookbook: t('lookbook'),
+    about: t('about'),
+    account: t('account'),
+    signin: t('signin'),
+    register: t('register') ?? 'Register',
+    admin: t('adminLink'),
+    menu: t('menu'),
+    close: t('close'),
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-ink/10">
+    <header className="relative z-50 bg-bg border-b border-ink/10">
       {/* ROW 1 — utility bar */}
       <div dir="ltr" className="hidden sm:flex items-center justify-between px-6 py-1.5 border-b border-ink/[0.06] text-[9px] font-mono tracking-wide uppercase text-ink/45">
         <a href="https://wa.me/966500000000" className="hover:text-accent transition-colors">
@@ -47,7 +62,16 @@ export default async function Nav() {
 
       {/* ROW 2 — logo / actions */}
       <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
-        <span />
+        <div className="justify-self-start">
+          <MobileNav
+            categories={categories}
+            brands={featuredBrands}
+            locale={locale}
+            labels={mobileLabels}
+            loggedIn={!!user}
+            isStaff={isStaff}
+          />
+        </div>
         <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
           {/* trimmed 6.9KB wordmark; invert renders it white on the dark header */}
           <Image
@@ -72,8 +96,8 @@ export default async function Nav() {
         </div>
       </nav>
 
-      {/* ROW 3 — category / brand nav. No overflow clip so dropdowns escape. */}
-      <div className="border-t border-ink/[0.06]">
+      {/* ROW 3 — category / brand nav (desktop only; mobile uses the drawer). */}
+      <div className="hidden lg:block border-t border-ink/[0.06]">
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 px-5 mx-auto">
           <Link href="/" className={navItem}>{t('shop')}</Link>
 

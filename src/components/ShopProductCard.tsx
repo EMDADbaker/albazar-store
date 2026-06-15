@@ -84,27 +84,27 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
             </div>
           )}
 
-          {/* Heart — top corner, appears on hover */}
+          {/* Heart — top corner. Always visible on touch; hover-reveal on desktop. */}
           <button
             onClick={toggleWish}
             aria-label={tp('save')}
-            className={`absolute top-2.5 ltr:left-2.5 rtl:right-2.5 w-8 h-8 flex items-center justify-center bg-paper/85 text-[15px] transition-all ${
+            className={`absolute top-2 ltr:left-2 rtl:right-2 w-10 h-10 flex items-center justify-center bg-paper/85 text-[17px] transition-all ${
               saved
                 ? 'text-red-500 opacity-100'
-                : 'text-coal/70 opacity-0 group-hover:opacity-100 hover:bg-coal hover:text-paper'
+                : 'text-coal/70 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 hover:bg-coal hover:text-paper'
             }`}
           >
             {saved ? '♥' : '♡'}
           </button>
 
-          {/* Quick view — bottom bar, appears on hover */}
+          {/* Quick view — bottom bar. Always shown on touch; hover-reveal on desktop. */}
           {!soldOut && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setQuick(true);
               }}
-              className="absolute bottom-0 inset-x-0 bg-coal/90 text-paper font-mono text-[10px] tracking-[0.18em] uppercase py-2.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
+              className="absolute bottom-0 inset-x-0 bg-coal/90 text-paper font-mono text-[11px] tracking-[0.18em] uppercase py-3.5 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all"
             >
               {tp('quickView')}
             </button>

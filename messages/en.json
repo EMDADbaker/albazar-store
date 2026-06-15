@@ -20,7 +20,9 @@
     "register": "Register",
     "adminLink": "Admin",
     "freeShip": "Free shipping over SAR 500",
-    "switchTo": "عربي"
+    "switchTo": "عربي",
+    "menu": "Menu",
+    "close": "Close"
   },
   "Countdown": {
     "eyebrow": "Dropping soon",

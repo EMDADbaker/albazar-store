@@ -20,7 +20,9 @@
     "register": "تسجيل",
     "adminLink": "الإدارة",
     "freeShip": "شحن مجاني فوق ٥٠٠ ر.س",
-    "switchTo": "EN"
+    "switchTo": "EN",
+    "menu": "القائمة",
+    "close": "إغلاق"
   },
   "Countdown": {
     "eyebrow": "قريب ينزل",
