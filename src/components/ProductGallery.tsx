@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 // Light-theme gallery: large main image + thumbnail strip, click to swap.
@@ -19,11 +20,13 @@ export default function ProductGallery({
     <div className="md:sticky md:top-20 h-fit">
       <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden">
         {hasImages ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={images[active]}
             alt={name}
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -43,13 +46,12 @@ export default function ProductGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`w-16 h-20 sm:w-20 sm:h-24 shrink-0 overflow-hidden border transition-colors ${
+              className={`relative w-16 h-20 sm:w-20 sm:h-24 shrink-0 overflow-hidden border transition-colors ${
                 i === active ? 'border-coal' : 'border-coal/15 hover:border-coal/40'
               }`}
               aria-label={`View image ${i + 1}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" className="w-full h-full object-cover" />
+              <Image src={src} alt="" fill sizes="80px" className="object-cover" />
             </button>
           ))}
         </div>

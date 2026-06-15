@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, type ReactNode } from 'react';
 
 export type Slide = { image: string; title: string; subtitle: string | null };
@@ -32,12 +33,20 @@ export default function HeroCarousel({
       {slides.map((s, idx) => (
         <div
           key={idx}
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+          className={`absolute inset-0 transition-opacity duration-1000 ${
             idx === i ? 'opacity-[0.25]' : 'opacity-0'
           }`}
-          style={{ backgroundImage: `url('${s.image}')` }}
           aria-hidden
-        />
+        >
+          <Image
+            src={s.image}
+            alt=""
+            fill
+            sizes="100vw"
+            priority={idx === 0}
+            className="object-cover"
+          />
+        </div>
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
 

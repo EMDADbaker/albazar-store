@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import Image from 'next/image';
 import { useCart } from './CartProvider';
 import { formatPrice, vatOf, inclVat } from '@/lib/money';
 import SizeChanger from './SizeChanger';
@@ -38,10 +39,9 @@ export default function CartView() {
           const name = locale === 'ar' ? l.nameAr : l.nameEn;
           return (
             <div key={l.variantId} className="flex items-center gap-4 py-4">
-              <div className="w-16 h-20 bg-paper-2 shrink-0 overflow-hidden">
+              <div className="relative w-16 h-20 bg-paper-2 shrink-0 overflow-hidden">
                 {l.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={l.image} alt={name} className="w-full h-full object-cover" />
+                  <Image src={l.image} alt={name} fill sizes="64px" className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-1/2 h-1/2 bg-coal/[0.08]" />

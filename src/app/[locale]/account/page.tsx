@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { requireUser } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
@@ -137,13 +138,14 @@ export default async function AccountPage({
                 return (
                   <div key={w.id}>
                     <Link href={`/product/${w.product.sku}`} className="group block">
-                      <div className="aspect-[4/5] bg-paper-2 overflow-hidden mb-2">
+                      <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden mb-2">
                         {w.product.images[0] && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <Image
                             src={w.product.images[0]}
                             alt={name}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            fill
+                            sizes="(max-width: 640px) 50vw, 25vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         )}
                       </div>

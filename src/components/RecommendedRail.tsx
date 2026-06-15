@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
@@ -47,10 +48,9 @@ export default function RecommendedRail() {
           return (
             <div key={p.id} className="w-40 shrink-0">
               <Link href={`/product/${p.slug}`} className="group block">
-                <div className="aspect-[4/5] bg-paper-2 overflow-hidden mb-2">
+                <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden mb-2">
                   {p.images[0] && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.images[0]} alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={p.images[0]} alt={name} fill sizes="160px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                   )}
                 </div>
               </Link>

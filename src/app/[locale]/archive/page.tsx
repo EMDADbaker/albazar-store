@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
@@ -55,11 +56,12 @@ export default async function ArchivePage({
                   return (
                     <div key={i}>
                       <div className="aspect-square border border-ink/[0.06] relative mb-2 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={p.image}
                           alt={pname}
-                          className="w-full h-full object-cover grayscale-[60%] brightness-[0.8] transition-all duration-700 hover:grayscale-0 hover:brightness-100"
+                          fill
+                          sizes="(max-width: 640px) 50vw, 20vw"
+                          className="object-cover grayscale-[60%] brightness-[0.8] transition-all duration-700 hover:grayscale-0 hover:brightness-100"
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="font-mono text-[9px] tracking-label uppercase text-ink/80 border border-ink/50 px-3 py-1.5 -rotate-[8deg] bg-bg/65">

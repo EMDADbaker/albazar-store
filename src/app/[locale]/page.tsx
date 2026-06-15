@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getHeroSlides } from '@/lib/hero';
@@ -127,11 +128,12 @@ function ShopByCategory({
           {categories.map((c) => (
             <Link key={c.slug} href={`/category/${c.slug}`} className="group relative block aspect-[4/3] overflow-hidden bg-coal/5">
               {c.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={c.image}
                   alt=""
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               )}
               <div className="absolute inset-0 bg-coal/40 group-hover:bg-coal/30 transition-colors" />
@@ -181,12 +183,13 @@ async function LookbookStrip() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4">
         {shots.map((src, i) => (
-          <div key={i} className="aspect-[4/5] overflow-hidden group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div key={i} className="relative aspect-[4/5] overflow-hidden group">
+            <Image
               src={src}
               alt=""
-              className="w-full h-full object-cover grayscale-[35%] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.04]"
+              fill
+              sizes="(max-width: 640px) 50vw, 25vw"
+              className="object-cover grayscale-[35%] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.04]"
             />
           </div>
         ))}

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import Nav from '@/components/Nav';
@@ -37,11 +38,12 @@ export default function LookbookPage({
               key={i}
               className={`group relative overflow-hidden bg-ink/[0.04] ${s.span} ${s.ratio}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={s.src}
                 alt=""
-                className="w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                fill
+                sizes="(max-width: 640px) 50vw, 33vw"
+                className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
               />
               <div className="absolute inset-0 ring-1 ring-inset ring-ink/[0.06]" />
             </figure>

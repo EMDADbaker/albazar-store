@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import Nav from '@/components/Nav';
@@ -29,9 +30,13 @@ function AboutBody() {
     <>
       {/* Cinematic Saudi opener */}
       <section className="relative h-[60vh] min-h-[380px] flex items-end overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/img/campaign/riyadh-arch.jpg')" }}
+        <Image
+          src="/img/campaign/riyadh-arch.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
           aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-bg/20" aria-hidden />
@@ -56,12 +61,13 @@ function AboutBody() {
 
       {/* The rules — split with heritage portrait */}
       <section className="grid md:grid-cols-2 border-y border-ink/[0.08]">
-        <div className="aspect-[4/5] md:aspect-auto overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="relative aspect-[4/5] md:aspect-auto overflow-hidden">
+          <Image
             src="/img/campaign/saudi-heritage.jpg"
             alt=""
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
           />
         </div>
         <div className="px-6 py-12 md:py-16 flex flex-col justify-center">

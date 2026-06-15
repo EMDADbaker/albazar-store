@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
 import { createBrand, deleteBrand, toggleBrandActive } from '@/app/admin/actions';
 import HideToggle from '@/components/admin/HideToggle';
@@ -56,10 +57,9 @@ export default async function BrandsAdmin() {
             key={b.id}
             className={`flex items-center gap-4 border px-3 py-2.5 ${b.active ? 'border-white/10' : 'border-white/10 opacity-50'}`}
           >
-            <div className="w-10 h-10 bg-white/5 border border-white/10 shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="relative w-10 h-10 bg-white/5 border border-white/10 shrink-0 flex items-center justify-center overflow-hidden">
               {b.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={b.logo} alt="" className="w-full h-full object-contain" />
+                <Image src={b.logo} alt="" fill sizes="40px" className="object-contain" />
               ) : (
                 <span className="font-mono text-[10px] text-white/30">{b.nameEn[0]}</span>
               )}

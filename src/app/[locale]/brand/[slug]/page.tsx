@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getBrandBySlug } from '@/lib/brands';
@@ -33,7 +34,7 @@ export default async function BrandPage({
         />
         {brand.logo && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={brand.logo} alt={brand.nameEn} className="h-12 mb-4 mt-4 object-contain" />
+          <Image src={brand.logo} alt={brand.nameEn} width={240} height={48} className="h-12 w-auto mb-4 mt-4 object-contain" />
         )}
         <h1 className="text-[clamp(32px,6vw,52px)] font-bold tracking-[-0.02em] leading-none mb-3 mt-4">
           {brand.nameEn}

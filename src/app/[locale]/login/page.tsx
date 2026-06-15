@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Suspense, useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -38,11 +39,13 @@ function LoginForm() {
   return (
     <form onSubmit={submit} className="w-full max-w-[360px]">
       <Link href="/" className="block mb-6" aria-label="ALBAZAR">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/img/albazar-logo.png"
+        <Image
+          src="/img/albazar-logo-min.png"
           alt="ALBAZAR"
-          className="h-12 w-[260px] object-cover invert mx-auto"
+          width={640}
+          height={57}
+          priority
+          className="h-11 w-auto invert mx-auto"
         />
       </Link>
       <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-accent/80 text-center mb-8">
@@ -92,9 +95,13 @@ export default function LoginPage() {
   return (
     <div className="relative min-h-screen flex items-center justify-center px-6 bg-bg text-ink overflow-hidden">
       {/* Cinematic backdrop */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-[0.28]"
-        style={{ backgroundImage: "url('/img/campaign/riyadh-arch.jpg')" }}
+      <Image
+        src="/img/campaign/riyadh-arch.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover opacity-[0.28]"
         aria-hidden
       />
       <div className="absolute inset-0 bg-gradient-to-b from-bg/80 via-bg/50 to-bg" aria-hidden />

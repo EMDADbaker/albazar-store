@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { createPortal } from 'react-dom';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
@@ -81,10 +82,9 @@ export default function QuickView({
           ✕
         </button>
 
-        <div className="aspect-[4/5] bg-paper-2 overflow-hidden">
+        <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden">
           {product.images[0] && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.images[0]} alt={name} className="w-full h-full object-cover" />
+            <Image src={product.images[0]} alt={name} fill sizes="(max-width: 640px) 100vw, 384px" className="object-cover" />
           )}
         </div>
 

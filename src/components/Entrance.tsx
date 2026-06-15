@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -58,13 +59,21 @@ export default function Entrance({ live }: { live: boolean }) {
           }}
         >
           <motion.div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/img/campaign/desert-dune.jpg')" }}
+            className="absolute inset-0"
             initial={{ opacity: 0, scale: 1.06 }}
             animate={{ opacity: 0.22, scale: 1 }}
             transition={{ duration: 3.5, ease: 'easeOut' }}
             aria-hidden
-          />
+          >
+            <Image
+              src="/img/campaign/desert-dune.jpg"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </motion.div>
           <div
             className="absolute inset-0 bg-gradient-to-b from-bg/70 via-transparent to-bg/90"
             aria-hidden

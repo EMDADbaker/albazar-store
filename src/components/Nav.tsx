@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getCategoryNav } from '@/lib/categories';
@@ -48,13 +49,14 @@ export default async function Nav() {
       <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
         <span />
         <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
-          {/* object-cover in a wide box crops the PNG's whitespace so the
-              wordmark reads big; invert renders the black art white on dark. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/img/albazar-logo.png"
+          {/* trimmed 6.9KB wordmark; invert renders it white on the dark header */}
+          <Image
+            src="/img/albazar-logo-min.png"
             alt="ALBAZAR"
-            className="h-9 sm:h-11 w-[180px] sm:w-[230px] object-cover invert"
+            width={640}
+            height={57}
+            priority
+            className="h-8 sm:h-10 w-auto invert"
           />
         </Link>
         <div className="justify-self-end flex items-center gap-2.5">
