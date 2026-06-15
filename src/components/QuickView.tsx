@@ -71,7 +71,7 @@ export default function QuickView({
       onClick={onClose}
     >
       <div
-        className="relative bg-paper text-coal w-full max-w-3xl max-h-[88vh] overflow-y-auto grid sm:grid-cols-2"
+        className="relative bg-paper text-coal w-full max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col sm:grid sm:grid-cols-2 sm:items-start"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -82,10 +82,17 @@ export default function QuickView({
           ✕
         </button>
 
-        {/* Capped height when stacked so the size picker stays in view; full 4:5 on desktop. */}
-        <div className="relative h-[34vh] sm:h-auto sm:aspect-[4/5] bg-paper-2 overflow-hidden">
+        {/* Whole image shown (contain) and height-capped when stacked so the size
+            picker stays in view; full-bleed 4:5 cover on the desktop two-column layout. */}
+        <div className="relative w-full h-[42vh] sm:h-auto sm:aspect-[4/5] bg-paper-2 overflow-hidden shrink-0">
           {product.images[0] && (
-            <Image src={product.images[0]} alt={name} fill sizes="(max-width: 640px) 100vw, 384px" className="object-cover" />
+            <Image
+              src={product.images[0]}
+              alt={name}
+              fill
+              sizes="(max-width: 640px) 100vw, 384px"
+              className="object-contain sm:object-cover"
+            />
           )}
         </div>
 

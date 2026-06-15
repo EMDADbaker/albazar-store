@@ -25,7 +25,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0c0c0e] text-white">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/12 bg-[#101013]">
+      <header className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-white/12 bg-[#101013]">
         <div className="flex items-center gap-8">
           <Link href="/admin" className="font-display font-bold text-[15px] tracking-[0.05em]">
             ALBAZAR<span className="text-accent">.</span>
@@ -57,7 +57,7 @@ export default async function DashboardLayout({
       </header>
 
       {/* Mobile nav */}
-      <nav className="md:hidden flex gap-4 px-6 py-3 border-b border-white/12 overflow-x-auto bg-[#101013]">
+      <nav className="md:hidden flex gap-4 px-4 py-3 border-b border-white/12 overflow-x-auto no-scrollbar bg-[#101013]">
         {NAV.map((n) => (
           <Link
             key={n.href}
@@ -69,7 +69,7 @@ export default async function DashboardLayout({
         ))}
       </nav>
 
-      <main className="flex-1 px-6 py-8 max-w-5xl mx-auto w-full">{children}</main>
+      <main className="flex-1 px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto w-full">{children}</main>
       <AdminFlash />
     </div>
   );

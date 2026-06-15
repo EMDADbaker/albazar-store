@@ -41,12 +41,12 @@ export default async function CategoriesAdmin() {
       <div className="space-y-2">
         {cats.map((c) => (
           <details key={c.id} className={`border ${c.active ? 'border-white/10' : 'border-white/10 opacity-50'}`}>
-            <summary className="flex items-center justify-between gap-4 px-4 py-3 cursor-pointer list-none">
-              <div>
-                <div className="text-[14px] font-medium">{c.nameEn}</div>
-                <div className="font-mono text-[10px] text-white/40">{c.nameAr} · /{c.slug} · {c._count.products} products</div>
+            <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none">
+              <div className="min-w-0">
+                <div className="text-[14px] font-medium truncate">{c.nameEn}</div>
+                <div className="font-mono text-[10px] text-white/40 truncate">{c.nameAr} · /{c.slug} · {c._count.products} products</div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 <HideToggle active={c.active} action={toggleCategoryActive.bind(null, c.id)} />
                 <DeleteButton action={deleteCategory.bind(null, c.id)} />
               </div>

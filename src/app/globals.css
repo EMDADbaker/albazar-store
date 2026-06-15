@@ -53,6 +53,17 @@ body {
   border-radius: 4px;
 }
 
+/* On phones, iOS Safari auto-zooms when a focused field's font is < 16px.
+   Force a 16px minimum on all form controls below `sm` to stop that zoom
+   (visual size is still controlled per-component via Tailwind on larger screens). */
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 /* Respect users who ask for less motion — kill loops, keep content usable. */
 @media (prefers-reduced-motion: reduce) {
   *,

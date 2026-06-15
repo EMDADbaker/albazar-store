@@ -42,15 +42,15 @@ export default async function VaultAdmin() {
         {optInUsers.map((u) => (
           <div
             key={u.id}
-            className="flex items-center justify-between gap-4 py-3 border-b border-white/12"
+            className="flex items-center justify-between gap-3 py-3 border-b border-white/12"
           >
-            <div>
-              <div className="font-mono text-[13px]">{u.name ?? u.email}</div>
-              <div className="font-mono text-[10px] text-white/60">
+            <div className="min-w-0">
+              <div className="font-mono text-[13px] truncate">{u.name ?? u.email}</div>
+              <div className="font-mono text-[10px] text-white/60 truncate">
                 {u.email} {u.phone ? `· ${u.phone}` : ''}
               </div>
             </div>
-            <div className="font-mono text-[10px] text-white/60">
+            <div className="font-mono text-[10px] text-white/60 shrink-0">
               {new Date(u.createdAt).toLocaleDateString('en-GB')}
             </div>
           </div>
@@ -68,10 +68,10 @@ export default async function VaultAdmin() {
         {members.map((m) => (
           <div
             key={m.id}
-            className="flex items-center justify-between gap-4 py-3 border-b border-white/12"
+            className="flex items-center justify-between gap-3 py-3 border-b border-white/12"
           >
-            <div className="font-mono text-[13px]">{m.phone}</div>
-            <div className="flex items-center gap-4 font-mono text-[10px] text-white/60">
+            <div className="font-mono text-[13px] shrink-0">{m.phone}</div>
+            <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 font-mono text-[10px] text-white/60">
               <span>{m.source ?? '—'}</span>
               {m.whatsappOptIn && <span className="text-accent/70">WhatsApp</span>}
               <span>{new Date(m.joinedAt).toLocaleDateString('en-GB')}</span>
