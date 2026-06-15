@@ -1,9 +1,36 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
 import type { ProductView, Variant } from './products';
 
 export type Recommendation = ProductView & { reasonKey: string; reasonArg?: string };
 
 const PAID = ['PAID', 'PACKED', 'SHIPPED', 'DELIVERED'] as const;
+
+// Global, shopper-independent data — identical for every request, so cache it
+// for 60s instead of re-querying Supabase on every cart view.
+const getActiveCandidates = unstable_cache(
+  () =>
+    prisma.product.findMany({
+      where: { isActive: true },
+      include: { brand: true, category: true, variants: { orderBy: { size: 'asc' } } },
+    }),
+  ['reco-candidates'],
+  { revalidate: 60, tags: ['reco'] },
+);
+
+const getPopularity = unstable_cache(
+  async () => {
+    const rows = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: { order: { status: { in: [...PAID] } } },
+      _sum: { quantity: true },
+    });
+    // Map isn't serializable through the cache — store a plain array.
+    return rows.map((r) => [r.productId, r._sum.quantity ?? 0] as [string, number]);
+  },
+  ['reco-popularity'],
+  { revalidate: 60, tags: ['reco'] },
+);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toView(p: any): ProductView {
@@ -42,62 +69,60 @@ export async function getCartRecommendations(
   limit = 6,
 ): Promise<Recommendation[]> {
   try {
-    const cart = await prisma.product.findMany({
-      where: { sku: { in: cartSkus.length ? cartSkus : ['__none__'] } },
-      include: { brand: true, category: true },
-    });
+    const who = userId ? { userId } : anonId ? { anonId } : null;
+
+    // The cached candidate set already holds every active product (with brand +
+    // category), so resolve the cart from it by SKU — no separate cart query.
+    const allCandidates = await getActiveCandidates();
+    const bySku = new Map(allCandidates.map((p) => [p.sku, p]));
+    const cart = cartSkus.map((s) => bySku.get(s)).filter(Boolean) as typeof allCandidates;
     const cartIds = new Set(cart.map((p) => p.id));
     const cartBrandIds = new Set(cart.map((p) => p.brandId).filter(Boolean) as string[]);
     const cartCatIds = new Set(cart.map((p) => p.categoryId).filter(Boolean) as string[]);
-    const brandNameById = new Map(cart.map((p) => [p.brandId, p.brand?.nameEn]));
-    const catNameById = new Map(cart.map((p) => [p.categoryId, p.category?.nameEn]));
 
-    // --- signals ---
-    // Co-purchase: orders containing a cart product → the other products.
-    const coOrders = cartIds.size
-      ? await prisma.order.findMany({
-          where: { status: { in: [...PAID] }, items: { some: { productId: { in: [...cartIds] } } } },
-          include: { items: true },
-        })
-      : [];
+    // --- signals --- run all remaining queries concurrently (single round-trip
+    // depth instead of sequential waits to a remote DB).
+    const [coOrders, wishRows, viewRows, soldRows] = await Promise.all([
+      // Co-purchase: orders containing a cart product → the other products.
+      cartIds.size
+        ? prisma.order.findMany({
+            where: { status: { in: [...PAID] }, items: { some: { productId: { in: [...cartIds] } } } },
+            include: { items: true },
+          })
+        : Promise.resolve([]),
+      userId
+        ? prisma.wishlistItem.findMany({ where: { userId }, select: { productId: true } })
+        : Promise.resolve([]),
+      who
+        ? prisma.event.findMany({
+            where: { ...who, type: 'view', productId: { not: null } },
+            orderBy: { createdAt: 'desc' },
+            take: 30,
+          })
+        : Promise.resolve([]),
+      getPopularity(),
+    ]);
+
     const coBought = new Set<string>();
     for (const o of coOrders) for (const it of o.items) if (!cartIds.has(it.productId)) coBought.add(it.productId);
 
-    // Wishlist + recent views (personal).
-    const wished = new Set<string>();
-    if (userId) {
-      const w = await prisma.wishlistItem.findMany({ where: { userId }, select: { productId: true } });
-      w.forEach((x) => wished.add(x.productId));
-    }
+    const wished = new Set<string>(wishRows.map((x) => x.productId));
+
+    // Recent views → browsed brands/categories. Resolve product → brand/cat from
+    // the already-loaded candidate set instead of an extra DB round-trip.
+    const productById = new Map(allCandidates.map((p) => [p.id, p]));
     const viewedBrand = new Set<string>();
     const viewedCat = new Set<string>();
-    const who = userId ? { userId } : anonId ? { anonId } : null;
-    if (who) {
-      const views = await prisma.event.findMany({
-        where: { ...who, type: 'view', productId: { not: null } },
-        orderBy: { createdAt: 'desc' },
-        take: 30,
-      });
-      const vids = [...new Set(views.map((v) => v.productId!).filter(Boolean))];
-      if (vids.length) {
-        const vp = await prisma.product.findMany({ where: { id: { in: vids } }, select: { brandId: true, categoryId: true } });
-        vp.forEach((p) => { if (p.brandId) viewedBrand.add(p.brandId); if (p.categoryId) viewedCat.add(p.categoryId); });
-      }
+    for (const v of viewRows) {
+      const vp = v.productId ? productById.get(v.productId) : null;
+      if (vp?.brandId) viewedBrand.add(vp.brandId);
+      if (vp?.categoryId) viewedCat.add(vp.categoryId);
     }
 
-    // Popularity (units sold) for tie-breaking.
-    const soldRows = await prisma.orderItem.groupBy({
-      by: ['productId'],
-      where: { order: { status: { in: [...PAID] } } },
-      _sum: { quantity: true },
-    });
-    const sold = new Map(soldRows.map((r) => [r.productId, r._sum.quantity ?? 0]));
+    const sold = new Map(soldRows);
 
-    // --- candidates ---
-    const candidates = await prisma.product.findMany({
-      where: { isActive: true, id: { notIn: [...cartIds] } },
-      include: { brand: true, category: true, variants: { orderBy: { size: 'asc' } } },
-    });
+    // Drop cart items from the cached candidate set (cache is cart-independent).
+    const candidates = allCandidates.filter((p) => !cartIds.has(p.id));
 
     const scored = candidates.map((p) => {
       let score = 0;
