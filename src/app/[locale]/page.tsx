@@ -12,7 +12,9 @@ import Entrance from '@/components/Entrance';
 import ShopProductCard from '@/components/ShopProductCard';
 import { Link } from '@/i18n/routing';
 
-export const dynamic = 'force-dynamic';
+// ISR: storefront re-renders at most once a minute; flips (drops/hero) appear
+// within 60s without a deploy. Mutations also revalidate these paths.
+export const revalidate = 60;
 
 export default async function Home({
   params: { locale },

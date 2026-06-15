@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { prisma } from './prisma';
 
 export type HeroSlideView = {
@@ -9,7 +10,7 @@ export type HeroSlideView = {
   subtitleEn: string | null;
 };
 
-export async function getHeroSlides(): Promise<HeroSlideView[]> {
+export const getHeroSlides = cache(async (): Promise<HeroSlideView[]> => {
   try {
     return await prisma.heroSlide.findMany({
       where: { active: true },
@@ -26,4 +27,4 @@ export async function getHeroSlides(): Promise<HeroSlideView[]> {
   } catch {
     return [];
   }
-}
+});

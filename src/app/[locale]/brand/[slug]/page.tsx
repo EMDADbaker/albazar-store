@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function BrandPage({
   params: { locale, slug },

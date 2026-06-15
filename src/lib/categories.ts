@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { prisma } from './prisma';
 import type { ProductView, Variant } from './products';
 
@@ -8,7 +9,7 @@ export type CategoryNavItem = {
 };
 
 // Categories that carry an active product (for the nav).
-export async function getCategories(): Promise<CategoryNavItem[]> {
+export const getCategories = cache(async (): Promise<CategoryNavItem[]> => {
   try {
     const cats = await prisma.category.findMany({
       where: { active: true, products: { some: { isActive: true } } },
@@ -18,7 +19,7 @@ export async function getCategories(): Promise<CategoryNavItem[]> {
   } catch {
     return [];
   }
-}
+});
 
 export type CategoryNavNode = {
   slug: string;
@@ -28,7 +29,7 @@ export type CategoryNavNode = {
 };
 
 // Categories + the brands available within each (for the header dropdowns).
-export async function getCategoryNav(): Promise<CategoryNavNode[]> {
+export const getCategoryNav = cache(async (): Promise<CategoryNavNode[]> => {
   try {
     const cats = await prisma.category.findMany({
       where: { active: true, products: { some: { isActive: true } } },
@@ -53,7 +54,7 @@ export async function getCategoryNav(): Promise<CategoryNavNode[]> {
   } catch {
     return [];
   }
-}
+});
 
 export type CategoryView = {
   slug: string;
@@ -62,7 +63,7 @@ export type CategoryView = {
   products: ProductView[];
 };
 
-export async function getCategoryBySlug(slug: string): Promise<CategoryView | null> {
+export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryView | null> => {
   try {
     const cat = await prisma.category.findUnique({ where: { slug } });
     if (!cat) return null;
@@ -97,4 +98,4 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryView | nu
   } catch {
     return null;
   }
-}
+});

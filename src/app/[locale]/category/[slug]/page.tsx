@@ -5,6 +5,8 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 
+export const revalidate = 60;
+
 export default async function CategoryPage({
   params: { locale, slug },
 }: {

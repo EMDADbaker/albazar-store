@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { prisma } from './prisma';
 import type { ProductView, Variant } from './products';
 
@@ -21,7 +22,7 @@ function toView(p: any): ProductView {
   };
 }
 
-export async function getNewArrivals(limit = 8): Promise<ProductView[]> {
+export const getNewArrivals = cache(async (limit = 8): Promise<ProductView[]> => {
   try {
     const products = await prisma.product.findMany({
       where: { isActive: true },
@@ -33,7 +34,7 @@ export async function getNewArrivals(limit = 8): Promise<ProductView[]> {
   } catch {
     return [];
   }
-}
+});
 
 export type CategoryCard = {
   slug: string;
@@ -44,7 +45,7 @@ export type CategoryCard = {
 };
 
 // Category tiles for the "Shop by Category" homepage section.
-export async function getCategoryCards(): Promise<CategoryCard[]> {
+export const getCategoryCards = cache(async (): Promise<CategoryCard[]> => {
   try {
     const cats = await prisma.category.findMany({
       where: { active: true, products: { some: { isActive: true } } },
@@ -68,4 +69,4 @@ export async function getCategoryCards(): Promise<CategoryCard[]> {
   } catch {
     return [];
   }
-}
+});

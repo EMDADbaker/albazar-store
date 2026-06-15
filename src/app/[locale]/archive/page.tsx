@@ -5,6 +5,8 @@ import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import { getArchivedDrops } from '@/lib/archive';
 
+export const revalidate = 60;
+
 export default async function ArchivePage({
   params: { locale },
 }: {
