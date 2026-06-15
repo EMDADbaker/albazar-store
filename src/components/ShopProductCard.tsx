@@ -6,7 +6,10 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { formatPrice, inclVat } from '@/lib/money';
 import { piecesLeft, type ProductView } from '@/lib/products';
-import QuickView from './QuickView';
+import dynamic from 'next/dynamic';
+
+// Modal only loads when a shopper opens Quick view — kept off the grid's path.
+const QuickView = dynamic(() => import('./QuickView'), { ssr: false });
 
 // Light-section product card. Clicking the card navigates to the product page;
 // the hover heart and Quick view buttons are exceptions (they stop propagation).

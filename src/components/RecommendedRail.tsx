@@ -6,8 +6,10 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { formatPrice, inclVat } from '@/lib/money';
 import type { ProductView } from '@/lib/products';
+import dynamic from 'next/dynamic';
 import { useCart } from './CartProvider';
-import QuickView from './QuickView';
+
+const QuickView = dynamic(() => import('./QuickView'), { ssr: false });
 
 type Reco = ProductView & { reasonKey: string; reasonArg?: string };
 
@@ -22,6 +24,7 @@ export default function RecommendedRail() {
   const [quick, setQuick] = useState<ProductView | null>(null);
 
   useEffect(() => {
+    if (slugs.length === 0) { setItems([]); return; } // empty cart → no fetch
     let cancel = false;
     fetch('/api/recommendations', {
       method: 'POST',

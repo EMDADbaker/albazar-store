@@ -52,3 +52,15 @@ body {
   background: rgba(240, 240, 240, 0.18);
   border-radius: 4px;
 }
+
+/* Respect users who ask for less motion — kill loops, keep content usable. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

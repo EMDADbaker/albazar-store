@@ -10,7 +10,7 @@ export default function Ticker() {
   return (
     <div className="border-y border-ink/[0.06] py-[9px] overflow-hidden whitespace-nowrap">
       <div
-        className={`inline-flex gap-11 ${
+        className={`inline-flex gap-11 will-change-transform ${
           locale === 'ar' ? 'animate-ticker-rtl' : 'animate-ticker'
         }`}
       >

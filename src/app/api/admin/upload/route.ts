@@ -8,8 +8,9 @@ export const runtime = 'nodejs';
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 const MAX_BYTES = 8 * 1024 * 1024; // 8MB
 
-// Saves an uploaded image into public/img/uploads and returns its public path.
-// Swap for Cloudinary later (PROJECT_BRIEF) without changing the admin UI.
+// Stores an uploaded image and returns its public path.
+//  - On Netlify (read-only FS): persist to Netlify Blobs, served via /api/img/[key].
+//  - In local dev: write to public/img/uploads so the file is served directly.
 export async function POST(req: Request) {
   await assertAdmin();
 
@@ -33,11 +34,19 @@ export async function POST(req: Request) {
     .replace(/^-+|-+$/g, '')
     .slice(0, 40) || 'img';
   const name = `${base}-${Date.now().toString(36)}.${ext}`;
+  const ab = await file.arrayBuffer();
 
+  // Serverless / Netlify: filesystem is read-only — use Blobs.
+  if (process.env.NETLIFY || process.env.NETLIFY_BLOBS_CONTEXT) {
+    const { getStore } = await import('@netlify/blobs');
+    const store = getStore('uploads');
+    await store.set(name, ab, { metadata: { type: file.type } });
+    return NextResponse.json({ path: `/api/img/${name}` });
+  }
+
+  // Local dev: write to the public folder.
   const dir = path.join(process.cwd(), 'public', 'img', 'uploads');
   await mkdir(dir, { recursive: true });
-  const bytes = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(dir, name), bytes);
-
+  await writeFile(path.join(dir, name), Buffer.from(ab));
   return NextResponse.json({ path: `/img/uploads/${name}` });
 }

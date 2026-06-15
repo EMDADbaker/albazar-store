@@ -8,9 +8,12 @@ import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
-import Entrance from '@/components/Entrance';
+import dynamic from 'next/dynamic';
 import ShopProductCard from '@/components/ShopProductCard';
 import { Link } from '@/i18n/routing';
+
+// First-visit overlay (framer-motion) — lazy chunk, off the homepage's path.
+const Entrance = dynamic(() => import('@/components/Entrance'));
 
 // ISR: storefront re-renders at most once a minute; flips (drops/hero) appear
 // within 60s without a deploy. Mutations also revalidate these paths.

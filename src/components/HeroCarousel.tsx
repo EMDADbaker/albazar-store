@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 export type Slide = { image: string; title: string; subtitle: string | null };
 
@@ -18,18 +18,26 @@ export default function HeroCarousel({
 }) {
   const [i, setI] = useState(0);
   const n = slides.length;
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (n <= 1) return;
-    const id = setInterval(() => setI((x) => (x + 1) % n), 6000);
-    return () => clearInterval(id);
+    const el = sectionRef.current;
+    let id: ReturnType<typeof setInterval> | null = null;
+    const start = () => { if (!id) id = setInterval(() => setI((x) => (x + 1) % n), 6000); };
+    const stop = () => { if (id) { clearInterval(id); id = null; } };
+    // Only advance while the hero is actually on screen.
+    if (!el || typeof IntersectionObserver === 'undefined') { start(); return stop; }
+    const obs = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()));
+    obs.observe(el);
+    return () => { stop(); obs.disconnect(); };
   }, [n]);
 
   const current = slides[Math.min(i, n - 1)];
   const go = (dir: number) => setI((x) => (x + dir + n) % n);
 
   return (
-    <section className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">
+    <section ref={sectionRef} className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">
       {slides.map((s, idx) => (
         <div
           key={idx}

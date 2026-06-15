@@ -16,7 +16,8 @@ export const spaceMono = Space_Mono({
 
 export const cairo = Cairo({
   subsets: ['arabic', 'latin'],
-  weight: ['400', '700', '900'],
+  // 900 dropped — no font-black in use; trims the Arabic font payload.
+  weight: ['400', '700'],
   variable: '--font-cairo',
   display: 'swap',
 });
