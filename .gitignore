@@ -36,3 +36,6 @@ yarn-error.log*
 
 # admin-uploaded images (local demo)
 /public/img/uploads
+
+# netlify
+.netlify

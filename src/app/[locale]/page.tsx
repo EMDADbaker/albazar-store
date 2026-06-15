@@ -11,6 +11,8 @@ import Entrance from '@/components/Entrance';
 import ShopProductCard from '@/components/ShopProductCard';
 import { Link } from '@/i18n/routing';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home({
   params: { locale },
 }: {
