@@ -42,6 +42,7 @@ export default function AdminMobileNav({ items }: { items: Item[] }) {
       <div
         className={`md:hidden fixed inset-0 z-[110] ${open ? '' : 'pointer-events-none'}`}
         aria-hidden={!open}
+        {...({ inert: open ? undefined : '' } as Record<string, unknown>)}
       >
         <div
           className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}

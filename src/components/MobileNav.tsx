@@ -73,10 +73,12 @@ export default function MobileNav({
         </svg>
       </button>
 
-      {/* Drawer */}
+      {/* Drawer — `inert` when closed removes its links from the tab order
+          (pointer-events-none alone doesn't, which fails aria-hidden-focus). */}
       <div
         className={`lg:hidden fixed inset-0 z-[90] ${open ? '' : 'pointer-events-none'}`}
         aria-hidden={!open}
+        {...({ inert: open ? undefined : '' } as Record<string, unknown>)}
       >
         <div
           className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${

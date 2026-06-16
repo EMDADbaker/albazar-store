@@ -8,12 +8,9 @@ import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
-import dynamic from 'next/dynamic';
 import ShopProductCard from '@/components/ShopProductCard';
+import EntranceGate from '@/components/EntranceGate';
 import { Link } from '@/i18n/routing';
-
-// First-visit overlay (framer-motion) — lazy chunk, off the homepage's path.
-const Entrance = dynamic(() => import('@/components/Entrance'));
 
 // ISR: storefront re-renders at most once a minute; flips (drops/hero) appear
 // within 60s without a deploy. Mutations also revalidate these paths.
@@ -38,7 +35,7 @@ export default async function Home({
 
   return (
     <>
-      <Entrance live={false} />
+      <EntranceGate live={false} />
       <div className="animate-reveal min-h-screen flex flex-col">
         <Nav />
 
@@ -94,7 +91,7 @@ function NewArrivals({
   if (products.length === 0) {
     return (
       <section id="shop" className="bg-paper text-coal scroll-mt-28">
-        <div className="max-w-6xl mx-auto px-6 py-20 text-center text-[14px] text-coal/50">
+        <div className="max-w-6xl mx-auto px-6 py-20 text-center text-[14px] text-coal/65">
           {t('empty')}
         </div>
       </section>
@@ -162,7 +159,7 @@ function SectionHead({ title, href, linkLabel }: { title: string; href?: string;
       {href && linkLabel && (
         <Link
           href={href}
-          className="font-mono text-[10px] tracking-wide uppercase text-coal/50 hover:text-coal border-b border-coal/30 pb-0.5"
+          className="font-mono text-[10px] tracking-wide uppercase text-coal/65 hover:text-coal border-b border-coal/30 pb-0.5"
         >
           {linkLabel} →
         </Link>

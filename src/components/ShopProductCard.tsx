@@ -112,7 +112,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
         </div>
 
         {product.brandNameEn && (
-          <div className="font-mono text-[9px] text-coal/50 tracking-[0.08em] uppercase mb-0.5">
+          <div className="font-mono text-[9px] text-coal/65 tracking-[0.08em] uppercase mb-0.5">
             {product.brandNameEn}
           </div>
         )}

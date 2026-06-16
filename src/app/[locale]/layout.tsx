@@ -54,7 +54,7 @@ export default async function LocaleLayout({
       <body className="bg-bg text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
           <CartProvider>
-            {children}
+            <main id="main-content">{children}</main>
             <CartToast />
           </CartProvider>
         </NextIntlClientProvider>

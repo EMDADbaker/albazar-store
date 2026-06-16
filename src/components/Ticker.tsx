@@ -17,7 +17,7 @@ export default function Ticker() {
         {loop.map((item, i) => (
           <span
             key={i}
-            className="font-mono text-[10px] tracking-wide uppercase text-ink/25 inline-flex items-center gap-2.5"
+            className="font-mono text-[10px] tracking-wide uppercase text-ink/45 inline-flex items-center gap-2.5"
           >
             <span className="w-[3px] h-[3px] rounded-full bg-accent/50 inline-block" />
             {item}

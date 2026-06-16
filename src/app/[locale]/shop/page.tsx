@@ -25,14 +25,14 @@ export default async function ShopPage({
         <h1 className="text-[clamp(32px,6vw,52px)] font-bold tracking-[-0.02em] leading-none mb-3 mt-4">
           {ts('shopTitle')}
         </h1>
-        <p className="font-mono text-[11px] text-coal/50">
+        <p className="font-mono text-[11px] text-coal/65">
           {ts('pieces', { count: products.length })}
         </p>
       </section>
 
       <section className="flex-1 px-5 sm:px-8 pb-16 max-w-6xl mx-auto w-full">
         {products.length === 0 ? (
-          <p className="text-[14px] text-coal/50 py-10">{ts('empty')}</p>
+          <p className="text-[14px] text-coal/65 py-10">{ts('empty')}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-9">
             {products.map((p) => (
