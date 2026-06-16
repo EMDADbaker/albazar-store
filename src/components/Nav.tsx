@@ -41,24 +41,13 @@ export default async function Nav() {
 
   return (
     <header className="relative z-50 bg-bg border-b border-ink/10">
-      {/* ROW 1 — utility bar */}
-      <div dir="ltr" className="hidden sm:flex items-center justify-between px-6 py-1.5 border-b border-ink/[0.06] text-[9px] font-mono tracking-wide uppercase text-ink/45">
+      {/* ROW 1 — utility bar (account/auth all live in the profile menu, row 2) */}
+      <div dir="ltr" className="hidden sm:flex items-center justify-center gap-3 px-6 py-1.5 border-b border-ink/[0.06] text-[9px] font-mono tracking-wide uppercase text-ink/45">
         <a href="https://wa.me/966500000000" className="hover:text-accent transition-colors">
           WhatsApp · +966 50 000 0000
         </a>
+        <span className="text-ink/20">·</span>
         <span className="text-accent/70">{t('freeShip')}</span>
-        <div className="flex items-center gap-4">
-          {user ? (
-            <Link href={isStaff ? '/' : '/account'} className="hover:text-accent transition-colors">
-              {isStaff ? t('adminLink') : t('account')}
-            </Link>
-          ) : (
-            <>
-              <Link href="/login" className="hover:text-accent transition-colors">{t('signin')}</Link>
-              <Link href="/register" className="hover:text-accent transition-colors">{t('register') ?? 'Register'}</Link>
-            </>
-          )}
-        </div>
       </div>
 
       {/* ROW 2 — logo / actions */}
@@ -85,13 +74,9 @@ export default async function Nav() {
           />
         </Link>
         <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
-          {isStaff ? (
-            <a href="/admin" className="hidden sm:inline text-[11px] tracking-wide uppercase text-accent hover:text-accent-bright">
-              {t('adminLink')}
-            </a>
-          ) : (
-            <AccountMenu loggedIn={!!user} isStaff={isStaff} name={user?.email} />
-          )}
+          {/* Everything account-related — sign in / register / account / admin /
+              sign out — lives in this one profile dropdown. */}
+          <AccountMenu loggedIn={!!user} isStaff={isStaff} name={user?.email} />
           <CartLink />
           <LangSwitch />
         </div>

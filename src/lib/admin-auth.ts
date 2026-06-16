@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from './auth';
@@ -5,7 +6,9 @@ import { prisma } from './prisma';
 
 type SessionUser = { id?: string; email?: string | null; role?: string };
 
-export async function getCurrentUser(): Promise<SessionUser | null> {
+// Deduped per request — Nav + the page both call this, so the session is
+// decoded only once per render instead of twice.
+export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   const session = await getServerSession(authOptions);
   const user = (session?.user as SessionUser) ?? null;
   if (!user) return null;
@@ -23,7 +26,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     }
   }
   return user;
-}
+});
 
 const STAFF = ['ADMIN', 'EMPLOYEE'];
 
