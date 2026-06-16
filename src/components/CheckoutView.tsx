@@ -43,6 +43,47 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Demo phone confirmation: a code is "texted" (shown on screen) and must be
+  // entered before the order can be placed. No real SMS gateway is wired yet.
+  const [codeSent, setCodeSent] = useState(false);
+  const [demoCode, setDemoCode] = useState('');
+  const [codeInput, setCodeInput] = useState('');
+  const [verified, setVerified] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [codeError, setCodeError] = useState(false);
+
+  function setPhone(v: string) {
+    set('phone', v.replace(/[^\d]/g, ''));
+    // Any change to the number invalidates a prior confirmation.
+    setCodeSent(false);
+    setVerified(false);
+    setCodeInput('');
+    setCodeError(false);
+  }
+
+  async function sendCode() {
+    setError(null);
+    if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
+    setSending(true);
+    await new Promise((r) => setTimeout(r, 700)); // simulate the SMS send
+    const code = String(Math.floor(1000 + Math.random() * 9000));
+    setDemoCode(code);
+    setCodeSent(true);
+    setVerified(false);
+    setCodeInput('');
+    setCodeError(false);
+    setSending(false);
+  }
+
+  function confirmCode() {
+    if (codeInput === demoCode) {
+      setVerified(true);
+      setCodeError(false);
+    } else {
+      setCodeError(true);
+    }
+  }
+
   if (lines.length === 0) {
     return (
       <div className="flex-1 px-6 py-24 text-center">
@@ -68,6 +109,7 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   async function submit() {
     setError(null);
     if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
+    if (!verified) return setError(t('verifyFirst'));
     if (!/^\d{5}$/.test(form.postalCode)) return setError(t('errorPostal'));
     if (!form.fullName || !form.city || !form.district || !form.street || !form.building) {
       return setError(t('errorGeneric'));
@@ -114,8 +156,14 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
       <div>
         <h1 className="text-[26px] font-bold mb-8">{t('title')}</h1>
 
-        <Section label={t('contact')}>
-          <Field label={t('fullName')} value={form.fullName} onChange={(v) => set('fullName', v)} />
+        {/* Signed-in: account details are locked — only the phone (verified) and
+            the delivery address can change. */}
+        <Section label={t('yourDetails')}>
+          <ReadOnlyRow label={t('name')} value={form.fullName || '—'} />
+          {form.email && <ReadOnlyRow label={t('email').replace(' (optional)', '')} value={form.email} />}
+        </Section>
+
+        <Section label={t('verifyTitle')}>
           <div>
             <FieldLabel>{t('phone')}</FieldLabel>
             <div className="flex gap-2">
@@ -125,14 +173,69 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
               <input
                 dir="ltr"
                 value={form.phone}
-                onChange={(e) => set('phone', e.target.value.replace(/[^\d]/g, ''))}
+                onChange={(e) => setPhone(e.target.value)}
                 maxLength={9}
                 placeholder="5X XXX XXXX"
-                className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors"
+                disabled={verified}
+                className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors disabled:opacity-60"
               />
+              {verified ? (
+                <button
+                  type="button"
+                  onClick={() => setPhone(form.phone)}
+                  className="font-mono text-[10px] uppercase tracking-wide text-coal/50 px-3 hover:text-coal"
+                >
+                  {t('changePhone')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={sendCode}
+                  disabled={sending}
+                  className="font-mono text-[10px] uppercase tracking-wide bg-coal text-paper px-3 py-2 whitespace-nowrap hover:opacity-90 disabled:opacity-50"
+                >
+                  {sending ? t('sending') : codeSent ? t('resend') : t('sendCode')}
+                </button>
+              )}
             </div>
           </div>
-          <Field label={t('email')} value={form.email} onChange={(v) => set('email', v)} type="email" optional />
+
+          {verified ? (
+            <div className="flex items-center gap-2 font-mono text-[11px] text-green-700">
+              <span>✓</span> {t('verified')}
+            </div>
+          ) : codeSent ? (
+            <div className="space-y-2">
+              <div className="font-mono text-[10px] text-coal/55">
+                {t('codeSentTo', { phone: `+966${form.phone}` })}
+              </div>
+              <div className="font-mono text-[10px] text-accent bg-accent/10 border border-accent/30 px-2.5 py-1.5 inline-block">
+                {t('demoCode', { code: demoCode })}
+              </div>
+              <div className="flex gap-2">
+                <input
+                  dir="ltr"
+                  inputMode="numeric"
+                  value={codeInput}
+                  onChange={(e) => { setCodeInput(e.target.value.replace(/[^\d]/g, '')); setCodeError(false); }}
+                  maxLength={4}
+                  placeholder={t('enterCode')}
+                  className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] tracking-[0.3em] p-3 outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={confirmCode}
+                  disabled={codeInput.length < 4}
+                  className="font-mono text-[10px] uppercase tracking-wide bg-coal text-paper px-4 whitespace-nowrap hover:opacity-90 disabled:opacity-40"
+                >
+                  {t('confirmCode')}
+                </button>
+              </div>
+              {codeError && <div className="font-mono text-[10px] text-red-600">{t('errorCode')}</div>}
+            </div>
+          ) : (
+            <div className="font-mono text-[10px] text-coal/40">{t('verifyHint')}</div>
+          )}
         </Section>
 
         <Section label={t('address')}>
@@ -236,6 +339,15 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <div className="font-mono text-[9px] uppercase tracking-wide text-coal/40 mb-1.5">{children}</div>;
+}
+
+function ReadOnlyRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 border border-coal/10 bg-paper-2/50 px-3 py-2.5">
+      <span className="font-mono text-[9px] uppercase tracking-wide text-coal/40">{label}</span>
+      <span className="text-[13px] text-coal/80 truncate">{value}</span>
+    </div>
+  );
 }
 
 function Field({

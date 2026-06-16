@@ -109,6 +109,7 @@
     "total": "Total",
     "checkout": "Checkout",
     "remove": "Remove",
+    "removing": "Removing…",
     "fromWishlist": "From your wishlist",
     "add": "Add",
     "change": "change"
@@ -141,7 +142,23 @@
     "errorPhone": "Enter a valid Saudi number.",
     "errorPostal": "Postal code must be 5 digits.",
     "cityPlaceholder": "Select city",
-    "paymentNote": "Payment is added next. This places your order on hold."
+    "paymentNote": "Payment is added next. This places your order on hold.",
+    "yourDetails": "Your details",
+    "name": "Name",
+    "verifyTitle": "Confirm your phone",
+    "verifyHint": "We'll text a code to confirm this number.",
+    "sendCode": "Send code",
+    "sending": "Sending…",
+    "codeSentTo": "Code sent to {phone}",
+    "demoCode": "Demo code: {code}",
+    "enterCode": "Enter 4-digit code",
+    "confirmCode": "Confirm",
+    "verifying": "Confirming…",
+    "verified": "Phone confirmed",
+    "resend": "Resend code",
+    "changePhone": "Change",
+    "errorCode": "Incorrect code. Try again.",
+    "verifyFirst": "Confirm your phone number first."
   },
   "Payment": {
     "securePayment": "Secure payment",
@@ -157,10 +174,10 @@
     "demoNote": "Demo mode — no real charge. Any details work."
   },
   "Confirmation": {
-    "eyebrow": "Order placed",
+    "eyebrow": "Payment confirmed",
     "paid": "Payment confirmed",
-    "title": "YOU MOVED FIRST.",
-    "subtitle": "Your order is on hold. We'll confirm on WhatsApp.",
+    "title": "ORDER CONFIRMED.",
+    "subtitle": "We'll send your order details to your WhatsApp.",
     "orderNumber": "Order",
     "pieceNote": "Piece numbers are assigned the moment payment confirms.",
     "items": "Your pieces",

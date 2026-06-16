@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
@@ -12,6 +13,13 @@ export default function CartView() {
   const t = useTranslations('Cart');
   const locale = useLocale();
   const { lines, subtotal, setQty, remove } = useCart();
+
+  // Animate a line out before it leaves the cart, so removal is visible.
+  const [removing, setRemoving] = useState<Set<string>>(new Set());
+  function removeWithAnim(variantId: string) {
+    setRemoving((prev) => new Set(prev).add(variantId));
+    setTimeout(() => remove(variantId), 320);
+  }
 
   if (lines.length === 0) {
     return (
@@ -37,8 +45,14 @@ export default function CartView() {
       <div className="divide-y divide-coal/12 border-y border-coal/12">
         {lines.map((l) => {
           const name = locale === 'ar' ? l.nameAr : l.nameEn;
+          const isRemoving = removing.has(l.variantId);
           return (
-            <div key={l.variantId} className="flex items-center gap-4 py-4">
+            <div
+              key={l.variantId}
+              className={`flex items-center gap-4 py-4 transition-all duration-300 ${
+                isRemoving ? 'opacity-0 ltr:translate-x-3 rtl:-translate-x-3 pointer-events-none' : 'opacity-100'
+              }`}
+            >
               <div className="relative w-16 h-20 bg-paper-2 shrink-0 overflow-hidden">
                 {l.image ? (
                   <Image src={l.image} alt={name} fill sizes="64px" className="object-cover" />
@@ -51,35 +65,42 @@ export default function CartView() {
 
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-medium truncate">{name}</div>
-                <div className="font-mono text-[10px] text-coal/45 mt-1 flex items-center gap-2 flex-wrap">
-                  <SizeChanger line={l} />
-                  <span>· {formatPrice(inclVat(l.price), locale)}</span>
-                </div>
+                {isRemoving ? (
+                  <div className="font-mono text-[10px] text-coal/45 mt-1">{t('removing')}</div>
+                ) : (
+                  <div className="font-mono text-[10px] text-coal/45 mt-1 flex items-center gap-2 flex-wrap">
+                    <SizeChanger line={l} />
+                    <span>· {formatPrice(inclVat(l.price), locale)}</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2 font-mono text-[12px]">
                 <button
-                  onClick={() => setQty(l.variantId, l.qty - 1)}
-                  className="w-7 h-7 border border-coal/20 text-coal/60 hover:border-coal"
+                  onClick={() => (l.qty - 1 <= 0 ? removeWithAnim(l.variantId) : setQty(l.variantId, l.qty - 1))}
+                  className="w-8 h-8 border border-coal/20 text-coal/60 hover:border-coal disabled:opacity-40"
                   aria-label="decrease"
+                  disabled={isRemoving}
                 >
                   −
                 </button>
                 <span className="w-6 text-center tabular-nums">{l.qty}</span>
                 <button
                   onClick={() => setQty(l.variantId, l.qty + 1)}
-                  className="w-7 h-7 border border-coal/20 text-coal/60 hover:border-coal"
+                  className="w-8 h-8 border border-coal/20 text-coal/60 hover:border-coal disabled:opacity-40"
                   aria-label="increase"
+                  disabled={isRemoving}
                 >
                   +
                 </button>
               </div>
 
               <button
-                onClick={() => remove(l.variantId)}
-                className="font-mono text-[9px] uppercase tracking-wide text-coal/35 hover:text-coal"
+                onClick={() => removeWithAnim(l.variantId)}
+                disabled={isRemoving}
+                className="font-mono text-[9px] uppercase tracking-wide text-coal/35 hover:text-coal disabled:opacity-50"
               >
-                {t('remove')}
+                {isRemoving ? t('removing') : t('remove')}
               </button>
             </div>
           );

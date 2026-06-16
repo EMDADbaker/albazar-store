@@ -79,19 +79,19 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           )}
 
           {!soldOut && (
-            <div className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 font-mono text-[9px] text-coal/70 bg-paper/85 px-2 py-1">
+            <div className="absolute top-2 ltr:right-2 rtl:left-2 font-mono text-[8.5px] text-coal/65 bg-paper/80 px-1.5 py-0.5">
               {left} / {product.totalPieces}
             </div>
           )}
 
-          {/* Heart — top corner. Always visible on touch; hover-reveal on desktop. */}
+          {/* Heart — top corner. Subtle on touch; hover-reveal on desktop. */}
           <button
             onClick={toggleWish}
             aria-label={tp('save')}
-            className={`absolute top-2 ltr:left-2 rtl:right-2 w-10 h-10 flex items-center justify-center bg-paper/85 text-[17px] transition-all ${
+            className={`absolute top-1.5 ltr:left-1.5 rtl:right-1.5 w-8 h-8 flex items-center justify-center text-[15px] rounded-full transition-all ${
               saved
                 ? 'text-red-500 opacity-100'
-                : 'text-coal/70 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 hover:bg-coal hover:text-paper'
+                : 'text-coal/60 bg-paper/60 opacity-100 lg:opacity-0 lg:bg-paper/85 lg:group-hover:opacity-100 hover:text-coal'
             }`}
           >
             {saved ? '♥' : '♡'}
@@ -104,7 +104,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
                 e.stopPropagation();
                 setQuick(true);
               }}
-              className="absolute bottom-0 inset-x-0 bg-coal/90 text-paper font-mono text-[11px] tracking-[0.18em] uppercase py-3.5 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all"
+              className="absolute bottom-0 inset-x-0 bg-coal/85 text-paper font-mono text-[10px] tracking-[0.16em] uppercase py-2.5 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all"
             >
               {tp('quickView')}
             </button>

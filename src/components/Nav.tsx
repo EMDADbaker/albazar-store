@@ -61,7 +61,7 @@ export default async function Nav() {
       </div>
 
       {/* ROW 2 — logo / actions */}
-      <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-6 py-3.5">
+      <nav dir="ltr" className="grid grid-cols-[1fr_auto_1fr] items-center px-3 sm:px-6 py-2.5 sm:py-3.5">
         <div className="justify-self-start">
           <MobileNav
             categories={categories}
@@ -80,12 +80,12 @@ export default async function Nav() {
             width={640}
             height={57}
             priority
-            className="h-8 sm:h-10 w-auto invert"
+            className="h-6 sm:h-10 w-auto invert"
           />
         </Link>
-        <div className="justify-self-end flex items-center gap-2.5">
+        <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
           {isStaff ? (
-            <a href="/admin" className="text-[11px] tracking-wide uppercase text-accent hover:text-accent-bright">
+            <a href="/admin" className="hidden sm:inline text-[11px] tracking-wide uppercase text-accent hover:text-accent-bright">
               {t('adminLink')}
             </a>
           ) : (

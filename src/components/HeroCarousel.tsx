@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 
 export type Slide = { image: string; title: string; subtitle: string | null };
 
@@ -19,22 +19,42 @@ export default function HeroCarousel({
   const [i, setI] = useState(0);
   const n = slides.length;
   const sectionRef = useRef<HTMLElement>(null);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const onScreen = useRef(true);
+
+  const clearTimer = useCallback(() => {
+    if (timer.current) { clearInterval(timer.current); timer.current = null; }
+  }, []);
+
+  // (Re)start the auto-advance countdown from zero. Calling this on a manual
+  // press resets the 6s window so the slide never jumps again right after a tap.
+  const startTimer = useCallback(() => {
+    clearTimer();
+    if (n <= 1 || !onScreen.current) return;
+    timer.current = setInterval(() => setI((x) => (x + 1) % n), 6000);
+  }, [n, clearTimer]);
 
   useEffect(() => {
-    if (n <= 1) return;
     const el = sectionRef.current;
-    let id: ReturnType<typeof setInterval> | null = null;
-    const start = () => { if (!id) id = setInterval(() => setI((x) => (x + 1) % n), 6000); };
-    const stop = () => { if (id) { clearInterval(id); id = null; } };
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      startTimer();
+      return clearTimer;
+    }
     // Only advance while the hero is actually on screen.
-    if (!el || typeof IntersectionObserver === 'undefined') { start(); return stop; }
-    const obs = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()));
+    const obs = new IntersectionObserver(([e]) => {
+      onScreen.current = e.isIntersecting;
+      if (e.isIntersecting) startTimer();
+      else clearTimer();
+    });
     obs.observe(el);
-    return () => { stop(); obs.disconnect(); };
-  }, [n]);
+    return () => { clearTimer(); obs.disconnect(); };
+  }, [startTimer, clearTimer]);
 
   const current = slides[Math.min(i, n - 1)];
-  const go = (dir: number) => setI((x) => (x + dir + n) % n);
+  const go = (dir: number) => {
+    setI((x) => (x + dir + n) % n);
+    startTimer(); // reset the countdown so a manual press gets a full interval
+  };
 
   return (
     <section ref={sectionRef} className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">

@@ -73,11 +73,18 @@ export default function ConfirmationView() {
       <h1 className="text-[clamp(32px,7vw,48px)] font-bold tracking-[-0.02em] leading-[1.02] mb-3">
         {t('title')}
       </h1>
-      <p className="text-[13px] text-coal/55 mb-2">{t('subtitle')}</p>
-
-      <div className="inline-flex items-center gap-2 font-mono text-[12px] text-coal/70 border border-coal/15 px-4 py-2 mt-4">
-        <span className="text-coal/40 uppercase tracking-wide">{t('orderNumber')}</span>
-        <span className="text-coal font-medium">{order.orderNumber}</span>
+      {/* WhatsApp — where the order details are sent — and the order number */}
+      <div className="flex flex-col items-center gap-3">
+        <div className="inline-flex items-center gap-2 text-[12.5px] text-green-700 bg-green-600/10 border border-green-600/25 px-4 py-2.5 max-w-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden className="shrink-0">
+            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.01c-.24.68-1.42 1.3-1.95 1.35-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-2.99s.75-2.12 1.01-2.41c.26-.29.57-.36.76-.36l.55.01c.18.01.41-.07.64.49.24.57.82 1.99.89 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.47-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.21 1.36.28.14.44.12.6-.07.17-.19.69-.8.87-1.08.18-.28.36-.23.61-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.66-.17 1.34z" />
+          </svg>
+          <span className="text-start leading-snug">{t('subtitle')}</span>
+        </div>
+        <div className="inline-flex items-center gap-2 font-mono text-[12px] text-coal/70 border border-coal/15 px-4 py-2">
+          <span className="text-coal/40 uppercase tracking-wide">{t('orderNumber')}</span>
+          <span className="text-coal font-medium">{order.orderNumber}</span>
+        </div>
       </div>
 
       <div className="mt-10 text-start">
