@@ -40,6 +40,24 @@ export const getNewArrivals = unstable_cache(
   { revalidate: 60, tags: ['catalog'] },
 );
 
+// Every active product — powers the "/shop" all-items page.
+export const getAllProducts = unstable_cache(
+  async (): Promise<ProductView[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        where: { isActive: true },
+        include: { variants: { orderBy: { size: 'asc' } }, brand: true },
+        orderBy: { createdAt: 'desc' },
+      });
+      return products.map(toView);
+    } catch {
+      return [];
+    }
+  },
+  ['all-products'],
+  { revalidate: 60, tags: ['catalog'] },
+);
+
 export type CategoryCard = {
   slug: string;
   nameAr: string;

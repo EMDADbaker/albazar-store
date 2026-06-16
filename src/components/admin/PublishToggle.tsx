@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react';
 import { setDropPublished } from '@/app/admin/actions';
+import { flashAdmin } from './flash';
 
 export default function PublishToggle({
   id,
@@ -15,7 +16,7 @@ export default function PublishToggle({
   return (
     <button
       disabled={pending}
-      onClick={() => start(() => setDropPublished(id, !published))}
+      onClick={() => start(async () => { await setDropPublished(id, !published); flashAdmin(!published ? 'Published' : 'Set to draft'); })}
       className={`font-mono text-[9px] uppercase tracking-wide px-2.5 py-1 border transition-colors disabled:opacity-50 ${
         published
           ? 'border-accent/40 text-accent bg-accent/10'

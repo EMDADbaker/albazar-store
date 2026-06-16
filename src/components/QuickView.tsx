@@ -82,16 +82,16 @@ export default function QuickView({
           ✕
         </button>
 
-        {/* Whole image shown (contain) and height-capped when stacked so the size
-            picker stays in view; full-bleed 4:5 cover on the desktop two-column layout. */}
-        <div className="relative w-full h-[42vh] sm:h-auto sm:aspect-[4/5] bg-paper-2 overflow-hidden shrink-0">
+        {/* Full-size 4:5 image at every width. When stacked, the modal scrolls
+            to reveal the size picker below — the image is never shrunk. */}
+        <div className="relative w-full aspect-[4/5] bg-paper-2 overflow-hidden shrink-0">
           {product.images[0] && (
             <Image
               src={product.images[0]}
               alt={name}
               fill
               sizes="(max-width: 640px) 100vw, 384px"
-              className="object-contain sm:object-cover"
+              className="object-cover"
             />
           )}
         </div>

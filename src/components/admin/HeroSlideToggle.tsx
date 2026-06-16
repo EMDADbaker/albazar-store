@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react';
 import { toggleHeroSlide } from '@/app/admin/actions';
+import { flashAdmin } from './flash';
 
 export default function HeroSlideToggle({
   id,
@@ -14,7 +15,7 @@ export default function HeroSlideToggle({
   return (
     <button
       disabled={pending}
-      onClick={() => start(() => toggleHeroSlide(id, !active))}
+      onClick={() => start(async () => { await toggleHeroSlide(id, !active); flashAdmin(!active ? 'Slide live' : 'Slide hidden'); })}
       className={`font-mono text-[9px] uppercase tracking-wide px-2.5 py-1 border transition-colors disabled:opacity-50 ${
         active
           ? 'border-accent/40 text-accent bg-accent/10'

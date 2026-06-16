@@ -26,6 +26,7 @@ export default async function Nav() {
 
   const mobileLabels = {
     shop: t('shop'),
+    shopAll: t('shopAll'),
     brands: tb('nav'),
     allBrands: tb('title'),
     lookbook: t('lookbook'),
@@ -100,6 +101,7 @@ export default async function Nav() {
       <div className="hidden lg:block border-t border-ink/[0.06]">
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 px-5 mx-auto">
           <Link href="/" className={navItem}>{t('shop')}</Link>
+          <Link href="/shop" className={navItem}>{t('shopAll')}</Link>
 
           {/* Brands dropdown (CSS hover) */}
           {featuredBrands.length > 0 && (

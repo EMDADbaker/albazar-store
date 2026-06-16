@@ -6,24 +6,42 @@ import { useSearchParams } from 'next/navigation';
 function Flash() {
   const params = useSearchParams();
   const created = params.get('created');
-  const [show, setShow] = useState(false);
+  const flash = params.get('flash');
+  const [msg, setMsg] = useState<string | null>(null);
 
+  // Toast from a redirect query (?created=Brand → "Brand created", or ?flash=…).
   useEffect(() => {
-    if (!created) return;
-    setShow(true);
-    const id = setTimeout(() => setShow(false), 3000);
-    // Clean the ?created param from the URL without a reload.
+    const initial = flash ?? (created ? `${created} created` : null);
+    if (!initial) return;
+    setMsg(initial);
     const url = new URL(window.location.href);
     url.searchParams.delete('created');
+    url.searchParams.delete('flash');
     window.history.replaceState({}, '', url.toString());
-    return () => clearTimeout(id);
-  }, [created]);
+  }, [created, flash]);
 
-  if (!show || !created) return null;
+  // Toast from an inline client action (toggle/delete/stock/status/save).
+  useEffect(() => {
+    const onFlash = (e: Event) => {
+      const detail = (e as CustomEvent<{ message: string }>).detail;
+      if (detail?.message) setMsg(detail.message);
+    };
+    window.addEventListener('albazar:admin-flash', onFlash);
+    return () => window.removeEventListener('albazar:admin-flash', onFlash);
+  }, []);
+
+  // Auto-dismiss whenever a new message lands.
+  useEffect(() => {
+    if (!msg) return;
+    const id = setTimeout(() => setMsg(null), 2600);
+    return () => clearTimeout(id);
+  }, [msg]);
+
+  if (!msg) return null;
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[120] flex items-center gap-2.5 bg-emerald-500 text-black px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
       <span className="text-[14px]">✓</span>
-      <span className="font-mono text-[11px] tracking-wide font-medium">{created} created</span>
+      <span className="font-mono text-[11px] tracking-wide font-medium">{msg}</span>
     </div>
   );
 }

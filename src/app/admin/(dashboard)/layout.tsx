@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin-auth';
 import SignOutButton from '@/components/admin/SignOutButton';
 import AdminFlash from '@/components/admin/AdminFlash';
+import AdminMobileNav from '@/components/admin/AdminMobileNav';
 
 const NAV = [
   { href: '/admin', label: 'Overview' },
@@ -26,10 +27,11 @@ export default async function DashboardLayout({
   return (
     <div className="min-h-screen flex flex-col bg-[#0c0c0e] text-white">
       <header className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-white/12 bg-[#101013]">
-        <div className="flex items-center gap-8">
-          <Link href="/admin" className="font-display font-bold text-[15px] tracking-[0.05em]">
+        <div className="flex items-center gap-3 md:gap-8">
+          <AdminMobileNav items={NAV} />
+          <Link href="/admin" className="font-display font-bold text-[14px] sm:text-[15px] tracking-[0.05em]">
             ALBAZAR<span className="text-accent">.</span>
-            <span className="font-mono text-[9px] text-white/45 ms-2 tracking-label uppercase">
+            <span className="hidden sm:inline font-mono text-[9px] text-white/45 ms-2 tracking-label uppercase">
               Admin
             </span>
           </Link>
@@ -55,19 +57,6 @@ export default async function DashboardLayout({
           <SignOutButton />
         </div>
       </header>
-
-      {/* Mobile nav */}
-      <nav className="md:hidden flex gap-4 px-4 py-3 border-b border-white/12 overflow-x-auto no-scrollbar bg-[#101013]">
-        {NAV.map((n) => (
-          <Link
-            key={n.href}
-            href={n.href}
-            className="font-mono text-[11px] tracking-wide uppercase text-white/70 hover:text-white whitespace-nowrap"
-          >
-            {n.label}
-          </Link>
-        ))}
-      </nav>
 
       <main className="flex-1 px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto w-full">{children}</main>
       <AdminFlash />

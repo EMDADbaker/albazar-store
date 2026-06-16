@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { flashAdmin } from './flash';
 
 // Two-step confirm delete. `action` is a server action pre-bound with the id.
 export default function DeleteButton({
   action,
   label = 'Delete',
+  flashMessage = 'Deleted',
 }: {
   action: () => Promise<void>;
   label?: string;
+  flashMessage?: string;
 }) {
   const [armed, setArmed] = useState(false);
   const [pending, start] = useTransition();
@@ -18,7 +21,7 @@ export default function DeleteButton({
       <span className="inline-flex items-center gap-2">
         <button
           disabled={pending}
-          onClick={() => start(() => action())}
+          onClick={() => start(async () => { await action(); flashAdmin(flashMessage); })}
           className="font-mono text-[9px] uppercase tracking-wide text-red-300 border border-red-400/40 bg-red-500/10 px-2 py-1 hover:bg-red-500/20 disabled:opacity-50"
         >
           {pending ? '…' : 'Confirm'}

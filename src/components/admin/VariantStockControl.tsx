@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { setVariantStock } from '@/app/admin/actions';
+import { flashAdmin } from './flash';
 
 export default function VariantStockControl({
   variantId,
@@ -29,7 +30,7 @@ export default function VariantStockControl({
       {dirty && (
         <button
           disabled={pending}
-          onClick={() => start(() => setVariantStock(variantId, value))}
+          onClick={() => start(async () => { await setVariantStock(variantId, value); flashAdmin(`${size} stock saved`); })}
           className="font-mono text-[9px] uppercase tracking-wide text-accent border border-accent/30 px-2 py-1 hover:bg-accent/10 disabled:opacity-50"
         >
           Save

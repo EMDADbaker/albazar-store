@@ -8,6 +8,7 @@ type Cat = { slug: string; nameAr: string; nameEn: string; brands: Brand[] };
 
 type Labels = {
   shop: string;
+  shopAll: string;
   brands: string;
   allBrands: string;
   lookbook: string;
@@ -107,6 +108,9 @@ export default function MobileNav({
           <nav className="px-5 pb-8 divide-y divide-ink/[0.06]">
             <Link href="/" onClick={close} className={linkCls}>
               {labels.shop}
+            </Link>
+            <Link href="/shop" onClick={close} className={linkCls}>
+              {labels.shopAll}
             </Link>
 
             {/* Brands — expandable */}

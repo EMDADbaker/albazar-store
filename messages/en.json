@@ -10,6 +10,7 @@
   "Nav": {
     "drop": "Drop 001",
     "shop": "Shop",
+    "shopAll": "Shop all",
     "all": "All",
     "archive": "Archive",
     "lookbook": "Lookbook",
@@ -110,6 +111,7 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "removing": "Removing…",
+    "browse": "View all items",
     "fromWishlist": "From your wishlist",
     "add": "Add",
     "change": "change"
@@ -137,6 +139,7 @@
     "freeShipping": "Free",
     "total": "Total",
     "empty": "Your cart is empty.",
+    "browse": "View all items",
     "errorGeneric": "Something went wrong. Try again.",
     "cartChanged": "Some items are no longer available and were removed. Review your order and place it again.",
     "errorPhone": "Enter a valid Saudi number.",
@@ -183,7 +186,7 @@
     "items": "Your pieces",
     "total": "Total paid",
     "totalPending": "Total",
-    "continue": "Back to Drop 001",
+    "continue": "Continue shopping",
     "vaultTitle": "Don't miss the next drop.",
     "notFound": "Order not found."
   },

@@ -116,7 +116,7 @@ export async function updateDrop(id: string, formData: FormData) {
   revalidatePath('/', 'layout');
   revalidateTag('nav');
   revalidateTag('catalog');
-  redirect('/admin/drops');
+  redirect('/admin/drops?flash=Drop saved');
 }
 
 export async function deleteDrop(id: string) {
@@ -248,7 +248,7 @@ export async function updateProduct(id: string, formData: FormData) {
   revalidatePath('/', 'layout');
   revalidateTag('nav');
   revalidateTag('catalog');
-  redirect('/admin/products');
+  redirect('/admin/products?flash=Product saved');
 }
 
 export async function setVariantStock(variantId: string, stock: number) {
@@ -366,6 +366,7 @@ export async function updateBrand(id: string, formData: FormData) {
   revalidatePath('/', 'layout');
   revalidateTag('nav');
   revalidateTag('catalog');
+  redirect('/admin/brands?flash=Brand saved');
 }
 
 export async function toggleBrandActive(id: string, active: boolean) {
@@ -431,6 +432,7 @@ export async function updateCategory(id: string, formData: FormData) {
   revalidatePath('/', 'layout');
   revalidateTag('nav');
   revalidateTag('catalog');
+  redirect('/admin/categories?flash=Category saved');
 }
 
 export async function deleteCategory(id: string) {

@@ -26,10 +26,10 @@ export default function CartView() {
       <div className="flex-1 px-6 py-24 text-center">
         <p className="text-[14px] text-coal/50 mb-6">{t('empty')}</p>
         <Link
-          href="/drop/drop-001"
+          href="/shop"
           className="font-mono text-[11px] tracking-wide uppercase text-coal border border-coal/30 px-5 py-2.5 inline-block hover:bg-coal hover:text-paper transition-colors"
         >
-          Drop 001
+          {t('browse')}
         </Link>
       </div>
     );

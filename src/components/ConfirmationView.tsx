@@ -123,7 +123,7 @@ export default function ConfirmationView() {
       </div>
 
       <Link
-        href="/drop/drop-001"
+        href="/shop"
         className="inline-block mt-12 font-mono text-[11px] tracking-wide uppercase text-coal/50 hover:text-coal transition-colors"
       >
         {t('continue')}
