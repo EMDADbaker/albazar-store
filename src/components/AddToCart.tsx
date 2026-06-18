@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 import type { ProductView } from '@/lib/products';
 
 // Light-theme add-to-cart: size chips + quantity stepper + CTA.
 export default function AddToCart({ product }: { product: ProductView }) {
   const t = useTranslations('Product');
+  const router = useRouter();
   const { add } = useCart();
   const [size, setSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -37,6 +38,7 @@ export default function AddToCart({ product }: { product: ProductView }) {
     window.dispatchEvent(
       new CustomEvent('albazar:added', { detail: { name: product.nameEn } }),
     );
+    router.prefetch('/checkout');
     setTimeout(() => setAdded(false), 2500);
   }
 

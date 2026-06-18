@@ -169,9 +169,9 @@ export default function MobileNav({
 
             {/* Account / auth */}
             {isStaff ? (
-              <a href="/admin" onClick={close} className={`${linkCls} text-accent`}>
+              <Link href="/admin" onClick={close} className={`${linkCls} text-accent`}>
                 {labels.admin}
-              </a>
+              </Link>
             ) : loggedIn ? (
               <Link href="/account" onClick={close} className={linkCls}>
                 {labels.account}

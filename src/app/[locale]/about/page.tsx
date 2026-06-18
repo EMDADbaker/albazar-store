@@ -6,6 +6,8 @@ import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
 
+export const revalidate = false;
+
 export default function AboutPage({
   params: { locale },
 }: {

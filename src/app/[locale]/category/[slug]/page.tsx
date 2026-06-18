@@ -1,11 +1,20 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getCategoryBySlug } from '@/lib/categories';
+import { getCategoryBySlug, getCategoryNav } from '@/lib/categories';
+import { routing } from '@/i18n/routing';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const cats = await getCategoryNav();
+  return cats.flatMap((c) =>
+    routing.locales.map((locale) => ({ locale, slug: c.slug }))
+  );
+}
 
 export default async function CategoryPage({
   params: { locale, slug },

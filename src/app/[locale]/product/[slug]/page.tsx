@@ -1,7 +1,9 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 import { getProductBySlug, getDropProducts, piecesLeft } from '@/lib/products';
+import { getAllProducts } from '@/lib/catalog';
 import { formatPrice, inclVat } from '@/lib/money';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -13,6 +15,16 @@ import WishlistButton from '@/components/WishlistButton';
 import ProductViewTracker from '@/components/ProductViewTracker';
 import { getCurrentUser } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
+
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.flatMap((p) =>
+    routing.locales.map((locale) => ({ locale, slug: p.slug }))
+  );
+}
 
 export default async function ProductPage({
   params: { locale, slug },

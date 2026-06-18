@@ -51,6 +51,10 @@ export default async function LocaleLayout({
       dir={dir}
       className={`${spaceGrotesk.variable} ${spaceMono.variable} ${cairo.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="bg-bg text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
           <CartProvider>

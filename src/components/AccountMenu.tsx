@@ -70,9 +70,9 @@ export default function AccountMenu({
                 {t('wishlist')}
               </Link>
               {isStaff && (
-                <a href="/admin" className={`${item} text-accent/90`}>
+                <Link href="/admin" className={`${item} text-accent/90`} onClick={() => setOpen(false)}>
                   {t('admin')}
-                </a>
+                </Link>
               )}
               <button onClick={() => signOut({ callbackUrl: '/' })} className={`${item} border-t border-ink/10 mt-1 pt-3`}>
                 {t('signOut')}

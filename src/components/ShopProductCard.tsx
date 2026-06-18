@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { formatPrice, inclVat } from '@/lib/money';
 import { piecesLeft, type ProductView } from '@/lib/products';
 import dynamic from 'next/dynamic';
@@ -51,9 +51,10 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
 
   return (
     <>
-      <div
-        className="group block cursor-pointer"
-        onClick={() => router.push(`/product/${product.slug}`)}
+      <Link
+        href={`/product/${product.slug}`}
+        className="group block"
+        onMouseEnter={() => router.prefetch(`/product/${product.slug}`)}
       >
         <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden mb-3">
           {product.images[0] ? (
@@ -122,7 +123,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
             {formatPrice(inclVat(product.price), locale)}
           </div>
         </div>
-      </div>
+      </Link>
 
       {quick && <QuickView product={product} onClose={() => setQuick(false)} />}
     </>

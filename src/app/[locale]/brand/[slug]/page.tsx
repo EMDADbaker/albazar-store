@@ -1,13 +1,22 @@
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getBrandBySlug } from '@/lib/brands';
+import { getBrandBySlug, getAllActiveBrands } from '@/lib/brands';
+import { routing } from '@/i18n/routing';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const brands = await getAllActiveBrands();
+  return brands.flatMap((b) =>
+    routing.locales.map((locale) => ({ locale, slug: b.slug }))
+  );
+}
 
 export default async function BrandPage({
   params: { locale, slug },
