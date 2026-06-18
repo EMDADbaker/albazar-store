@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls \"C:\\\\Users\\\\Trustangle\\\\Desktop\\\\E-commerce website\\\\\")"
+      "Bash(ls \"C:\\\\Users\\\\Trustangle\\\\Desktop\\\\E-commerce website\\\\\")",
+      "Bash(sort -k5 -h -r)"
     ]
   }
 }
