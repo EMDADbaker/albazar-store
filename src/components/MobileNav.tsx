@@ -3,14 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Link } from '@/i18n/routing';
+import { MENU } from '@/lib/nav-menu';
 
 type Brand = { slug: string; nameEn: string };
-type Cat = { slug: string; nameAr: string; nameEn: string; brands: Brand[] };
 
 type Labels = {
-  shop: string;
   shopAll: string;
-  brands: string;
   allBrands: string;
   lookbook: string;
   about: string;
@@ -23,14 +21,12 @@ type Labels = {
 };
 
 // Mobile / narrow-window navigation: a hamburger that opens a slide-in drawer.
-// Replaces the wrap-prone desktop category row below the `lg` breakpoint.
+// Renders the same MENU taxonomy as the desktop bar; brand list is from the DB.
 export default function MobileNav({
-  categories,
   brands,
   locale,
   labels,
 }: {
-  categories: Cat[];
   brands: Brand[];
   locale: string;
   labels: Labels;
@@ -40,8 +36,9 @@ export default function MobileNav({
   const loggedIn = !!user;
   const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
   const [open, setOpen] = useState(false);
-  const [brandsOpen, setBrandsOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const isRtl = locale === 'ar';
+  const ar = locale === 'ar';
 
   // Lock body scroll while the drawer is open.
   useEffect(() => {
@@ -58,8 +55,10 @@ export default function MobileNav({
   }, []);
 
   const close = () => setOpen(false);
+  const toggleGroup = (key: string) => setOpenGroup((g) => (g === key ? null : key));
   const linkCls =
     'block font-mono text-[13px] tracking-[0.12em] uppercase text-ink/80 hover:text-accent transition-colors py-3';
+  const childCls = 'block text-[12px] text-ink/60 hover:text-accent py-1.5 truncate';
 
   return (
     <>
@@ -74,8 +73,7 @@ export default function MobileNav({
         </svg>
       </button>
 
-      {/* Drawer — `inert` when closed removes its links from the tab order
-          (pointer-events-none alone doesn't, which fails aria-hidden-focus). */}
+      {/* Drawer — `inert` when closed removes its links from the tab order. */}
       <div
         className={`lg:hidden fixed inset-0 z-[90] ${open ? '' : 'pointer-events-none'}`}
         aria-hidden={!open}
@@ -109,57 +107,80 @@ export default function MobileNav({
           </div>
 
           <nav className="px-5 pb-8 divide-y divide-ink/[0.06]">
-            <Link href="/" onClick={close} className={linkCls}>
-              {labels.shop}
-            </Link>
             <Link href="/shop" onClick={close} className={linkCls}>
               {labels.shopAll}
             </Link>
 
-            {/* Brands — expandable */}
-            {brands.length > 0 && (
-              <div>
-                <button
-                  onClick={() => setBrandsOpen((v) => !v)}
-                  className={`${linkCls} flex items-center justify-between w-full`}
-                >
-                  {labels.brands}
-                  <span className={`text-[10px] transition-transform ${brandsOpen ? 'rotate-180' : ''}`}>▾</span>
-                </button>
-                {brandsOpen && (
-                  <div className="pb-3 -mt-1 grid grid-cols-2 gap-x-4 gap-y-1">
-                    {brands.map((b) => (
-                      <Link
-                        key={b.slug}
-                        href={`/brand/${b.slug}`}
-                        onClick={close}
-                        className="text-[12px] text-ink/60 hover:text-accent py-1.5 truncate"
-                      >
-                        {b.nameEn}
-                      </Link>
-                    ))}
-                    <Link
-                      href="/brands"
-                      onClick={close}
-                      className="col-span-2 mt-1 font-mono text-[10px] uppercase tracking-wide text-accent py-1.5"
-                    >
-                      {labels.allBrands} →
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
+            {MENU.map((item) => {
+              const label = ar ? item.ar : item.en;
 
-            {categories.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/category/${c.slug}`}
-                onClick={close}
-                className={linkCls}
-              >
-                {isRtl ? c.nameAr : c.nameEn}
-              </Link>
-            ))}
+              // Brands group — expandable, filled from the DB.
+              if (item.brands) {
+                if (brands.length === 0) {
+                  return (
+                    <Link key={item.en} href={item.href} onClick={close} className={linkCls}>
+                      {label}
+                    </Link>
+                  );
+                }
+                const expanded = openGroup === item.en;
+                return (
+                  <div key={item.en}>
+                    <button
+                      onClick={() => toggleGroup(item.en)}
+                      className={`${linkCls} flex items-center justify-between w-full`}
+                    >
+                      {label}
+                      <span className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`}>▾</span>
+                    </button>
+                    {expanded && (
+                      <div className="pb-3 -mt-1 grid grid-cols-2 gap-x-4 gap-y-1">
+                        {brands.map((b) => (
+                          <Link key={b.slug} href={`/brand/${b.slug}`} onClick={close} className={childCls}>
+                            {b.nameEn}
+                          </Link>
+                        ))}
+                        <Link href="/brands" onClick={close} className="col-span-2 mt-1 font-mono text-[10px] uppercase tracking-wide text-accent py-1.5">
+                          {labels.allBrands} →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Category group with sub-items — expandable.
+              if (item.children && item.children.length > 0) {
+                const expanded = openGroup === item.en;
+                return (
+                  <div key={item.en}>
+                    <button
+                      onClick={() => toggleGroup(item.en)}
+                      className={`${linkCls} flex items-center justify-between w-full`}
+                    >
+                      {label}
+                      <span className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`}>▾</span>
+                    </button>
+                    {expanded && (
+                      <div className="pb-3 -mt-1">
+                        {item.children.map((c) => (
+                          <Link key={c.slug} href={`/category/${c.slug}`} onClick={close} className={childCls}>
+                            {ar ? c.ar : c.en}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Plain link (Headwear, Footwear, New Arrivals, Sale).
+              return (
+                <Link key={item.en} href={item.href} onClick={close} className={linkCls}>
+                  {label}
+                </Link>
+              );
+            })}
 
             <Link href="/lookbook" onClick={close} className={linkCls}>
               {labels.lookbook}

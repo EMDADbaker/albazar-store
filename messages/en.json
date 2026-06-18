@@ -1,7 +1,7 @@
 {
   "Meta": {
-    "title": "ALBAZAR — Riyadh Streetwear. Limited Drops.",
-    "description": "Limited pieces. No restocks. Numbered drops from Riyadh."
+    "title": "ALBAZAR — Jeddah Streetwear. Limited Drops.",
+    "description": "Limited pieces. No restocks. Numbered drops from Jeddah."
   },
   "Entrance": {
     "eyebrow": "ALBAZAR · البازار",
@@ -59,7 +59,7 @@
       "Free shipping over SAR 500",
       "Mada · Apple Pay · STC Pay · Tabby · Tamara",
       "Vault members get the drop 1 hour early",
-      "Riyadh to the world"
+      "Jeddah to the world"
     ]
   },
   "AccountMenu": {
@@ -91,7 +91,7 @@
     "shippingReturns": "Shipping & Returns",
     "shippingBody": "Free shipping inside Saudi Arabia on orders over SAR 500. Gulf and international rates calculated at checkout. Returns within 3 days of delivery for unworn pieces with tags. No exchanges on sold-out sizes — when it's gone, it's gone.",
     "fitTitle": "Fit & care",
-    "fitBody": "Designed in Riyadh. True to size, boxy fit. Cold wash, hang dry, no tumble.",
+    "fitBody": "Designed in Jeddah. True to size, boxy fit. Cold wash, hang dry, no tumble.",
     "related": "More from the drop",
     "added": "Added",
     "save": "Save to wishlist",
@@ -203,7 +203,7 @@
   },
   "Storefront": {
     "shopTitle": "SHOP",
-    "shopSubtitle": "Streetwear, skate and more — curated in Riyadh.",
+    "shopSubtitle": "Streetwear, skate and more — curated in Jeddah.",
     "browse": "Browse",
     "pieces": "{count} pieces",
     "viewDrop": "View drop",
@@ -237,7 +237,7 @@
   },
   "Lookbook": {
     "eyebrow": "Drop 001 — Campaign",
-    "title": "RIYADH AFTER DARK.",
+    "title": "JEDDAH AFTER DARK.",
     "subtitle": "Shot in the city. Worn in the city. The street is the runway.",
     "credit": "ALBAZAR — Drop 001"
   },

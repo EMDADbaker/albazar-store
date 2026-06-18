@@ -43,14 +43,13 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Demo phone confirmation: a code is "texted" (shown on screen) and must be
-  // entered before the order can be placed. No real SMS gateway is wired yet.
+  // Demo phone confirmation: a code is "texted" and entered before placing the
+  // order. DEMO MODE — no real SMS gateway: any 4-digit code is accepted and
+  // nothing is generated or stored.
   const [codeSent, setCodeSent] = useState(false);
-  const [demoCode, setDemoCode] = useState('');
   const [codeInput, setCodeInput] = useState('');
   const [verified, setVerified] = useState(false);
   const [sending, setSending] = useState(false);
-  const [codeError, setCodeError] = useState(false);
 
   function setPhone(v: string) {
     set('phone', v.replace(/[^\d]/g, ''));
@@ -58,7 +57,6 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
     setCodeSent(false);
     setVerified(false);
     setCodeInput('');
-    setCodeError(false);
   }
 
   async function sendCode() {
@@ -66,22 +64,15 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
     if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
     setSending(true);
     await new Promise((r) => setTimeout(r, 700)); // simulate the SMS send
-    const code = String(Math.floor(1000 + Math.random() * 9000));
-    setDemoCode(code);
     setCodeSent(true);
     setVerified(false);
     setCodeInput('');
-    setCodeError(false);
     setSending(false);
   }
 
   function confirmCode() {
-    if (codeInput === demoCode) {
-      setVerified(true);
-      setCodeError(false);
-    } else {
-      setCodeError(true);
-    }
+    // Demo: accept any 4-digit code.
+    setVerified(true);
   }
 
   if (lines.length === 0) {
@@ -209,15 +200,12 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
               <div className="font-mono text-[10px] text-coal/55">
                 {t('codeSentTo', { phone: `+966${form.phone}` })}
               </div>
-              <div className="font-mono text-[10px] text-accent bg-accent/10 border border-accent/30 px-2.5 py-1.5 inline-block">
-                {t('demoCode', { code: demoCode })}
-              </div>
               <div className="flex gap-2">
                 <input
                   dir="ltr"
                   inputMode="numeric"
                   value={codeInput}
-                  onChange={(e) => { setCodeInput(e.target.value.replace(/[^\d]/g, '')); setCodeError(false); }}
+                  onChange={(e) => setCodeInput(e.target.value.replace(/[^\d]/g, ''))}
                   maxLength={4}
                   placeholder={t('enterCode')}
                   className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] tracking-[0.3em] p-3 outline-none transition-colors"
@@ -231,7 +219,6 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
                   {t('confirmCode')}
                 </button>
               </div>
-              {codeError && <div className="font-mono text-[10px] text-red-600">{t('errorCode')}</div>}
             </div>
           ) : (
             <div className="font-mono text-[10px] text-coal/40">{t('verifyHint')}</div>

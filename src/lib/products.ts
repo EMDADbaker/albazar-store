@@ -28,8 +28,8 @@ const DEMO_PRODUCTS: ProductView[] = [
     dropSlug: 'drop-001',
     nameAr: 'هودي البازار — أسود',
     nameEn: 'Bazar Hoodie — Black',
-    storyAr: 'هودي ثقيل بقصّة واسعة. مطبوع في الرياض. ١٥٠ قطعة بس.',
-    storyEn: 'Heavyweight, boxy cut. Printed in Riyadh. 150 pieces only.',
+    storyAr: 'هودي ثقيل بقصّة واسعة. مطبوع في جدة. ١٥٠ قطعة بس.',
+    storyEn: 'Heavyweight, boxy cut. Printed in Jeddah. 150 pieces only.',
     price: 34900, // 349 SAR excl VAT
     sku: 'AZ001-HOODIE-BLK',
     totalPieces: 150,
