@@ -78,7 +78,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
         return [...prev, { ...line, qty }];
       });
-      setDrawerOpen(true); // slide the mini-cart open on every add
     };
     const remove: CartContextValue['remove'] = (variantId) =>
       setLines((prev) => prev.filter((l) => l.variantId !== variantId));
