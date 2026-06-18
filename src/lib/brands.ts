@@ -10,15 +10,12 @@ export type BrandNav = { slug: string; nameEn: string };
 // Every active brand (even with no products yet) — for the /brands A–Z index.
 export const getAllActiveBrands = unstable_cache(
   async (): Promise<BrandNav[]> => {
-    try {
-      return await prisma.brand.findMany({
-        where: { active: true },
-        orderBy: { nameEn: 'asc' },
-        select: { slug: true, nameEn: true },
-      });
-    } catch {
-      return [];
-    }
+    // No catch: a thrown DB error must not be cached as an empty list.
+    return await prisma.brand.findMany({
+      where: { active: true },
+      orderBy: { nameEn: 'asc' },
+      select: { slug: true, nameEn: true },
+    });
   },
   ['all-active-brands'],
   { revalidate: 300, tags: ['nav'] },
@@ -27,16 +24,12 @@ export const getAllActiveBrands = unstable_cache(
 // Brands that actually carry an active product (for the Brands index + nav).
 export const getBrandsWithProducts = unstable_cache(
   async (): Promise<BrandNav[]> => {
-    try {
-      const brands = await prisma.brand.findMany({
-        where: { active: true, products: { some: { isActive: true } } },
-        orderBy: { nameEn: 'asc' },
-        select: { slug: true, nameEn: true },
-      });
-      return brands;
-    } catch {
-      return [];
-    }
+    // No catch: never cache an empty nav from a transient DB failure.
+    return await prisma.brand.findMany({
+      where: { active: true, products: { some: { isActive: true } } },
+      orderBy: { nameEn: 'asc' },
+      select: { slug: true, nameEn: true },
+    });
   },
   ['brands-with-products'],
   { revalidate: 300, tags: ['nav'] },
@@ -52,39 +45,37 @@ export type BrandView = {
 
 export const getBrandBySlug = unstable_cache(
   async (slug: string): Promise<BrandView | null> => {
-    try {
-      const brand = await prisma.brand.findUnique({ where: { slug } });
-      if (!brand) return null;
-      const products = await prisma.product.findMany({
-        where: { brandId: brand.id, isActive: true },
-        include: { variants: { orderBy: { size: 'asc' } } },
-        orderBy: { createdAt: 'desc' },
-      });
-      return {
-        slug: brand.slug,
-        nameEn: brand.nameEn,
-        nameAr: brand.nameAr,
-        logo: brand.logo,
-        products: products.map((p) => ({
-          id: p.id,
-          slug: p.sku,
-          dropSlug: '',
-          nameAr: p.nameAr,
-          nameEn: p.nameEn,
-          storyAr: p.storyAr,
-          storyEn: p.storyEn,
-          price: p.price,
-          sku: p.sku,
-          totalPieces: p.totalPieces,
-          images: p.images,
-          variants: p.variants.map((v): Variant => ({ id: v.id, size: v.size, stock: v.stock })),
-          brandNameEn: brand.nameEn,
-          brandSlug: brand.slug,
-        })),
-      };
-    } catch {
-      return null;
-    }
+    // null = genuinely missing (cacheable). A DB error throws (not cached) so a
+    // transient failure can't pin a real brand page to a false 404.
+    const brand = await prisma.brand.findUnique({ where: { slug } });
+    if (!brand) return null;
+    const products = await prisma.product.findMany({
+      where: { brandId: brand.id, isActive: true },
+      include: { variants: { orderBy: { size: 'asc' } } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return {
+      slug: brand.slug,
+      nameEn: brand.nameEn,
+      nameAr: brand.nameAr,
+      logo: brand.logo,
+      products: products.map((p) => ({
+        id: p.id,
+        slug: p.sku,
+        dropSlug: '',
+        nameAr: p.nameAr,
+        nameEn: p.nameEn,
+        storyAr: p.storyAr,
+        storyEn: p.storyEn,
+        price: p.price,
+        sku: p.sku,
+        totalPieces: p.totalPieces,
+        images: p.images,
+        variants: p.variants.map((v): Variant => ({ id: v.id, size: v.size, stock: v.stock })),
+        brandNameEn: brand.nameEn,
+        brandSlug: brand.slug,
+      })),
+    };
   },
   ['brand-by-slug'],
   { revalidate: 60, tags: ['nav', 'catalog'] },

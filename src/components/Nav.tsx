@@ -15,10 +15,19 @@ export default async function Nav() {
   const t = await getTranslations('Nav');
   const tb = await getTranslations('Brands');
   const locale = await getLocale();
-  const [categories, brands] = await Promise.all([
-    getCategoryNav(),
-    getBrandsWithProducts(),
-  ]);
+  // Resolve nav data defensively: the cached getters now THROW on a DB error
+  // (so failures aren't cached as empty). Catch here so a transient blip renders
+  // an empty nav for this one request instead of crashing the page.
+  let categories: Awaited<ReturnType<typeof getCategoryNav>> = [];
+  let brands: Awaited<ReturnType<typeof getBrandsWithProducts>> = [];
+  try {
+    [categories, brands] = await Promise.all([
+      getCategoryNav(),
+      getBrandsWithProducts(),
+    ]);
+  } catch {
+    /* leave nav lists empty for this render; not cached, retried next request */
+  }
   const featuredBrands = brands.slice(0, 14);
 
   const navItem =

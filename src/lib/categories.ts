@@ -21,8 +21,9 @@ export const getCategories = unstable_cache(
         orderBy: { sortOrder: 'asc' },
       });
       return cats.map((c) => ({ slug: c.slug, nameAr: c.nameAr, nameEn: c.nameEn }));
-    } catch {
-      return [];
+    } catch (e) {
+      // Re-throw: never let a transient DB error cache an empty nav for 300s.
+      throw e;
     }
   },
   ['categories-list'],
@@ -60,8 +61,10 @@ export const getCategoryNav = unstable_cache(
         brands: [...seen.entries()].slice(0, 8).map(([slug, nameEn]) => ({ slug, nameEn })),
       };
     });
-  } catch {
-    return [];
+  } catch (e) {
+    // Re-throw so a failed query is never cached as an empty nav (which would
+    // make categories vanish sitewide for up to 300s). Nav handles the throw.
+    throw e;
   }
   },
   ['category-nav'],
@@ -77,7 +80,8 @@ export type CategoryView = {
 
 export const getCategoryBySlug = unstable_cache(
   async (slug: string): Promise<CategoryView | null> => {
-  try {
+    // A genuine "no such category" returns null (safe to cache). A thrown DB
+    // error must NOT be caught here, or a transient failure caches a false 404.
     const cat = await prisma.category.findUnique({ where: { slug } });
     if (!cat) return null;
 
@@ -108,9 +112,6 @@ export const getCategoryBySlug = unstable_cache(
         brandSlug: p.brand?.slug ?? null,
       })),
     };
-  } catch {
-    return null;
-  }
   },
   ['category-by-slug'],
   { revalidate: 60, tags: ['nav', 'catalog'] },

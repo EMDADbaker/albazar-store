@@ -67,10 +67,12 @@ export default function AccountMenu() {
               <Link href="/account#wishlist" className={item} onClick={() => setOpen(false)}>
                 {t('wishlist')}
               </Link>
+              {/* Plain <a>: /admin lives outside the [locale] segment, so the
+                  locale-aware Link would wrongly rewrite it to /en/admin (404). */}
               {isStaff && (
-                <Link href="/admin" className={`${item} text-accent/90`} onClick={() => setOpen(false)}>
+                <a href="/admin" className={`${item} text-accent/90`}>
                   {t('admin')}
-                </Link>
+                </a>
               )}
               <button onClick={() => signOut({ callbackUrl: '/' })} className={`${item} border-t border-ink/10 mt-1 pt-3`}>
                 {t('signOut')}

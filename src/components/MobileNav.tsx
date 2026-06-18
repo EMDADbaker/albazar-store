@@ -168,11 +168,12 @@ export default function MobileNav({
               {labels.about}
             </Link>
 
-            {/* Account / auth */}
+            {/* Account / auth. Plain <a> for /admin: it's outside [locale]; the
+                i18n Link would rewrite it to /en/admin (404). */}
             {isStaff ? (
-              <Link href="/admin" onClick={close} className={`${linkCls} text-accent`}>
+              <a href="/admin" onClick={close} className={`${linkCls} text-accent`}>
                 {labels.admin}
-              </Link>
+              </a>
             ) : loggedIn ? (
               <Link href="/account" onClick={close} className={linkCls}>
                 {labels.account}
