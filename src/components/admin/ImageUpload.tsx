@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 
 // Click/drop to upload images; submits the resulting public path(s) via a
@@ -84,8 +85,15 @@ export default function ImageUpload({
         <div className="flex flex-wrap gap-2 mt-3">
           {paths.map((p, i) => (
             <div key={p + i} className="relative w-16 h-16 group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p} alt="" className="w-full h-full object-cover border border-ink/15" />
+              {/* 64px thumbnail — next/image keeps the preview from pulling the
+                  full-size master (oversized hero masters were ~10MB raw). */}
+              <Image
+                src={p}
+                alt=""
+                fill
+                sizes="64px"
+                className="object-cover border border-ink/15"
+              />
               <button
                 type="button"
                 onClick={() => removeAt(i)}

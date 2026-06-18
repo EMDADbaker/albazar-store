@@ -9,7 +9,6 @@ import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
 import ShopProductCard from '@/components/ShopProductCard';
-import EntranceGate from '@/components/EntranceGate';
 import { Link } from '@/i18n/routing';
 
 // ISR: storefront re-renders at most once a minute; flips (drops/hero) appear
@@ -34,22 +33,19 @@ export default async function Home({
   }));
 
   return (
-    <>
-      <EntranceGate live={false} />
-      <div className="animate-reveal min-h-screen flex flex-col">
-        <Nav />
+    <div className="animate-reveal min-h-screen flex flex-col">
+      <Nav />
 
-        <Hero slides={slides} />
-        <Ticker />
+      <Hero slides={slides} />
+      <Ticker />
 
-        <NewArrivals products={newArrivals} />
-        <ShopByCategory categories={categories} locale={locale} />
+      <NewArrivals products={newArrivals} />
+      <ShopByCategory categories={categories} locale={locale} />
 
-        <LookbookStrip />
-        <VaultBand />
-        <Footer />
-      </div>
-    </>
+      <LookbookStrip />
+      <VaultBand />
+      <Footer />
+    </div>
   );
 }
 
