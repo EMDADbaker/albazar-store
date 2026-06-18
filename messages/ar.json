@@ -111,6 +111,8 @@
     "checkout": "الدفع",
     "remove": "احذف",
     "removing": "جاري الحذف…",
+    "close": "إغلاق",
+    "viewCart": "عرض السلة",
     "browse": "تصفّح كل القطع",
     "items": "{count} قطعة",
     "summary": "ملخص الطلب",

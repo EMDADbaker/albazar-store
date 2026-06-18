@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { spaceGrotesk, spaceMono, cairo } from '@/lib/fonts';
 import { CartProvider } from '@/components/CartProvider';
-import CartToast from '@/components/CartToast';
+import CartDrawer from '@/components/CartDrawer';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -59,7 +59,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <CartProvider>
             <main id="main-content">{children}</main>
-            <CartToast />
+            <CartDrawer />
           </CartProvider>
         </NextIntlClientProvider>
       </body>

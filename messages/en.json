@@ -111,6 +111,8 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "removing": "Removing…",
+    "close": "Close",
+    "viewCart": "View cart",
     "browse": "View all items",
     "items": "{count} items",
     "summary": "Order summary",

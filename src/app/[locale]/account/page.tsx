@@ -1,14 +1,13 @@
-import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { requireUser } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
-import { formatPrice, inclVat } from '@/lib/money';
+import { formatPrice } from '@/lib/money';
 import { Link } from '@/i18n/routing';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import LogoutButton from '@/components/account/LogoutButton';
 import VaultToggle from '@/components/account/VaultToggle';
-import WishlistRemove from '@/components/account/WishlistRemove';
+import WishlistCard from '@/components/account/WishlistCard';
 import { updateProfile } from '@/app/account/actions';
 
 export const dynamic = 'force-dynamic';
@@ -133,31 +132,17 @@ export default async function AccountPage({
             <div className="text-[13px] text-coal/50">{t('wishlistEmpty')}</div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6">
-              {user.wishlist.map((w) => {
-                const name = locale === 'ar' ? w.product.nameAr : w.product.nameEn;
-                return (
-                  <div key={w.id}>
-                    <Link href={`/product/${w.product.sku}`} className="group block">
-                      <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden mb-2">
-                        {w.product.images[0] && (
-                          <Image
-                            src={w.product.images[0]}
-                            alt={name}
-                            fill
-                            sizes="(max-width: 640px) 50vw, 25vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        )}
-                      </div>
-                      <div className="text-[12px] font-medium">{name}</div>
-                      <div className="font-mono text-[11px] text-coal/60">
-                        {formatPrice(inclVat(w.product.price), locale)}
-                      </div>
-                    </Link>
-                    <WishlistRemove productId={w.productId} />
-                  </div>
-                );
-              })}
+              {user.wishlist.map((w) => (
+                <WishlistCard
+                  key={w.id}
+                  productId={w.productId}
+                  sku={w.product.sku}
+                  nameAr={w.product.nameAr}
+                  nameEn={w.product.nameEn}
+                  image={w.product.images[0]}
+                  price={w.product.price}
+                />
+              ))}
             </div>
           )}
         </Section>

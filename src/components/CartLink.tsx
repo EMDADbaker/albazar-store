@@ -1,17 +1,18 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
 import { useCart } from './CartProvider';
 
-// Minimal shopping-bag icon with a live count badge.
+// Minimal shopping-bag icon with a live count badge. Opens the slide-out
+// mini-cart drawer (instead of navigating) so the cart is one tap away.
 export default function CartLink() {
   const t = useTranslations('Nav');
-  const { count } = useCart();
+  const { count, openCart } = useCart();
 
   return (
-    <Link
-      href="/cart"
+    <button
+      type="button"
+      onClick={openCart}
       aria-label={t('cart')}
       className="relative p-1.5 text-ink/80 hover:text-accent transition-colors"
     >
@@ -24,6 +25,6 @@ export default function CartLink() {
           {count}
         </span>
       )}
-    </Link>
+    </button>
   );
 }

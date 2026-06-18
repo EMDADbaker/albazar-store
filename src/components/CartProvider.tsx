@@ -28,6 +28,10 @@ type CartContextValue = {
   setQty: (variantId: string, qty: number) => void;
   clear: () => void;
   subtotal: number; // excl VAT
+  // Slide-out mini-cart drawer
+  drawerOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -36,6 +40,7 @@ const STORAGE_KEY = 'albazar_cart';
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -73,6 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
         return [...prev, { ...line, qty }];
       });
+      setDrawerOpen(true); // slide the mini-cart open on every add
     };
     const remove: CartContextValue['remove'] = (variantId) =>
       setLines((prev) => prev.filter((l) => l.variantId !== variantId));
@@ -92,8 +98,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setQty,
       clear,
       subtotal: lines.reduce((sum, l) => sum + l.price * l.qty, 0),
+      drawerOpen,
+      openCart: () => setDrawerOpen(true),
+      closeCart: () => setDrawerOpen(false),
     };
-  }, [lines]);
+  }, [lines, drawerOpen]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

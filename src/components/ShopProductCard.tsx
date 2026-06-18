@@ -27,6 +27,9 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
   const [pending, setPending] = useState(false);
 
   async function toggleWish(e: React.MouseEvent) {
+    // Inside the card's <Link>; stop both the click-bubble AND the anchor's
+    // default navigation so the heart only toggles the wishlist.
+    e.preventDefault();
     e.stopPropagation();
     if (pending) return;
     setPending(true);
@@ -102,6 +105,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           {!soldOut && (
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setQuick(true);
               }}
