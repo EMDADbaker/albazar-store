@@ -1,21 +1,19 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
 // Click-to-open account dropdown: links + sign in/out for every role.
-export default function AccountMenu({
-  loggedIn,
-  isStaff,
-  name,
-}: {
-  loggedIn: boolean;
-  isStaff: boolean;
-  name?: string | null;
-}) {
+// Session is read client-side (useSession) so the surrounding Nav stays static.
+export default function AccountMenu() {
   const t = useTranslations('AccountMenu');
+  const { data: session } = useSession();
+  const user = session?.user as { email?: string | null; role?: string } | undefined;
+  const loggedIn = !!user;
+  const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
+  const name = user?.email;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

@@ -1,23 +1,31 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { addToWishlist, removeFromWishlist } from '@/app/account/actions';
 
-export default function WishlistButton({
-  productId,
-  initialSaved,
-  loggedIn,
-}: {
-  productId: string;
-  initialSaved: boolean;
-  loggedIn: boolean;
-}) {
+// Self-contained: reads login state (useSession) and saved state (GET
+// /api/wishlist) on the client, so the product page stays static.
+export default function WishlistButton({ productId }: { productId: string }) {
   const t = useTranslations('Product');
   const router = useRouter();
-  const [saved, setSaved] = useState(initialSaved);
+  const { status } = useSession();
+  const loggedIn = status === 'authenticated';
+  const [saved, setSaved] = useState(false);
   const [pending, start] = useTransition();
+
+  // Hydrate the heart from the server once we know the user is logged in.
+  useEffect(() => {
+    if (!loggedIn) return;
+    let cancel = false;
+    fetch(`/api/wishlist?productId=${encodeURIComponent(productId)}`)
+      .then((r) => r.json())
+      .then((d) => { if (!cancel) setSaved(!!d.saved); })
+      .catch(() => {});
+    return () => { cancel = true; };
+  }, [loggedIn, productId]);
 
   function toggle() {
     if (!loggedIn) {

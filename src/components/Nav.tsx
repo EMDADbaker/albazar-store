@@ -3,22 +3,22 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getCategoryNav } from '@/lib/categories';
 import { getBrandsWithProducts } from '@/lib/brands';
-import { getCurrentUser } from '@/lib/admin-auth';
 import LangSwitch from './LangSwitch';
 import CartLink from './CartLink';
 import AccountMenu from './AccountMenu';
 import MobileNav from './MobileNav';
 
+// No session read here on purpose — account state lives in AccountMenu /
+// MobileNav (client, via useSession). That keeps Nav (and every page that
+// renders it) free of cookie access, so public pages serve fully static.
 export default async function Nav() {
   const t = await getTranslations('Nav');
   const tb = await getTranslations('Brands');
   const locale = await getLocale();
-  const [categories, brands, user] = await Promise.all([
+  const [categories, brands] = await Promise.all([
     getCategoryNav(),
     getBrandsWithProducts(),
-    getCurrentUser(),
   ]);
-  const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
   const featuredBrands = brands.slice(0, 14);
 
   const navItem =
@@ -58,8 +58,6 @@ export default async function Nav() {
             brands={featuredBrands}
             locale={locale}
             labels={mobileLabels}
-            loggedIn={!!user}
-            isStaff={isStaff}
           />
         </div>
         <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
@@ -76,7 +74,7 @@ export default async function Nav() {
         <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
           {/* Everything account-related — sign in / register / account / admin /
               sign out — lives in this one profile dropdown. */}
-          <AccountMenu loggedIn={!!user} isStaff={isStaff} name={user?.email} />
+          <AccountMenu />
           <CartLink />
           <LangSwitch />
         </div>

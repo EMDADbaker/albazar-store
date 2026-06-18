@@ -6,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import { spaceGrotesk, spaceMono, cairo } from '@/lib/fonts';
 import { CartProvider } from '@/components/CartProvider';
 import CartDrawer from '@/components/CartDrawer';
+import AuthSessionProvider from '@/components/AuthSessionProvider';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -57,10 +58,12 @@ export default async function LocaleLayout({
       </head>
       <body className="bg-bg text-ink antialiased">
         <NextIntlClientProvider messages={messages}>
-          <CartProvider>
-            <main id="main-content">{children}</main>
-            <CartDrawer />
-          </CartProvider>
+          <AuthSessionProvider>
+            <CartProvider>
+              <main id="main-content">{children}</main>
+              <CartDrawer />
+            </CartProvider>
+          </AuthSessionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

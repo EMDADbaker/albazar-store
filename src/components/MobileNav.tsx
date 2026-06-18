@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Link } from '@/i18n/routing';
 
 type Brand = { slug: string; nameEn: string };
@@ -28,16 +29,16 @@ export default function MobileNav({
   brands,
   locale,
   labels,
-  loggedIn,
-  isStaff,
 }: {
   categories: Cat[];
   brands: Brand[];
   locale: string;
   labels: Labels;
-  loggedIn: boolean;
-  isStaff: boolean;
 }) {
+  const { data: session } = useSession();
+  const user = session?.user as { role?: string } | undefined;
+  const loggedIn = !!user;
+  const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
   const [open, setOpen] = useState(false);
   const [brandsOpen, setBrandsOpen] = useState(false);
   const isRtl = locale === 'ar';
