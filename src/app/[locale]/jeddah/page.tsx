@@ -36,8 +36,9 @@ export default async function JeddahEditorial({
   const products = await getNewArrivals(6);
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg text-ink overflow-x-hidden">
-      <Nav />
+    <div className="relative min-h-screen flex flex-col bg-bg text-ink overflow-x-hidden">
+      <div id="hero-sentinel" className="absolute top-0 inset-x-0 h-[100px] pointer-events-none" aria-hidden />
+      <Nav hero />
 
       {/* ── Section 0 — Hero opener ───────────────────────────────────────── */}
       <section className="relative h-[88vh] min-h-[520px] flex flex-col items-center justify-center text-center px-6 overflow-hidden">

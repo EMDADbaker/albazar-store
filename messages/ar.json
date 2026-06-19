@@ -9,6 +9,12 @@
   },
   "Nav": {
     "drop": "دروب ٠٠١",
+    "newDrop": "دروب جديد",
+    "collections": "الكولكشن",
+    "search": "بحث",
+    "searchPlaceholder": "ابحث عن منتجات أو براندات…",
+    "searchEmpty": "ما فيه نتائج. جرّب كلمة ثانية.",
+    "searchResults": "{count} نتيجة لـ ”{q}“",
     "shop": "تسوّق",
     "shopAll": "كل القطع",
     "all": "الكل",

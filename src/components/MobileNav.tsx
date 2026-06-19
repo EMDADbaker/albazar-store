@@ -21,13 +21,17 @@ type Labels = {
   close: string;
 };
 
-// Mobile / narrow-window navigation: a hamburger that opens a slide-in drawer.
-// Renders the same MENU taxonomy as the desktop bar; brand list is from the DB.
+// Slide-in navigation drawer with the full MENU taxonomy. Controlled by the
+// header (open/onClose) so it can be opened from either header state.
 export default function MobileNav({
+  open,
+  onClose,
   brands,
   locale,
   labels,
 }: {
+  open: boolean;
+  onClose: () => void;
   brands: Brand[];
   locale: string;
   labels: Labels;
@@ -36,7 +40,6 @@ export default function MobileNav({
   const user = session?.user as { role?: string } | undefined;
   const loggedIn = !!user;
   const isStaff = user?.role === 'ADMIN' || user?.role === 'EMPLOYEE';
-  const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const isRtl = locale === 'ar';
   const ar = locale === 'ar';
@@ -50,12 +53,12 @@ export default function MobileNav({
   }, [open]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, []);
+  }, [onClose]);
 
-  const close = () => setOpen(false);
+  const close = onClose;
   const toggleGroup = (key: string) => setOpenGroup((g) => (g === key ? null : key));
   const linkCls =
     'block font-mono text-[13px] tracking-[0.12em] uppercase text-ink/80 hover:text-accent transition-colors py-3';
@@ -63,20 +66,9 @@ export default function MobileNav({
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        aria-label={labels.menu}
-        aria-expanded={open}
-        className="lg:hidden w-11 h-11 -ms-2 flex items-center justify-center text-ink/85 hover:text-accent transition-colors"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-          <path d="M3 6h18M3 12h18M3 18h18" />
-        </svg>
-      </button>
-
       {/* Drawer — `inert` when closed removes its links from the tab order. */}
       <div
-        className={`lg:hidden fixed inset-0 z-[90] ${open ? '' : 'pointer-events-none'}`}
+        className={`fixed inset-0 z-[95] ${open ? '' : 'pointer-events-none'}`}
         aria-hidden={!open}
         {...({ inert: open ? undefined : '' } as Record<string, unknown>)}
       >

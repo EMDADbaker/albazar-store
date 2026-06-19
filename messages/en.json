@@ -9,6 +9,12 @@
   },
   "Nav": {
     "drop": "Drop 001",
+    "newDrop": "New Drop",
+    "collections": "Collections",
+    "search": "Search",
+    "searchPlaceholder": "Search products, brands…",
+    "searchEmpty": "No matches. Try another term.",
+    "searchResults": "{count} results for “{q}”",
     "shop": "Shop",
     "shopAll": "Shop all",
     "all": "All",

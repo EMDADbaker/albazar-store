@@ -1,4 +1,24 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from './prisma';
+
+// Slug of the current drop, for the "New Drop" header link. Cached so the
+// header (on every page) doesn't pay a query; revalidated with the catalog.
+export const getActiveDropSlug = unstable_cache(
+  async (): Promise<string | null> => {
+    try {
+      const d = await prisma.drop.findFirst({
+        where: { published: true, status: { in: ['LIVE', 'TEASER', 'SOLDOUT'] } },
+        orderBy: [{ status: 'asc' }, { launchAt: 'asc' }],
+        select: { slug: true },
+      });
+      return d?.slug ?? null;
+    } catch {
+      return null;
+    }
+  },
+  ['active-drop-slug'],
+  { revalidate: 300, tags: ['catalog'] },
+);
 
 export type ActiveDrop = {
   id: string;

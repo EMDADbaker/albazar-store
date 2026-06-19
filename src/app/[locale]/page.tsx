@@ -35,8 +35,10 @@ export default async function Home({
   }));
 
   return (
-    <div className="animate-reveal min-h-screen flex flex-col">
-      <Nav />
+    <div className="relative animate-reveal min-h-screen flex flex-col">
+      {/* Header watches this: in view = Hero Mode, scrolled past = Shopping Mode */}
+      <div id="hero-sentinel" className="absolute top-0 inset-x-0 h-[100px] pointer-events-none" aria-hidden />
+      <Nav hero />
 
       <Hero slides={slides} />
       <Ticker />
