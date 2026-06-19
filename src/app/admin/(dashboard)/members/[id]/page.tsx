@@ -8,22 +8,24 @@ export const dynamic = 'force-dynamic';
 type CartLine = { nameEn?: string; size?: string; qty?: number };
 
 export default async function MemberDetail({ params: { id } }: { params: { id: string } }) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: {
-      orders: { orderBy: { createdAt: 'desc' }, include: { items: { include: { product: true } } } },
-      wishlist: { include: { product: true }, orderBy: { createdAt: 'desc' } },
-      cart: true,
-    },
-  });
+  // user + view-history are independent (both keyed on the route id) — run them
+  // in parallel so the page pays one DB round-trip instead of two.
+  const [user, views] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id },
+      include: {
+        orders: { orderBy: { createdAt: 'desc' }, include: { items: { include: { product: true } } } },
+        wishlist: { include: { product: true }, orderBy: { createdAt: 'desc' } },
+        cart: true,
+      },
+    }),
+    prisma.event.findMany({
+      where: { userId: id, type: 'view', productId: { not: null } },
+      orderBy: { createdAt: 'desc' },
+      take: 40,
+    }),
+  ]);
   if (!user) notFound();
-
-  // Browsing history from events (views), newest first, resolved to products.
-  const views = await prisma.event.findMany({
-    where: { userId: id, type: 'view', productId: { not: null } },
-    orderBy: { createdAt: 'desc' },
-    take: 40,
-  });
   const viewedIds = [...new Set(views.map((v) => v.productId!).filter(Boolean))].slice(0, 12);
   const viewedProducts = viewedIds.length
     ? await prisma.product.findMany({ where: { id: { in: viewedIds } }, select: { id: true, nameEn: true } })

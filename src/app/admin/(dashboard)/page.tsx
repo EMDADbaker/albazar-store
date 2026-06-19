@@ -18,11 +18,15 @@ export default async function AdminOverview() {
     prisma.cart.count(),
     prisma.order.aggregate({ _sum: { total: true }, where: { status: { in: [...PAID] } } }),
     prisma.order.aggregate({ _sum: { total: true }, where: { status: 'PENDING' } }),
+    // Only the fields the brand-score aggregation needs — keeps the payload
+    // small over the remote DB link.
     prisma.orderItem.findMany({
       where: { order: { status: { in: [...PAID] } } },
-      include: { product: { include: { brand: true } } },
+      select: { quantity: true, unitPrice: true, product: { select: { brand: { select: { nameEn: true } } } } },
     }),
-    prisma.wishlistItem.findMany({ include: { product: { include: { brand: true } } } }),
+    prisma.wishlistItem.findMany({
+      select: { product: { select: { brand: { select: { nameEn: true } } } } },
+    }),
     prisma.productVariant.count({ where: { stock: { lte: 3 } } }),
     prisma.order.findMany({ orderBy: { createdAt: 'desc' }, take: 6, include: { items: true, user: true } }),
   ]);
