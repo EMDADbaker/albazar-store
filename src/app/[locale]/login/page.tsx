@@ -12,7 +12,7 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get('next');
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ function LoginForm() {
     e.preventDefault();
     setError(false);
     setLoading(true);
-    const res = await signIn('credentials', { email, password, redirect: false });
+    const res = await signIn('credentials', { phone: `+966${phone}`, password, redirect: false });
     if (!res?.ok) {
       setError(true);
       setLoading(false);
@@ -52,14 +52,21 @@ function LoginForm() {
         {t('signIn')}
       </div>
 
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder={t('email')}
-        autoComplete="username"
-        className={field}
-      />
+      <div className="flex gap-2 mb-3">
+        <div className="font-mono text-[13px] text-ink/50 border border-white/20 flex items-center px-3 bg-white/[0.06]">
+          +966
+        </div>
+        <input
+          dir="ltr"
+          inputMode="numeric"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, ''))}
+          maxLength={9}
+          placeholder="5X XXX XXXX"
+          autoComplete="tel-national"
+          className={`${field} mb-0 flex-1 font-mono`}
+        />
+      </div>
       <input
         type="password"
         value={password}

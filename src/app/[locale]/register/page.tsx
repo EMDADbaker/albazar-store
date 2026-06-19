@@ -17,12 +17,15 @@ export default function RegisterPage() {
 
   // Live password rule (mirrors the server: min 6 chars).
   const pwLongEnough = form.password.length >= 6;
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  // Phone is required; email is optional (only validated if filled in).
+  const emailFilled = form.email.trim().length > 0;
+  const emailOk = !emailFilled || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
   const phoneOk = /^5\d{8}$/.test(form.phone);
   const nameOk = form.name.trim().length >= 2;
 
   function errorFor(code: string) {
     switch (code) {
+      case 'phone_taken': return t('phoneTaken');
       case 'email_taken': return t('emailTaken');
       case 'password_short': return t('passwordShort');
       case 'name_short': return t('nameShort');
@@ -37,8 +40,8 @@ export default function RegisterPage() {
     setError(null);
     // Explicit client-side checks first — fail fast with a precise message.
     if (!nameOk) return setError(t('nameShort'));
-    if (!emailOk) return setError(t('emailInvalid'));
     if (!phoneOk) return setError(t('phoneInvalid'));
+    if (!emailOk) return setError(t('emailInvalid'));
     if (!pwLongEnough) return setError(t('passwordShort'));
 
     setLoading(true);
@@ -53,8 +56,8 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
-    // Auto sign-in then land on the account dashboard.
-    await signIn('credentials', { email: form.email, password: form.password, redirect: false });
+    // Auto sign-in (by phone) then land on the account dashboard.
+    await signIn('credentials', { phone: `+966${form.phone}`, password: form.password, redirect: false });
     window.location.href = '/account';
   }
 
@@ -77,14 +80,7 @@ export default function RegisterPage() {
           placeholder={t('name')}
           className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-3 transition-colors"
         />
-        <input
-          type="email"
-          value={form.email}
-          onChange={(e) => set('email', e.target.value)}
-          placeholder={t('email')}
-          autoComplete="username"
-          className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-3 transition-colors"
-        />
+        {/* Phone is the primary identifier — required. */}
         <div className="flex gap-2 mb-3">
           <div className="font-mono text-[13px] text-coal/50 border border-coal/15 flex items-center px-3 bg-paper-2">
             +966
@@ -95,9 +91,18 @@ export default function RegisterPage() {
             onChange={(e) => set('phone', e.target.value.replace(/[^\d]/g, ''))}
             maxLength={9}
             placeholder="5X XXX XXXX"
+            autoComplete="tel-national"
             className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors"
           />
         </div>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => set('email', e.target.value)}
+          placeholder={t('emailOptional')}
+          autoComplete="email"
+          className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-3 transition-colors"
+        />
         <input
           type="password"
           value={form.password}

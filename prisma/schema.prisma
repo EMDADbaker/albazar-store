@@ -181,10 +181,12 @@ model VaultMember {
 
 model User {
   id           String         @id @default(cuid())
-  email        String         @unique
+  // Phone is the primary login identifier (required at registration); email is
+  // now optional. Both unique-when-present (Postgres allows multiple NULLs).
+  email        String?        @unique
   passwordHash String
   name         String?
-  phone        String?
+  phone        String?        @unique
   role         Role           @default(CLIENT)
   addressJson  Json? // saved Saudi shipping address, autofills checkout
   vaultOptIn   Boolean        @default(false)

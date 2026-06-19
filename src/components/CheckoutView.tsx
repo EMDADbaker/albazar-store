@@ -43,13 +43,14 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Demo phone confirmation: a code is "texted" and entered before placing the
-  // order. DEMO MODE — no real SMS gateway: any 4-digit code is accepted and
-  // nothing is generated or stored.
+  // Phone confirmation via WhatsApp OTP (Twilio Verify). Falls back to demo
+  // acceptance server-side until the Twilio env vars are configured.
   const [codeSent, setCodeSent] = useState(false);
   const [codeInput, setCodeInput] = useState('');
   const [verified, setVerified] = useState(false);
   const [sending, setSending] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [codeError, setCodeError] = useState(false);
 
   function setPhone(v: string) {
     set('phone', v.replace(/[^\d]/g, ''));
@@ -57,22 +58,51 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
     setCodeSent(false);
     setVerified(false);
     setCodeInput('');
+    setCodeError(false);
   }
 
   async function sendCode() {
     setError(null);
     if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
     setSending(true);
-    await new Promise((r) => setTimeout(r, 700)); // simulate the SMS send
-    setCodeSent(true);
-    setVerified(false);
-    setCodeInput('');
-    setSending(false);
+    try {
+      const res = await fetch('/api/otp/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: `+966${form.phone}` }),
+      });
+      if (!res.ok) {
+        setError(t('errorGeneric'));
+        return;
+      }
+      setCodeSent(true);
+      setVerified(false);
+      setCodeInput('');
+      setCodeError(false);
+    } catch {
+      setError(t('errorGeneric'));
+    } finally {
+      setSending(false);
+    }
   }
 
-  function confirmCode() {
-    // Demo: accept any 4-digit code.
-    setVerified(true);
+  async function confirmCode() {
+    setCodeError(false);
+    setVerifying(true);
+    try {
+      const res = await fetch('/api/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: `+966${form.phone}`, code: codeInput }),
+      });
+      const data = await res.json();
+      if (data.approved) setVerified(true);
+      else setCodeError(true);
+    } catch {
+      setCodeError(true);
+    } finally {
+      setVerifying(false);
+    }
   }
 
   if (lines.length === 0) {
@@ -213,12 +243,13 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
                 <button
                   type="button"
                   onClick={confirmCode}
-                  disabled={codeInput.length < 4}
+                  disabled={codeInput.length < 4 || verifying}
                   className="font-mono text-[10px] uppercase tracking-wide bg-coal text-paper px-4 whitespace-nowrap hover:opacity-90 disabled:opacity-40"
                 >
-                  {t('confirmCode')}
+                  {verifying ? t('verifying') : t('confirmCode')}
                 </button>
               </div>
+              {codeError && <div className="font-mono text-[10px] text-red-600">{t('errorCode')}</div>}
             </div>
           ) : (
             <div className="font-mono text-[10px] text-coal/40">{t('verifyHint')}</div>
