@@ -2,18 +2,26 @@
 
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Link } from '@/i18n/routing';
 
-export type Slide = { image: string; title: string; subtitle: string | null };
+export type Slide = {
+  image: string;
+  title: string;
+  subtitle: string | null;
+  href?: string; // when set, the slide shows an "Enter" CTA linking here
+};
 
 // Auto-advancing hero carousel: crossfading background images, per-slide
 // copy, clickable dots. Countdown / scroll cue render below via children.
 export default function HeroCarousel({
   slides,
   eyebrow,
+  enterLabel,
   children,
 }: {
   slides: Slide[];
   eyebrow: string;
+  enterLabel?: string;
   children?: ReactNode;
 }) {
   const [i, setI] = useState(0);
@@ -91,6 +99,15 @@ export default function HeroCarousel({
             {current?.subtitle || ' '}
           </p>
         </div>
+        {/* A slide can link to a landing/edit page — gold CTA pill. */}
+        {current?.href && enterLabel && (
+          <Link
+            href={current.href}
+            className="inline-flex items-center gap-2 border border-accent/60 text-accent font-mono text-[11px] tracking-[0.2em] uppercase px-6 py-3 mb-2 hover:bg-accent hover:text-bg transition-colors"
+          >
+            {enterLabel} <span aria-hidden>→</span>
+          </Link>
+        )}
         {children}
       </div>
 

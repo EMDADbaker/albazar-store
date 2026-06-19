@@ -322,5 +322,26 @@
   },
   "Currency": {
     "symbol": "SAR"
+  },
+  "Jeddah": {
+    "enter": "Enter the edit",
+    "eyebrow": "ALBAZAR · The Edit",
+    "kicker": "From Al-Balad to the world",
+    "title": "OLD JEDDAH",
+    "titleAccent": "× STREETWEAR",
+    "lede": "The old town meets the new street. Coral stone and carved rawasheen, cut with the labels that move the culture now.",
+    "quote": "One roof, many makers, the whole world passing through.",
+    "quoteCredit": "بلد جدة — the Gate to Makkah",
+    "heritageTag": "Al-Balad",
+    "heritageTitle": "The bazaar was always here.",
+    "heritageBody": "Jeddah's old town was a Red Sea port where merchants and pilgrims from Arabia, India and Africa unloaded into the same narrow streets. Coral-stone houses, carved rawasheen balconies, calligraphy over every door — a melting pot before the phrase existed. ALBAZAR is that gate, rebuilt for now.",
+    "editTag": "The lineup",
+    "editTitle": "Shop the edit",
+    "editSub": "Hand-picked from the drop.",
+    "footerTitle": "Jeddah is the bazaar.",
+    "footerBody": "Not a mall — a marketplace with a pulse. We don't make the clothes; we choose them. Being carried in ALBAZAR is a signal: this got picked. From the coral streets of Al-Balad to the feeds of the world, the street is the runway and the bazaar never closes. Curated, never just stocked. Saudi taste, the world's brands. Discovery, not retail.",
+    "expand": "Read more",
+    "collapse": "Show less",
+    "cta": "Shop the drop"
   }
 }

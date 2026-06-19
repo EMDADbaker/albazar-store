@@ -30,6 +30,8 @@ export default async function Home({
     image: s.image,
     title: locale === 'ar' ? s.titleAr : s.titleEn,
     subtitle: locale === 'ar' ? s.subtitleAr : s.subtitleEn,
+    // The STREET WEAR slide opens the Old Jeddah editorial.
+    href: s.image === '/img/slide3.jpg' ? '/jeddah' : undefined,
   }));
 
   return (
@@ -53,6 +55,7 @@ export default async function Home({
 
 function Hero({ slides }: { slides: Slide[] }) {
   const t = useTranslations('Storefront');
+  const tj = useTranslations('Jeddah');
   const effective: Slide[] =
     slides.length > 0
       ? slides
@@ -64,7 +67,7 @@ function Hero({ slides }: { slides: Slide[] }) {
           },
         ];
   return (
-    <HeroCarousel slides={effective} eyebrow="ALBAZAR · البازار">
+    <HeroCarousel slides={effective} eyebrow="ALBAZAR · البازار" enterLabel={tj('enter')}>
       <a
         href="#shop"
         className="inline-flex flex-col items-center gap-2 mt-3 font-mono text-[10px] tracking-[0.3em] uppercase text-ink/50 hover:text-accent transition-colors"
