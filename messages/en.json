@@ -275,6 +275,11 @@
     "invalid": "Invalid email or password.",
     "emailTaken": "That email is already registered.",
     "checkFields": "Check your details and try again.",
+    "passwordReq": "At least 6 characters",
+    "passwordShort": "Password must be at least 6 characters.",
+    "nameShort": "Enter your full name (at least 2 characters).",
+    "emailInvalid": "Enter a valid email address.",
+    "phoneInvalid": "Enter a valid Saudi number (5X XXX XXXX).",
     "noAccount": "New here?",
     "haveAccount": "Already have an account?"
   },

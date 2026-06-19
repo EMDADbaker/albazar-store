@@ -135,13 +135,13 @@ export default function MobileNav({
                     </button>
                     {expanded && (
                       <div className="pb-3 -mt-1 grid grid-cols-2 gap-x-4 gap-y-1">
-                        {brands.map((b) => (
+                        {brands.slice(0, 12).map((b) => (
                           <Link key={b.slug} href={`/brand/${b.slug}`} onClick={close} className={childCls}>
                             {b.nameEn}
                           </Link>
                         ))}
                         <Link href="/brands" onClick={close} className="col-span-2 mt-1 font-mono text-[10px] uppercase tracking-wide text-accent py-1.5">
-                          {labels.allBrands} →
+                          {labels.allBrands} ({brands.length}) →
                         </Link>
                       </div>
                     )}

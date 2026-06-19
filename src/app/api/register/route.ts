@@ -15,7 +15,17 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'invalid' }, { status: 400 });
+    // Report which field failed so the form can show an explicit message.
+    const field = parsed.error.issues[0]?.path[0];
+    const code =
+      field === 'password'
+        ? 'password_short'
+        : field === 'name'
+          ? 'name_short'
+          : field === 'email'
+            ? 'email_invalid'
+            : 'invalid';
+    return NextResponse.json({ error: code }, { status: 400 });
   }
   const { name, email, password } = parsed.data;
   const phone = normalizeSaudiPhone(parsed.data.phone);

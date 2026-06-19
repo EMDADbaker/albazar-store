@@ -99,13 +99,14 @@ export default async function Nav() {
                   </Link>
                   <div className="absolute left-1/2 -translate-x-1/2 top-full pt-1 hidden group-hover:block z-50">
                     <div className="bg-bg border border-ink/15 p-4 grid grid-cols-2 gap-x-6 gap-y-1.5 w-[320px] shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
-                      {brands.map((b) => (
+                      {/* A featured handful only — the full A–Z lives on /brands. */}
+                      {brands.slice(0, 12).map((b) => (
                         <Link key={b.slug} href={`/brand/${b.slug}`} className="text-[11px] text-ink/70 hover:text-accent transition-colors truncate">
                           {b.nameEn}
                         </Link>
                       ))}
                       <Link href="/brands" className="col-span-2 mt-2 pt-2 border-t border-ink/10 font-mono text-[9px] uppercase tracking-wide text-accent hover:text-accent-bright">
-                        {tb('title')} →
+                        {tb('title')} ({brands.length}) →
                       </Link>
                     </div>
                   </div>

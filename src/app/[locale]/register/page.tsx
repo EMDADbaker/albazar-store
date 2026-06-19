@@ -15,9 +15,32 @@ export default function RegisterPage() {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
+  // Live password rule (mirrors the server: min 6 chars).
+  const pwLongEnough = form.password.length >= 6;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  const phoneOk = /^5\d{8}$/.test(form.phone);
+  const nameOk = form.name.trim().length >= 2;
+
+  function errorFor(code: string) {
+    switch (code) {
+      case 'email_taken': return t('emailTaken');
+      case 'password_short': return t('passwordShort');
+      case 'name_short': return t('nameShort');
+      case 'email_invalid': return t('emailInvalid');
+      case 'invalid_phone': return t('phoneInvalid');
+      default: return t('checkFields');
+    }
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    // Explicit client-side checks first — fail fast with a precise message.
+    if (!nameOk) return setError(t('nameShort'));
+    if (!emailOk) return setError(t('emailInvalid'));
+    if (!phoneOk) return setError(t('phoneInvalid'));
+    if (!pwLongEnough) return setError(t('passwordShort'));
+
     setLoading(true);
     const res = await fetch('/api/register', {
       method: 'POST',
@@ -26,7 +49,7 @@ export default function RegisterPage() {
     });
     const data = await res.json();
     if (!res.ok) {
-      setError(data.error === 'email_taken' ? t('emailTaken') : t('checkFields'));
+      setError(errorFor(data.error));
       setLoading(false);
       return;
     }
@@ -81,8 +104,17 @@ export default function RegisterPage() {
           onChange={(e) => set('password', e.target.value)}
           placeholder={t('password')}
           autoComplete="new-password"
-          className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-4 transition-colors"
+          className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal text-[13px] p-3 outline-none mb-2 transition-colors"
         />
+
+        {/* Live requirement checklist — turns green as the rule is met, so the
+            user fixes it before submitting (no surprise "too short" error). */}
+        <ul className="mb-4 space-y-1">
+          <li className={`flex items-center gap-2 font-mono text-[10px] ${pwLongEnough ? 'text-green-700' : 'text-coal/45'}`}>
+            <span>{pwLongEnough ? '✓' : '○'}</span>
+            {t('passwordReq')}
+          </li>
+        </ul>
 
         {error && (
           <div className="text-[11px] text-red-600 mb-4 font-mono text-center">{error}</div>
