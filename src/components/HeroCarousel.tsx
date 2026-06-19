@@ -65,12 +65,12 @@ export default function HeroCarousel({
   };
 
   return (
-    <section ref={sectionRef} className="relative px-6 h-[80vh] flex flex-col items-center justify-center text-center overflow-hidden">
+    <section ref={sectionRef} className="relative px-6 h-[100svh] min-h-[480px] flex flex-col items-center justify-center text-center overflow-hidden">
       {slides.map((s, idx) => (
         <div
           key={idx}
           className={`absolute inset-0 transition-opacity duration-1000 ${
-            idx === i ? 'opacity-[0.25]' : 'opacity-0'
+            idx === i ? 'opacity-100' : 'opacity-0'
           }`}
           aria-hidden
         >
@@ -84,7 +84,10 @@ export default function HeroCarousel({
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/30 to-bg" aria-hidden />
+      {/* Scrim: keep the image as the focus, just enough darkening for the text
+          (heavier at top/bottom for the floating header + scroll cue/dots). */}
+      <div className="absolute inset-0 bg-gradient-to-b from-bg/65 via-bg/25 to-bg/85" aria-hidden />
+      <div className="absolute inset-0 bg-bg/15" aria-hidden />
 
       <div className="relative pt-8 w-full max-w-2xl px-2">
         <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
@@ -117,18 +120,18 @@ export default function HeroCarousel({
           <button
             onClick={() => go(-1)}
             aria-label="Previous slide"
-            className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-5 z-10 w-11 h-11 flex items-center justify-center border border-ink/20 bg-bg/40 backdrop-blur-sm text-ink/80 hover:bg-accent hover:text-bg hover:border-accent transition-colors"
+            className="absolute top-1/2 -translate-y-1/2 left-0 sm:left-1 z-10 w-12 h-20 flex items-center justify-center text-ink/55 hover:text-accent transition-colors drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
           <button
             onClick={() => go(1)}
             aria-label="Next slide"
-            className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-5 z-10 w-11 h-11 flex items-center justify-center border border-ink/20 bg-bg/40 backdrop-blur-sm text-ink/80 hover:bg-accent hover:text-bg hover:border-accent transition-colors"
+            className="absolute top-1/2 -translate-y-1/2 right-0 sm:right-1 z-10 w-12 h-20 flex items-center justify-center text-ink/55 hover:text-accent transition-colors drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 5l7 7-7 7" />
             </svg>
           </button>

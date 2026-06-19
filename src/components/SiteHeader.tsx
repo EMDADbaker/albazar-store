@@ -124,12 +124,12 @@ export default function SiteHeader({
             </button>
             <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
               <Image
-                src="/img/albazar-logo-min.png"
+                src="/img/albazar-logo-white.png"
                 alt="ALBAZAR"
-                width={640}
-                height={57}
+                width={1424}
+                height={134}
                 priority
-                className="h-7 sm:h-9 w-auto invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
+                className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
               />
             </Link>
             <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
@@ -155,11 +155,11 @@ export default function SiteHeader({
               </button>
               <Link href="/" aria-label="ALBAZAR">
                 <Image
-                  src="/img/albazar-logo-min.png"
+                  src="/img/albazar-logo-white.png"
                   alt="ALBAZAR"
-                  width={640}
-                  height={57}
-                  className="h-5 sm:h-6 w-auto invert"
+                  width={1424}
+                  height={134}
+                  className="h-5 sm:h-6 w-auto"
                 />
               </Link>
             </div>
