@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Link } from '@/i18n/routing';
 import { MENU } from '@/lib/nav-menu';
+import LangSwitch from './LangSwitch';
 
 type Brand = { slug: string; nameEn: string };
 
@@ -209,6 +210,11 @@ export default function MobileNav({
                 </Link>
               </div>
             )}
+
+            {/* Language toggle lives here on mobile (kept off the top bar). */}
+            <div className="pt-4">
+              <LangSwitch />
+            </div>
           </nav>
         </div>
       </div>

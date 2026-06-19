@@ -70,12 +70,15 @@ export default async function Nav() {
             className="h-6 sm:h-10 w-auto invert"
           />
         </Link>
-        <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
+        <div className="justify-self-end flex items-center gap-2 sm:gap-2.5">
           {/* Everything account-related — sign in / register / account / admin /
               sign out — lives in this one profile dropdown. */}
           <AccountMenu />
           <CartLink />
-          <LangSwitch />
+          {/* Language pill is bulky on phones — it lives in the drawer there. */}
+          <div className="hidden sm:block">
+            <LangSwitch />
+          </div>
         </div>
       </nav>
 
