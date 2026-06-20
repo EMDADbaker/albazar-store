@@ -150,8 +150,8 @@ export default function SiteHeader({
                 : 'opacity-0 -translate-y-full pointer-events-none'
             }`}
           >
-            {/* Left: hamburger (mobile) + the regular logo */}
-            <div className="justify-self-start flex items-center gap-2">
+            {/* Left: hamburger on mobile only — no logo in the taxonomy bar */}
+            <div className="justify-self-start">
               <button
                 onClick={() => setDrawerOpen(true)}
                 aria-label={labels.menu}
@@ -159,15 +159,6 @@ export default function SiteHeader({
               >
                 {HAMBURGER}
               </button>
-              <Link href="/" aria-label="ALBAZAR">
-                <Image
-                  src="/img/albazar-logo-white.png"
-                  alt="ALBAZAR"
-                  width={1424}
-                  height={134}
-                  className="h-5 sm:h-6 w-auto"
-                />
-              </Link>
             </div>
 
             {/* Center: full taxonomy with dropdowns (desktop) */}
