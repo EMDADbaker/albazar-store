@@ -86,19 +86,17 @@ export default function HeroCarousel({
       ))}
       {/* Scrim: keep the image as the focus, just enough darkening for the text
           (heavier at top/bottom for the floating header + scroll cue/dots). */}
-      <div className="absolute inset-0 bg-gradient-to-b from-bg/65 via-bg/25 to-bg/85" aria-hidden />
-      <div className="absolute inset-0 bg-bg/15" aria-hidden />
 
       <div className="relative pt-8 w-full max-w-2xl px-2">
-        <div className="font-mono text-[10px] tracking-[0.4em] text-accent/90 uppercase mb-4">
+        <div className="font-mono text-[10px] tracking-[0.4em] text-accent uppercase mb-4 drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)]">
           {eyebrow}
         </div>
         {/* Reserve constant space so varying slide copy never shifts the layout */}
         <div className="min-h-[150px] sm:min-h-[180px] flex flex-col items-center justify-center mb-6">
-          <h1 className="text-[clamp(36px,8vw,64px)] font-bold tracking-[-0.02em] leading-[0.98] transition-opacity duration-500">
+          <h1 className="text-[clamp(36px,8vw,64px)] font-bold tracking-[-0.02em] leading-[0.98] transition-opacity duration-500 drop-shadow-[0_2px_18px_rgba(0,0,0,0.8)]">
             {current?.title}
           </h1>
-          <p className="text-[13px] text-ink/45 max-w-md mx-auto mt-3 min-h-[36px] transition-opacity duration-500">
+          <p className="text-[13px] text-ink/85 max-w-md mx-auto mt-3 min-h-[36px] transition-opacity duration-500 drop-shadow-[0_1px_12px_rgba(0,0,0,0.9)]">
             {current?.subtitle || ' '}
           </p>
         </div>

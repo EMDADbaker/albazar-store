@@ -110,7 +110,11 @@ export default function SiteHeader({
     <>
       <header
         className={`fixed inset-x-0 top-0 z-[80] transition-[background-color,border-color] duration-300 ${
-          shopping ? 'bg-bg border-b border-ink/10' : 'bg-transparent border-b border-transparent'
+          minimal
+            ? 'bg-transparent border-b border-transparent'
+            : shopping
+              ? 'bg-bg border-b border-ink/10'
+              : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div
