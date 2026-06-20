@@ -38,7 +38,7 @@ export default async function Home({
     <div className="relative animate-reveal min-h-screen flex flex-col">
       {/* Header watches this: transparent while it's in view, solid once the
           full-screen slide has scrolled past (spans ~the hero height). */}
-      <div id="hero-sentinel" className="absolute top-0 inset-x-0 h-[88svh] pointer-events-none" aria-hidden />
+      <div id="hero-sentinel" className="absolute top-0 inset-x-0 h-[100svh] pointer-events-none" aria-hidden />
       <Nav hero />
 
       <Hero slides={slides} />

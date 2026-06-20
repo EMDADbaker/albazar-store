@@ -1,6 +1,5 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { getAllActiveBrands } from '@/lib/brands';
-import { getActiveDropSlug } from '@/lib/drop';
 import SiteHeader, { type HeaderLabels } from './SiteHeader';
 
 // Server wrapper: fetches the (cached) nav data and renders the dual-state
@@ -11,13 +10,12 @@ export default async function Nav({ hero = false }: { hero?: boolean }) {
   const tb = await getTranslations('Brands');
   const locale = await getLocale();
 
-  // Cached getters; catch so a transient DB blip just renders an emptier header.
+  // Cached getter; catch so a transient DB blip just renders an emptier header.
   let brands: Awaited<ReturnType<typeof getAllActiveBrands>> = [];
-  let dropSlug: string | null = null;
   try {
-    [brands, dropSlug] = await Promise.all([getAllActiveBrands(), getActiveDropSlug()]);
+    brands = await getAllActiveBrands();
   } catch {
-    /* leave defaults */
+    /* leave empty */
   }
 
   const labels: HeaderLabels = {
@@ -39,13 +37,5 @@ export default async function Nav({ hero = false }: { hero?: boolean }) {
     searchPlaceholder: t('searchPlaceholder'),
   };
 
-  return (
-    <SiteHeader
-      hero={hero}
-      brands={brands}
-      locale={locale}
-      labels={labels}
-      dropHref={dropSlug ? `/drop/${dropSlug}` : '/shop'}
-    />
-  );
+  return <SiteHeader hero={hero} brands={brands} locale={locale} labels={labels} />;
 }

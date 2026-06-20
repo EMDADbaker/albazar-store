@@ -37,23 +37,22 @@ const HAMBURGER = (
   </svg>
 );
 
-// Dual-state fixed header. HERO MODE (transparent, hamburger + centered logo +
-// account/cart) while the hero is in view; SHOPPING MODE (solid blurred bar,
-// links + search) otherwise. State is driven by an IntersectionObserver on a
-// #hero-sentinel the hero page renders — no scroll listeners. Pages without a
-// hero pass hero={false} and stay in shopping mode.
+// Dual-state fixed header. HERO MODE (homepage + /jeddah, hero in view):
+// transparent bar with hamburger, centered logo, account/cart — opens the
+// slide-in drawer for full nav. SHOPPING MODE (scrolled past the hero, and the
+// permanent state on every other page): solid black bar with the logo + full
+// inline taxonomy (dropdowns) + search/account/cart. State is driven by an
+// IntersectionObserver on #hero-sentinel (only present on the two hero pages).
 export default function SiteHeader({
   hero,
   brands,
   locale,
   labels,
-  dropHref,
 }: {
   hero: boolean;
   brands: Brand[];
   locale: string;
   labels: HeaderLabels;
-  dropHref: string;
 }) {
   const ar = locale === 'ar';
   const [mode, setMode] = useState<'hero' | 'shopping'>(hero ? 'hero' : 'shopping');
@@ -80,9 +79,13 @@ export default function SiteHeader({
   }, [hero, pathname]);
 
   const shopping = mode === 'shopping';
+
+  // Close the slide-in drawer once the hero ends and the shopping bar takes over.
+  useEffect(() => {
+    if (shopping) setDrawerOpen(false);
+  }, [shopping]);
   const navLink =
-    'font-mono text-[12px] tracking-[0.14em] uppercase text-ink/80 hover:text-accent transition-colors whitespace-nowrap';
-  const categoryItems = MENU.filter((m) => !m.brands);
+    'font-mono text-[11px] tracking-[0.1em] uppercase text-ink/80 hover:text-accent transition-colors whitespace-nowrap';
 
   const drawerLabels = {
     shopAll: labels.shopAll,
@@ -100,19 +103,19 @@ export default function SiteHeader({
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-[80] transition-colors duration-300 ${
-          shopping ? 'bg-bg/95 backdrop-blur-md border-b border-ink/10' : 'bg-transparent'
+        className={`fixed inset-x-0 top-0 z-[80] transition-[background-color,border-color] duration-300 ${
+          shopping ? 'bg-bg border-b border-ink/10' : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div
           dir="ltr"
-          className="relative transition-[height] duration-300"
+          className="relative transition-[height] duration-300 ease-out"
           style={{ height: shopping ? 56 : 76 }}
         >
-          {/* ── HERO layer ─────────────────────────────────────────────── */}
+          {/* ── HERO layer (hamburger · centered logo · account/cart) ─── */}
           <div
-            className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-opacity duration-300 ${
-              shopping ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-all duration-300 ease-out ${
+              shopping ? 'opacity-0 pointer-events-none -translate-y-2' : 'opacity-100 translate-y-0'
             }`}
           >
             <button
@@ -138,14 +141,16 @@ export default function SiteHeader({
             </div>
           </div>
 
-          {/* ── SHOPPING layer ─────────────────────────────────────────── */}
+          {/* ── SHOPPING layer (full nav · no logo · pops in after hero) ─ */}
           <div
-            className={`absolute inset-0 flex items-center justify-between gap-4 px-4 sm:px-6 transition-opacity duration-300 ${
-              shopping ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-all duration-300 ease-out ${
+              shopping
+                ? 'opacity-100 translate-y-0 pointer-events-auto'
+                : 'opacity-0 -translate-y-full pointer-events-none'
             }`}
           >
-            {/* Left: hamburger (mobile) + smaller logo */}
-            <div className="flex items-center gap-2">
+            {/* Left: hamburger (mobile) + the regular logo */}
+            <div className="justify-self-start flex items-center gap-2">
               <button
                 onClick={() => setDrawerOpen(true)}
                 aria-label={labels.menu}
@@ -164,51 +169,66 @@ export default function SiteHeader({
               </Link>
             </div>
 
-            {/* Center: nav links (desktop) */}
-            <nav className="hidden lg:flex items-center gap-7">
-              <Link href={dropHref} className={navLink}>{labels.newDrop}</Link>
+            {/* Center: full taxonomy with dropdowns (desktop) */}
+            <nav className="hidden lg:flex items-center justify-center gap-x-3 xl:gap-x-5 col-start-2">
+              <Link href="/shop" className={navLink}>{labels.shopAll}</Link>
 
-              {/* Shop — mega-menu (CSS hover) */}
-              <div className="relative group h-full flex items-center">
-                <Link href="/shop" className={navLink}>
-                  {labels.shop} <span className="text-[8px]">▾</span>
-                </Link>
-                <div className="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block">
-                  <div className="mt-2 bg-bg border border-ink/15 shadow-[0_16px_50px_rgba(0,0,0,0.6)] p-6 grid grid-cols-[1fr_1fr] gap-x-10 w-[460px]">
-                    <div>
-                      <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 mb-3">{labels.brandsTitle}</div>
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                        {brands.slice(0, 12).map((b) => (
-                          <Link key={b.slug} href={`/brand/${b.slug}`} className="text-[11px] text-ink/70 hover:text-accent transition-colors truncate">
-                            {b.nameEn}
-                          </Link>
-                        ))}
-                      </div>
-                      <Link href="/brands" className="block mt-3 font-mono text-[9px] uppercase tracking-wide text-accent hover:text-accent-bright">
-                        {labels.allBrands} ({brands.length}) →
+              {MENU.map((item) => {
+                const label = ar ? item.ar : item.en;
+
+                if (item.brands) {
+                  if (brands.length === 0) {
+                    return <Link key={item.en} href={item.href} className={navLink}>{label}</Link>;
+                  }
+                  return (
+                    <div key={item.en} className="relative group flex items-center">
+                      <Link href={item.href} className={navLink}>
+                        {label} <span className="text-[8px]">▾</span>
                       </Link>
-                    </div>
-                    <div>
-                      <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink/40 mb-3">{labels.shopAll}</div>
-                      <div className="grid gap-1.5">
-                        {categoryItems.map((c) => (
-                          <Link key={c.en} href={c.href} className="text-[11px] text-ink/70 hover:text-accent transition-colors truncate">
-                            {ar ? c.ar : c.en}
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block pt-2">
+                        <div className="bg-bg border border-ink/15 shadow-[0_16px_50px_rgba(0,0,0,0.6)] p-4 grid grid-cols-2 gap-x-6 gap-y-1.5 w-[320px]">
+                          {brands.slice(0, 12).map((b) => (
+                            <Link key={b.slug} href={`/brand/${b.slug}`} className="text-[11px] text-ink/70 hover:text-accent transition-colors truncate">
+                              {b.nameEn}
+                            </Link>
+                          ))}
+                          <Link href="/brands" className="col-span-2 mt-2 pt-2 border-t border-ink/10 font-mono text-[9px] uppercase tracking-wide text-accent hover:text-accent-bright">
+                            {labels.allBrands} ({brands.length}) →
                           </Link>
-                        ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  );
+                }
 
-              <Link href="/jeddah" className={navLink}>{labels.collections}</Link>
+                if (item.children && item.children.length > 0) {
+                  return (
+                    <div key={item.en} className="relative group flex items-center">
+                      <Link href={item.href} className={navLink}>
+                        {label} <span className="text-[8px] ms-1">▾</span>
+                      </Link>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block pt-2">
+                        <div className="bg-bg border border-ink/15 shadow-[0_16px_50px_rgba(0,0,0,0.6)] p-3 w-[210px]">
+                          {item.children.map((c) => (
+                            <Link key={c.slug} href={`/category/${c.slug}`} className="block text-[11px] text-ink/70 hover:text-accent transition-colors py-1 truncate">
+                              {ar ? c.ar : c.en}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return <Link key={item.en} href={item.href} className={navLink}>{label}</Link>;
+              })}
+
               <Link href="/lookbook" className={navLink}>{labels.lookbook}</Link>
               <Link href="/about" className={navLink}>{labels.about}</Link>
             </nav>
 
             {/* Right: search + account + cart */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5">
+            <div className="justify-self-end col-start-3 flex items-center gap-1.5 sm:gap-2.5">
               <SearchOverlay label={labels.search} placeholder={labels.searchPlaceholder} />
               <AccountMenu />
               <CartLink />
