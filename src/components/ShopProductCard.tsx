@@ -54,28 +54,34 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
 
   return (
     <>
-      <Link
-        href={`/product/${product.slug}`}
-        className="group block"
-        onMouseEnter={() => router.prefetch(`/product/${product.slug}`)}
-      >
+      {/* The wishlist + quick-view buttons must NOT live inside the <a> (a
+          <button> in an <a> is invalid HTML and breaks hydration). So the image
+          link and the buttons are siblings inside this relative container. */}
+      <div className="group block">
         <div className="relative aspect-[4/5] bg-paper-2 overflow-hidden mb-3">
-          {product.images[0] ? (
-            <Image
-              src={product.images[0]}
-              alt={name}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-1/2 h-1/2 bg-black/[0.06]" />
-            </div>
-          )}
+          <Link
+            href={`/product/${product.slug}`}
+            aria-label={name}
+            className="block w-full h-full"
+            onMouseEnter={() => router.prefetch(`/product/${product.slug}`)}
+          >
+            {product.images[0] ? (
+              <Image
+                src={product.images[0]}
+                alt={name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-1/2 h-1/2 bg-black/[0.06]" />
+              </div>
+            )}
+          </Link>
 
           {soldOut && (
-            <div className="absolute inset-0 flex items-center justify-center bg-paper/40">
+            <div className="absolute inset-0 flex items-center justify-center bg-paper/40 pointer-events-none">
               <span className="font-mono text-[9px] tracking-label uppercase text-coal border border-coal/50 px-3 py-1.5 -rotate-[8deg] bg-paper/80">
                 {t('soldOut')}
               </span>
@@ -83,7 +89,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           )}
 
           {!soldOut && (
-            <div className="absolute top-2 ltr:right-2 rtl:left-2 font-mono text-[8.5px] text-coal/65 bg-paper/80 px-1.5 py-0.5">
+            <div className="absolute top-2 ltr:right-2 rtl:left-2 font-mono text-[8.5px] text-coal/65 bg-paper/80 px-1.5 py-0.5 pointer-events-none">
               {left} / {product.totalPieces}
             </div>
           )}
@@ -92,7 +98,7 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           <button
             onClick={toggleWish}
             aria-label={tp('save')}
-            className={`absolute top-1.5 ltr:left-1.5 rtl:right-1.5 w-8 h-8 flex items-center justify-center text-[15px] rounded-full transition-all ${
+            className={`absolute top-1.5 ltr:left-1.5 rtl:right-1.5 z-10 w-8 h-8 flex items-center justify-center text-[15px] rounded-full transition-all ${
               saved
                 ? 'text-red-500 opacity-100'
                 : 'text-coal/60 bg-paper/60 opacity-100 lg:opacity-0 lg:bg-paper/85 lg:group-hover:opacity-100 hover:text-coal'
@@ -104,30 +110,28 @@ export default function ShopProductCard({ product }: { product: ProductView }) {
           {/* Quick view — bottom bar. Always shown on touch; hover-reveal on desktop. */}
           {!soldOut && (
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setQuick(true);
-              }}
-              className="absolute bottom-0 inset-x-0 bg-coal/85 text-paper font-mono text-[10px] tracking-[0.16em] uppercase py-2.5 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all"
+              onClick={() => setQuick(true)}
+              className="absolute bottom-0 inset-x-0 z-10 bg-coal/85 text-paper font-mono text-[10px] tracking-[0.16em] uppercase py-2.5 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all"
             >
               {tp('quickView')}
             </button>
           )}
         </div>
 
-        {product.brandNameEn && (
-          <div className="font-mono text-[9px] text-coal/65 tracking-[0.08em] uppercase mb-0.5">
-            {product.brandNameEn}
+        <Link href={`/product/${product.slug}`} className="block">
+          {product.brandNameEn && (
+            <div className="font-mono text-[9px] text-coal/65 tracking-[0.08em] uppercase mb-0.5">
+              {product.brandNameEn}
+            </div>
+          )}
+          <div className="flex items-baseline justify-between gap-2">
+            <div className="text-[13px] font-medium text-coal leading-tight">{name}</div>
+            <div className="font-mono text-[12px] text-coal whitespace-nowrap">
+              {formatPrice(inclVat(product.price), locale)}
+            </div>
           </div>
-        )}
-        <div className="flex items-baseline justify-between gap-2">
-          <div className="text-[13px] font-medium text-coal leading-tight">{name}</div>
-          <div className="font-mono text-[12px] text-coal whitespace-nowrap">
-            {formatPrice(inclVat(product.price), locale)}
-          </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
 
       {quick && <QuickView product={product} onClose={() => setQuick(false)} />}
     </>

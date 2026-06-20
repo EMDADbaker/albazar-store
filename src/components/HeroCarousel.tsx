@@ -102,16 +102,20 @@ export default function HeroCarousel({
             {current?.subtitle || ' '}
           </p>
         </div>
-        {/* A slide can link to a landing/edit page — gold CTA pill. */}
-        {current?.href && enterLabel && (
-          <Link
-            href={current.href}
-            className="inline-flex items-center gap-2 border border-accent/60 text-accent font-mono text-[11px] tracking-[0.2em] uppercase px-6 py-3 mb-2 hover:bg-accent hover:text-bg transition-colors"
-          >
-            {enterLabel} <span aria-hidden>→</span>
-          </Link>
-        )}
-        {children}
+        {/* Either the slide's CTA (edit/landing slides) OR the scroll cue —
+            never both, so they can't crowd each other. Centered on its own row. */}
+        <div className="flex justify-center">
+          {current?.href && enterLabel ? (
+            <Link
+              href={current.href}
+              className="inline-flex items-center gap-2 bg-accent text-bg font-mono text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-accent-bright transition-colors"
+            >
+              {enterLabel} <span aria-hidden>→</span>
+            </Link>
+          ) : (
+            children
+          )}
+        </div>
       </div>
 
       {n > 1 && (

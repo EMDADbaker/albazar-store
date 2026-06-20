@@ -1,10 +1,11 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { getAllActiveBrands } from '@/lib/brands';
 import SiteHeader, { type HeaderLabels } from './SiteHeader';
+import ClassicHeader from './ClassicHeader';
 
-// Server wrapper: fetches the (cached) nav data and renders the dual-state
-// SiteHeader. Pass `hero` on pages that render a #hero-sentinel (homepage,
-// /jeddah) to enable Hero Mode; everything else stays in Shopping Mode.
+// Server wrapper: fetches the (cached) nav data. Hero pages (homepage, /jeddah)
+// get the transparent->solid dual-state SiteHeader; every other page gets the
+// classic multi-row header whose taxonomy row sticks on scroll.
 export default async function Nav({ hero = false }: { hero?: boolean }) {
   const t = await getTranslations('Nav');
   const tb = await getTranslations('Brands');
@@ -21,6 +22,7 @@ export default async function Nav({ hero = false }: { hero?: boolean }) {
   const labels: HeaderLabels = {
     menu: t('menu'),
     close: t('close'),
+    freeShip: t('freeShip'),
     shopAll: t('shopAll'),
     allBrands: tb('title'),
     brandsTitle: tb('nav'),
@@ -37,5 +39,9 @@ export default async function Nav({ hero = false }: { hero?: boolean }) {
     searchPlaceholder: t('searchPlaceholder'),
   };
 
-  return <SiteHeader hero={hero} brands={brands} locale={locale} labels={labels} />;
+  return hero ? (
+    <SiteHeader hero brands={brands} locale={locale} labels={labels} />
+  ) : (
+    <ClassicHeader brands={brands} locale={locale} labels={labels} />
+  );
 }

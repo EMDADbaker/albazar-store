@@ -15,6 +15,7 @@ type Brand = { slug: string; nameEn: string };
 export type HeaderLabels = {
   menu: string;
   close: string;
+  freeShip: string;
   shopAll: string;
   allBrands: string;
   brandsTitle: string;
