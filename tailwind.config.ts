@@ -43,8 +43,10 @@ const config: Config = {
           '50%': { opacity: '0.9' },
         },
         reveal: {
-          from: { opacity: '0', transform: 'translateY(14px)' },
-          to: { opacity: '1', transform: 'none' },
+          // Opacity-only on purpose: a `transform` here would make this element
+          // a containing block and break the fixed header nested inside it.
+          from: { opacity: '0' },
+          to: { opacity: '1' },
         },
       },
       animation: {
