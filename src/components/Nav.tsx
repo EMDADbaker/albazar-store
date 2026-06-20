@@ -6,7 +6,13 @@ import ClassicHeader from './ClassicHeader';
 // Server wrapper: fetches the (cached) nav data. Hero pages (homepage, /jeddah)
 // get the transparent->solid dual-state SiteHeader; every other page gets the
 // classic multi-row header whose taxonomy row sticks on scroll.
-export default async function Nav({ hero = false }: { hero?: boolean }) {
+export default async function Nav({
+  hero = false,
+  minimal = false,
+}: {
+  hero?: boolean;
+  minimal?: boolean;
+}) {
   const t = await getTranslations('Nav');
   const tb = await getTranslations('Brands');
   const locale = await getLocale();
@@ -40,7 +46,7 @@ export default async function Nav({ hero = false }: { hero?: boolean }) {
   };
 
   return hero ? (
-    <SiteHeader hero brands={brands} locale={locale} labels={labels} />
+    <SiteHeader hero minimal={minimal} brands={brands} locale={locale} labels={labels} />
   ) : (
     <ClassicHeader brands={brands} locale={locale} labels={labels} />
   );

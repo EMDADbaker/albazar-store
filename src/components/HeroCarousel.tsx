@@ -108,7 +108,7 @@ export default function HeroCarousel({
           {current?.href && enterLabel ? (
             <Link
               href={current.href}
-              className="inline-flex items-center gap-2 bg-accent text-bg font-mono text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-accent-bright transition-colors"
+              className="inline-flex items-center gap-3 border border-ink/55 text-ink bg-transparent backdrop-blur-[1px] font-mono text-[11px] tracking-[0.2em] uppercase px-8 py-4 hover:bg-ink hover:text-bg hover:border-ink transition-colors"
             >
               {enterLabel} <span aria-hidden>→</span>
             </Link>

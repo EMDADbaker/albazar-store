@@ -49,11 +49,16 @@ export default function SiteHeader({
   brands,
   locale,
   labels,
+  minimal = false,
 }: {
   hero: boolean;
   brands: Brand[];
   locale: string;
   labels: HeaderLabels;
+  // `minimal`: keep the hamburger + centered-logo header in BOTH states (only
+  // the background solidifies on scroll). Used by editorial pages like /jeddah
+  // that shouldn't turn into the full taxonomy bar.
+  minimal?: boolean;
 }) {
   const ar = locale === 'ar';
   const [mode, setMode] = useState<'hero' | 'shopping'>(hero ? 'hero' : 'shopping');
@@ -111,12 +116,12 @@ export default function SiteHeader({
         <div
           dir="ltr"
           className="relative transition-[height] duration-300 ease-out"
-          style={{ height: shopping ? 56 : 76 }}
+          style={{ height: minimal ? 72 : shopping ? 56 : 76 }}
         >
           {/* ── HERO layer (hamburger · centered logo · account/cart) ─── */}
           <div
             className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-all duration-300 ease-out ${
-              shopping ? 'opacity-0 pointer-events-none -translate-y-2' : 'opacity-100 translate-y-0'
+              !minimal && shopping ? 'opacity-0 pointer-events-none -translate-y-2' : 'opacity-100 translate-y-0'
             }`}
           >
             <button
@@ -142,7 +147,10 @@ export default function SiteHeader({
             </div>
           </div>
 
-          {/* ── SHOPPING layer (full nav · no logo · pops in after hero) ─ */}
+          {/* ── SHOPPING layer (full nav · no logo · pops in after hero).
+                 Skipped entirely in `minimal` mode so the header never turns
+                 into the taxonomy bar. ─────────────────────────────────────── */}
+          {!minimal && (
           <div
             className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-all duration-300 ease-out ${
               shopping
@@ -226,6 +234,7 @@ export default function SiteHeader({
               <CartLink />
             </div>
           </div>
+          )}
         </div>
       </header>
 
