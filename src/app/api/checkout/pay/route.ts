@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+import { getDisabledPaymentIds } from '@/lib/payment';
 
 const schema = z.object({
   orderId: z.string().min(1),
@@ -18,6 +19,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'invalid' }, { status: 400 });
   }
   const { orderId, method } = parsed.data;
+
+  // Reject methods the admin has switched off (don't trust the client).
+  if ((await getDisabledPaymentIds()).includes(method)) {
+    return NextResponse.json({ error: 'method_disabled' }, { status: 400 });
+  }
 
   try {
     const order = await prisma.order.findUnique({

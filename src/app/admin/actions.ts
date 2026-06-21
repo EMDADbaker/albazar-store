@@ -445,3 +445,15 @@ export async function deleteCategory(id: string) {
   revalidateTag('nav');
   revalidateTag('catalog');
 }
+
+// ── Payment methods ──────────────────────────────────────────────────────────
+export async function setPaymentDisabled(disabled: string[]) {
+  await assertAdmin();
+  await prisma.setting.upsert({
+    where: { key: 'payment_disabled' },
+    update: { value: { disabled } },
+    create: { key: 'payment_disabled', value: { disabled } },
+  });
+  revalidatePath('/admin/payments');
+  revalidateTag('payments');
+}

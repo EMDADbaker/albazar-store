@@ -8,18 +8,9 @@ import { useCart } from './CartProvider';
 import { formatPrice } from '@/lib/money';
 
 type Snapshot = { orderNumber: string; total: number };
+type Method = { id: string; label: string; card: boolean };
 
-const METHODS = [
-  { id: 'mada', label: 'Mada', card: true },
-  { id: 'visa', label: 'Visa / Mastercard', card: true },
-  { id: 'applepay', label: 'Apple Pay', card: false },
-  { id: 'stcpay', label: 'STC Pay', card: false },
-  { id: 'tabby', label: 'Tabby — 4 payments', card: false },
-  { id: 'tamara', label: 'Tamara — split in 3', card: false },
-  { id: 'cash', label: 'Cash on delivery', card: false },
-];
-
-function PaymentInner() {
+function PaymentInner({ methods }: { methods: Method[] }) {
   const t = useTranslations('Payment');
   const locale = useLocale();
   const router = useRouter();
@@ -28,7 +19,7 @@ function PaymentInner() {
   const orderId = params.get('order');
 
   const [snap, setSnap] = useState<Snapshot | null>(null);
-  const [method, setMethod] = useState('mada');
+  const [method, setMethod] = useState(() => methods[0]?.id ?? '');
   const [card, setCard] = useState({ number: '', exp: '', cvc: '' });
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState(false);
@@ -43,7 +34,7 @@ function PaymentInner() {
     }
   }, [orderId]);
 
-  const active = METHODS.find((m) => m.id === method);
+  const active = methods.find((m) => m.id === method);
 
   async function pay() {
     setError(false);
@@ -81,6 +72,18 @@ function PaymentInner() {
     );
   }
 
+  // Admin can switch every method off.
+  if (methods.length === 0) {
+    return (
+      <div className="flex-1 px-6 py-24 text-center">
+        <p className="text-[14px] text-coal/60 mb-6 max-w-sm mx-auto">{t('noMethods')}</p>
+        <a href="https://wa.me/966500000000" className="font-mono text-[11px] uppercase tracking-wide text-coal underline">
+          WhatsApp
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 px-5 sm:px-6 py-12 max-w-md mx-auto w-full">
       <div className="text-center mb-8">
@@ -97,7 +100,7 @@ function PaymentInner() {
 
       {/* Method picker */}
       <div className="grid grid-cols-2 gap-2 mb-5">
-        {METHODS.map((m) => (
+        {methods.map((m) => (
           <button
             key={m.id}
             onClick={() => setMethod(m.id)}
@@ -163,10 +166,10 @@ function PaymentInner() {
   );
 }
 
-export default function PaymentView() {
+export default function PaymentView({ methods }: { methods: Method[] }) {
   return (
     <Suspense fallback={<div className="flex-1" />}>
-      <PaymentInner />
+      <PaymentInner methods={methods} />
     </Suspense>
   );
 }

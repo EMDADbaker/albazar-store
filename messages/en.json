@@ -191,7 +191,8 @@
     "failed": "Payment failed. Try again.",
     "processing": "Processing…",
     "pay": "Pay",
-    "demoNote": "Demo mode — no real charge. Any details work."
+    "demoNote": "Demo mode — no real charge. Any details work.",
+    "noMethods": "Online payment is temporarily unavailable. Please reach us on WhatsApp to complete your order."
   },
   "Confirmation": {
     "eyebrow": "Payment confirmed",
