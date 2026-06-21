@@ -109,10 +109,13 @@ export default function ClassicHeader({
     </nav>
   );
 
+  // NOTE: the sticky nav row is a SIBLING of the top rows (not nested in a short
+  // header), so its containing block is the page itself — that's what lets it
+  // stick to the top across the whole scroll instead of only the header's height.
   return (
-    <header className="relative z-40 bg-bg text-ink">
-      {/* ── Desktop: utility + logo scroll away; nav row sticks ──────────── */}
-      <div className="hidden lg:block">
+    <>
+      {/* ── Desktop: utility + logo (scroll away) ───────────────────────── */}
+      <header className="hidden lg:block bg-bg text-ink">
         <div dir="ltr" className="flex items-center justify-center gap-3 px-6 py-1.5 border-b border-ink/[0.06] text-[9px] font-mono tracking-wide uppercase text-ink/45">
           <a href="https://wa.me/966500000000" className="hover:text-accent transition-colors">
             WhatsApp · +966 50 000 0000
@@ -132,14 +135,15 @@ export default function ClassicHeader({
             <LangSwitch />
           </div>
         </div>
+      </header>
 
-        <div className="sticky top-0 z-50 bg-bg border-y border-ink/10">
-          {Taxonomy}
-        </div>
+      {/* ── Desktop: taxonomy row that STICKS to the top on scroll ───────── */}
+      <div className="hidden lg:block sticky top-0 z-50 bg-bg text-ink border-y border-ink/10">
+        {Taxonomy}
       </div>
 
       {/* ── Mobile: one compact bar that sticks ─────────────────────────── */}
-      <div dir="ltr" className="lg:hidden sticky top-0 z-50 bg-bg border-b border-ink/10 grid grid-cols-[1fr_auto_1fr] items-center px-4 py-2.5">
+      <div dir="ltr" className="lg:hidden sticky top-0 z-50 bg-bg text-ink border-b border-ink/10 grid grid-cols-[1fr_auto_1fr] items-center px-4 py-2.5">
         <button
           onClick={() => setDrawerOpen(true)}
           aria-label={labels.menu}
@@ -163,6 +167,6 @@ export default function ClassicHeader({
         locale={locale}
         labels={drawerLabels}
       />
-    </header>
+    </>
   );
 }
