@@ -122,30 +122,40 @@ export default function SiteHeader({
           className="relative transition-[height] duration-300 ease-out"
           style={{ height: minimal ? 72 : shopping ? 56 : 76 }}
         >
-          {/* ── HERO layer (hamburger · centered logo · account/cart) ─── */}
+          {/* ── HERO layer. Homepage: big hamburger + logo on the LEFT,
+                 account/cart right. /jeddah (minimal): centered logo. ─────── */}
           <div
-            className={`absolute inset-0 grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 transition-all duration-300 ease-out ${
+            className={`absolute inset-0 flex items-center ${minimal ? 'justify-center' : 'justify-between'} px-4 sm:px-6 transition-all duration-300 ease-out ${
               !minimal && shopping ? 'opacity-0 pointer-events-none -translate-y-2' : 'opacity-100 translate-y-0'
             }`}
           >
-            <button
-              onClick={() => setDrawerOpen(true)}
-              aria-label={labels.menu}
-              className="justify-self-start w-11 h-11 -ms-2 flex items-center justify-center text-ink/90 hover:text-accent transition-colors drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
-            >
-              {HAMBURGER}
-            </button>
-            <Link href="/" className="justify-self-center" aria-label="ALBAZAR">
-              <Image
-                src="/img/albazar-logo-white.png"
-                alt="ALBAZAR"
-                width={1424}
-                height={134}
-                priority
-                className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
-              />
-            </Link>
-            <div className="justify-self-end flex items-center gap-1.5 sm:gap-2.5">
+            {/* Big hamburger (+ logo on the homepage) on the left */}
+            <div className={`flex items-center gap-3 sm:gap-5 ${minimal ? 'absolute left-4 sm:left-6' : ''}`}>
+              <button
+                onClick={() => setDrawerOpen(true)}
+                aria-label={labels.menu}
+                className="-ms-1 flex items-center justify-center text-ink hover:text-accent transition-colors drop-shadow-[0_1px_5px_rgba(0,0,0,0.6)]"
+              >
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M3 7h18M3 12h18M3 17h18" />
+                </svg>
+              </button>
+              {!minimal && (
+                <Link href="/" aria-label="ALBAZAR">
+                  <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} priority className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" />
+                </Link>
+              )}
+            </div>
+
+            {/* Centered logo — /jeddah only */}
+            {minimal && (
+              <Link href="/" aria-label="ALBAZAR">
+                <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} priority className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" />
+              </Link>
+            )}
+
+            {/* Account + cart on the right */}
+            <div className={`flex items-center gap-1.5 sm:gap-2.5 ${minimal ? 'absolute right-4 sm:right-6' : ''}`}>
               <AccountMenu />
               <CartLink />
             </div>
