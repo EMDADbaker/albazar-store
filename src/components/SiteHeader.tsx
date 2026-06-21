@@ -122,15 +122,14 @@ export default function SiteHeader({
           className="relative transition-[height] duration-300 ease-out"
           style={{ height: minimal ? 72 : shopping ? 56 : 76 }}
         >
-          {/* ── HERO layer. Homepage: big hamburger + logo on the LEFT,
-                 account/cart right. /jeddah (minimal): centered logo. ─────── */}
+          {/* ── HERO layer: big hamburger + logo on the LEFT, account/cart
+                 on the right (homepage and /jeddah alike). ───────────────── */}
           <div
-            className={`absolute inset-0 flex items-center ${minimal ? 'justify-center' : 'justify-between'} px-4 sm:px-6 transition-all duration-300 ease-out ${
+            className={`absolute inset-0 flex items-center justify-between px-4 sm:px-6 transition-all duration-300 ease-out ${
               !minimal && shopping ? 'opacity-0 pointer-events-none -translate-y-2' : 'opacity-100 translate-y-0'
             }`}
           >
-            {/* Big hamburger (+ logo on the homepage) on the left */}
-            <div className={`flex items-center gap-3 sm:gap-5 ${minimal ? 'absolute left-4 sm:left-6' : ''}`}>
+            <div className="flex items-center gap-3 sm:gap-5">
               <button
                 onClick={() => setDrawerOpen(true)}
                 aria-label={labels.menu}
@@ -140,22 +139,12 @@ export default function SiteHeader({
                   <path d="M3 7h18M3 12h18M3 17h18" />
                 </svg>
               </button>
-              {!minimal && (
-                <Link href="/" aria-label="ALBAZAR">
-                  <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} priority className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" />
-                </Link>
-              )}
-            </div>
-
-            {/* Centered logo — /jeddah only */}
-            {minimal && (
               <Link href="/" aria-label="ALBAZAR">
                 <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} priority className="h-6 sm:h-8 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" />
               </Link>
-            )}
+            </div>
 
-            {/* Account + cart on the right */}
-            <div className={`flex items-center gap-1.5 sm:gap-2.5 ${minimal ? 'absolute right-4 sm:right-6' : ''}`}>
+            <div className="flex items-center gap-1.5 sm:gap-2.5">
               <AccountMenu />
               <CartLink />
             </div>
