@@ -56,8 +56,8 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
-    // Auto sign-in (by phone) then land on the account dashboard.
-    await signIn('credentials', { phone: `+966${form.phone}`, password: form.password, redirect: false });
+    // Auto sign-in (by phone identifier) then land on the account dashboard.
+    await signIn('credentials', { identifier: `+966${form.phone}`, password: form.password, redirect: false });
     window.location.href = '/account';
   }
 

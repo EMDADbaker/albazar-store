@@ -13,16 +13,23 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Albazar',
-      // Phone is the login identifier (email is optional on the account).
+      // Log in with EITHER email or Saudi phone number + password.
       credentials: {
-        phone: { label: 'Phone', type: 'text' },
+        identifier: { label: 'Email or phone', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.phone || !credentials.password) return null;
-        const phone = normalizeSaudiPhone(credentials.phone);
-        if (!phone) return null;
-        const user = await prisma.user.findUnique({ where: { phone } });
+        const id = credentials?.identifier?.trim();
+        if (!id || !credentials?.password) return null;
+
+        // Email if it looks like one, otherwise treat as a Saudi phone.
+        const user = id.includes('@')
+          ? await prisma.user.findUnique({ where: { email: id.toLowerCase() } })
+          : await (async () => {
+              const phone = normalizeSaudiPhone(id);
+              return phone ? prisma.user.findUnique({ where: { phone } }) : null;
+            })();
+
         if (!user) return null;
         const ok = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!ok) return null;

@@ -280,6 +280,7 @@
     "email": "Email",
     "password": "Password",
     "invalid": "Invalid email or password.",
+    "identifier": "Email or phone",
     "emailOptional": "Email (optional)",
     "emailTaken": "That email is already registered.",
     "phoneTaken": "That number already has an account.",
