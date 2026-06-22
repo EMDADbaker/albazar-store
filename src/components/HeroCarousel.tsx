@@ -84,10 +84,11 @@ export default function HeroCarousel({
           />
         </div>
       ))}
-      {/* Scrim: keep the image as the focus, just enough darkening for the text
-          (heavier at top/bottom for the floating header + scroll cue/dots). */}
+      {/* Light scrim — just enough darkening so the centred copy stays readable
+          while the slide image still shows through clearly. */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-bg/30 via-bg/20 to-bg/45" aria-hidden />
 
-      <div className="relative pt-8 w-full max-w-2xl px-2">
+      <div className="relative z-10 pt-8 w-full max-w-2xl px-2">
         <div className="font-mono text-[10px] tracking-[0.4em] text-accent uppercase mb-4 drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)]">
           {eyebrow}
         </div>
