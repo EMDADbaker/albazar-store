@@ -1,22 +1,16 @@
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getBrandBySlug, getAllActiveBrands } from '@/lib/brands';
-import { routing } from '@/i18n/routing';
+import { getBrandBySlug } from '@/lib/brands';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
+// Rendered on-demand with ISR (no generateStaticParams) so the build never
+// queries the DB for every brand — that exhausts the connection pool and fails
+// the Netlify build. First request generates + caches the page for `revalidate`.
 export const revalidate = 60;
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  const brands = await getAllActiveBrands();
-  return brands.flatMap((b) =>
-    routing.locales.map((locale) => ({ locale, slug: b.slug }))
-  );
-}
 
 export default async function BrandPage({
   params: { locale, slug },

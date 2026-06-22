@@ -2,28 +2,13 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getActiveDrop } from '@/lib/drop';
 import { getDropProducts } from '@/lib/products';
-import { routing } from '@/i18n/routing';
-import { prisma } from '@/lib/prisma';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 
+// On-demand ISR (no generateStaticParams) so the build doesn't query the DB for
+// every drop — keeps the Netlify build off the connection pool.
 export const revalidate = 60;
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  try {
-    const drops = await prisma.drop.findMany({
-      where: { published: true },
-      select: { slug: true },
-    });
-    return drops.flatMap((d) =>
-      routing.locales.map((locale) => ({ locale, slug: d.slug }))
-    );
-  } catch {
-    return [];
-  }
-}
 
 export default async function DropPage({
   params: { locale, slug },

@@ -1,21 +1,13 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { getCategoryBySlug, getCategoryNav } from '@/lib/categories';
-// (notFound no longer used — unknown slugs render a friendly empty state)
+import { getCategoryBySlug } from '@/lib/categories';
 import { menuTitleForSlug } from '@/lib/nav-menu';
-import { routing } from '@/i18n/routing';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 
+// On-demand ISR (no generateStaticParams) so the build doesn't query the DB for
+// every category — keeps the Netlify build off the connection pool.
 export const revalidate = 60;
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  const cats = await getCategoryNav();
-  return cats.flatMap((c) =>
-    routing.locales.map((locale) => ({ locale, slug: c.slug }))
-  );
-}
 
 export default async function CategoryPage({
   params: { locale, slug },
