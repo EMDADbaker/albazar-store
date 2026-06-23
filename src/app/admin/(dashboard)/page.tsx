@@ -7,15 +7,18 @@ export const dynamic = 'force-dynamic';
 const PAID = ['PAID', 'PACKED', 'SHIPPED', 'DELIVERED'] as const;
 
 export default async function AdminOverview() {
-  const [
-    products, brands, clients, pending, carts,
-    paidAgg, pendingAgg, paidItems, wishlist, lowStock, recent,
-  ] = await Promise.all([
+  // The DB is remote (high per-query latency) and the pooled connection limit is
+  // small (9). Firing all 11 queries at once exhausts the pool and the extras
+  // time out. Run them in two batches so we never exceed the connection limit.
+  const [products, brands, clients, pending, carts, lowStock] = await Promise.all([
     prisma.product.count(),
     prisma.brand.count({ where: { active: true } }),
     prisma.user.count({ where: { role: 'CLIENT' } }),
     prisma.order.count({ where: { status: 'PENDING' } }),
     prisma.cart.count(),
+    prisma.productVariant.count({ where: { stock: { lte: 3 } } }),
+  ]);
+  const [paidAgg, pendingAgg, paidItems, wishlist, recent] = await Promise.all([
     prisma.order.aggregate({ _sum: { total: true }, where: { status: { in: [...PAID] } } }),
     prisma.order.aggregate({ _sum: { total: true }, where: { status: 'PENDING' } }),
     // Only the fields the brand-score aggregation needs — keeps the payload
@@ -27,7 +30,6 @@ export default async function AdminOverview() {
     prisma.wishlistItem.findMany({
       select: { product: { select: { brand: { select: { nameEn: true } } } } },
     }),
-    prisma.productVariant.count({ where: { stock: { lte: 3 } } }),
     prisma.order.findMany({ orderBy: { createdAt: 'desc' }, take: 6, include: { items: true, user: true } }),
   ]);
 
