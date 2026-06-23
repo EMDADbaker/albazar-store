@@ -183,7 +183,7 @@ model User {
   id           String         @id @default(cuid())
   // Phone is the primary login identifier (required at registration); email is
   // now optional. Both unique-when-present (Postgres allows multiple NULLs).
-  email        String?        @unique
+  email         String?        @unique
   passwordHash String
   name         String?
   phone        String?        @unique
@@ -234,6 +234,19 @@ model WishlistItem {
 model Setting {
   key   String @id
   value Json
+}
+
+// Short-lived email codes for account verification and password recovery.
+// One active code per (email, purpose); hashed, 10-minute expiry.
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  purpose   String // EMAIL_VERIFY | PASSWORD_RESET
+  codeHash  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, purpose])
 }
 
 // First-party behaviour signal for personalised recommendations.
