@@ -291,7 +291,22 @@
     "emailInvalid": "Enter a valid email address.",
     "phoneInvalid": "Enter a valid Saudi number (5X XXX XXXX).",
     "noAccount": "New here?",
-    "haveAccount": "Already have an account?"
+    "haveAccount": "Already have an account?",
+    "phoneOptional": "Phone (optional)",
+    "codeInvalid": "That code is wrong or expired.",
+    "codeTooSoon": "Please wait before requesting a new code.",
+    "sendCode": "Send code",
+    "enterCode": "Enter code",
+    "resendCode": "Resend code",
+    "codeSent": "We emailed you a verification code.",
+    "codeSentDemo": "Demo mode: the code is printed in the server log.",
+    "codeSentTo": "Enter the code sent to {email}",
+    "forgotPassword": "Forgot password?",
+    "resetTitle": "Reset password",
+    "resetSent": "If you have an account, we sent a reset code.",
+    "newPassword": "New password",
+    "resetPassword": "Reset password",
+    "backToSignIn": "Back to sign in"
   },
   "Account": {
     "title": "My account",

@@ -53,10 +53,11 @@ function LoginForm() {
       </div>
 
       <input
+        type="email"
         value={identifier}
         onChange={(e) => setIdentifier(e.target.value)}
-        placeholder={t('identifier')}
-        autoComplete="username"
+        placeholder={t('email')}
+        autoComplete="email"
         className={field}
       />
       <input
@@ -65,8 +66,17 @@ function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder={t('password')}
         autoComplete="current-password"
-        className={`${field} mb-4`}
+        className={`${field} mb-2`}
       />
+
+      <div className="text-right mb-4">
+        <Link
+          href="/forgot-password"
+          className="font-mono text-[10px] uppercase tracking-wide text-ink/50 hover:text-accent"
+        >
+          {t('forgotPassword')}
+        </Link>
+      </div>
 
       {error && (
         <div className="text-[11px] text-red-400 mb-4 font-mono text-center">{t('invalid')}</div>

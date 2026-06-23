@@ -291,7 +291,22 @@
     "emailInvalid": "اكتب إيميل صحيح.",
     "phoneInvalid": "اكتب رقم سعودي صحيح (5X XXX XXXX).",
     "noAccount": "جديد هنا؟",
-    "haveAccount": "عندك حساب؟"
+    "haveAccount": "عندك حساب؟",
+    "phoneOptional": "الجوال (اختياري)",
+    "codeInvalid": "الرمز غير صحيح أو منتهي.",
+    "codeTooSoon": "انتظر شوي قبل طلب رمز جديد.",
+    "sendCode": "أرسل الرمز",
+    "enterCode": "أدخل الرمز",
+    "resendCode": "إعادة إرسال الرمز",
+    "codeSent": "أرسلنا لك رمز التحقق على إيميلك.",
+    "codeSentDemo": "وضع تجريبي: الرمز مطبوع في سجلّ الخادم.",
+    "codeSentTo": "أدخل الرمز المرسل إلى {email}",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetTitle": "استعادة كلمة المرور",
+    "resetSent": "إذا كان عندك حساب، أرسلنا لك رمز الاستعادة.",
+    "newPassword": "كلمة المرور الجديدة",
+    "resetPassword": "تغيير كلمة المرور",
+    "backToSignIn": "الرجوع لتسجيل الدخول"
   },
   "Account": {
     "title": "حسابي",

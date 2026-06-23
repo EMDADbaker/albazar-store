@@ -43,66 +43,8 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Phone confirmation via WhatsApp OTP (Twilio Verify). Falls back to demo
-  // acceptance server-side until the Twilio env vars are configured.
-  const [codeSent, setCodeSent] = useState(false);
-  const [codeInput, setCodeInput] = useState('');
-  const [verified, setVerified] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [codeError, setCodeError] = useState(false);
-
   function setPhone(v: string) {
     set('phone', v.replace(/[^\d]/g, ''));
-    // Any change to the number invalidates a prior confirmation.
-    setCodeSent(false);
-    setVerified(false);
-    setCodeInput('');
-    setCodeError(false);
-  }
-
-  async function sendCode() {
-    setError(null);
-    if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
-    setSending(true);
-    try {
-      const res = await fetch('/api/otp/request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `+966${form.phone}` }),
-      });
-      if (!res.ok) {
-        setError(t('errorGeneric'));
-        return;
-      }
-      setCodeSent(true);
-      setVerified(false);
-      setCodeInput('');
-      setCodeError(false);
-    } catch {
-      setError(t('errorGeneric'));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  async function confirmCode() {
-    setCodeError(false);
-    setVerifying(true);
-    try {
-      const res = await fetch('/api/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `+966${form.phone}`, code: codeInput }),
-      });
-      const data = await res.json();
-      if (data.approved) setVerified(true);
-      else setCodeError(true);
-    } catch {
-      setCodeError(true);
-    } finally {
-      setVerifying(false);
-    }
   }
 
   if (lines.length === 0) {
@@ -130,7 +72,6 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
   async function submit() {
     setError(null);
     if (!isValidSaudiPhone(`+966${form.phone}`)) return setError(t('errorPhone'));
-    if (!verified) return setError(t('verifyFirst'));
     if (!/^\d{5}$/.test(form.postalCode)) return setError(t('errorPostal'));
     if (!form.fullName || !form.city || !form.district || !form.street || !form.building) {
       return setError(t('errorGeneric'));
@@ -184,7 +125,7 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
           {form.email && <ReadOnlyRow label={t('email').replace(' (optional)', '')} value={form.email} />}
         </Section>
 
-        <Section label={t('verifyTitle')}>
+        <Section label={t('phone')}>
           <div>
             <FieldLabel>{t('phone')}</FieldLabel>
             <div className="flex gap-2">
@@ -197,63 +138,10 @@ export default function CheckoutView({ prefill }: { prefill?: Prefill }) {
                 onChange={(e) => setPhone(e.target.value)}
                 maxLength={9}
                 placeholder="5X XXX XXXX"
-                disabled={verified}
-                className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors disabled:opacity-60"
+                className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none transition-colors"
               />
-              {verified ? (
-                <button
-                  type="button"
-                  onClick={() => setPhone(form.phone)}
-                  className="font-mono text-[10px] uppercase tracking-wide text-coal/50 px-3 hover:text-coal"
-                >
-                  {t('changePhone')}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={sendCode}
-                  disabled={sending}
-                  className="font-mono text-[10px] uppercase tracking-wide bg-coal text-paper px-3 py-2 whitespace-nowrap hover:opacity-90 disabled:opacity-50"
-                >
-                  {sending ? t('sending') : codeSent ? t('resend') : t('sendCode')}
-                </button>
-              )}
             </div>
           </div>
-
-          {verified ? (
-            <div className="flex items-center gap-2 font-mono text-[11px] text-green-700">
-              <span>✓</span> {t('verified')}
-            </div>
-          ) : codeSent ? (
-            <div className="space-y-2">
-              <div className="font-mono text-[10px] text-coal/55">
-                {t('codeSentTo', { phone: `+966${form.phone}` })}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  dir="ltr"
-                  inputMode="numeric"
-                  value={codeInput}
-                  onChange={(e) => setCodeInput(e.target.value.replace(/[^\d]/g, ''))}
-                  maxLength={4}
-                  placeholder={t('enterCode')}
-                  className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] tracking-[0.3em] p-3 outline-none transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={confirmCode}
-                  disabled={codeInput.length < 4 || verifying}
-                  className="font-mono text-[10px] uppercase tracking-wide bg-coal text-paper px-4 whitespace-nowrap hover:opacity-90 disabled:opacity-40"
-                >
-                  {verifying ? t('verifying') : t('confirmCode')}
-                </button>
-              </div>
-              {codeError && <div className="font-mono text-[10px] text-red-600">{t('errorCode')}</div>}
-            </div>
-          ) : (
-            <div className="font-mono text-[10px] text-coal/40">{t('verifyHint')}</div>
-          )}
         </Section>
 
         <Section label={t('address')}>
