@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { spaceGrotesk, spaceMono, cairo } from '@/lib/fonts';
+import { spaceGrotesk, spaceMono, arabicFont } from '@/lib/fonts';
 import { CartProvider } from '@/components/CartProvider';
 import CartDrawer from '@/components/CartDrawer';
 import AuthSessionProvider from '@/components/AuthSessionProvider';
@@ -50,13 +51,25 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${spaceGrotesk.variable} ${spaceMono.variable} ${cairo.variable}`}
+      className={`${spaceGrotesk.variable} ${spaceMono.variable} ${arabicFont.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
       <body className="bg-bg text-ink antialiased">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-BTYRN10CND"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BTYRN10CND');
+          `}
+        </Script>
         <NextIntlClientProvider messages={messages}>
           <AuthSessionProvider>
             <CartProvider>

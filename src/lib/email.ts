@@ -8,7 +8,9 @@
 // and verify your sending domain in the Resend dashboard (DNS records).
 
 const API_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.EMAIL_FROM ?? 'ALBAZAR <onboarding@resend.dev>';
+// Sender. Override with EMAIL_FROM; the address's domain (albazars.com) must be
+// verified in Resend (DNS records) for delivery to succeed.
+const FROM = process.env.EMAIL_FROM ?? 'ALBAZAR <baker@albazars.com>';
 
 export const emailLive = Boolean(API_KEY);
 

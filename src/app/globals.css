@@ -13,12 +13,14 @@ body {
 }
 
 body {
-  font-family: var(--font-space-grotesk), var(--font-cairo), sans-serif;
+  font-family: var(--font-space-grotesk), var(--font-arabic), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 [dir='rtl'] body {
-  font-family: var(--font-cairo), var(--font-space-grotesk), sans-serif;
+  font-family: var(--font-arabic), var(--font-space-grotesk), sans-serif;
+  /* Tajawal at 500 reads solid and clear on the dark background. */
+  font-weight: 500;
 }
 
 /* Hairline borders used everywhere in the reference */

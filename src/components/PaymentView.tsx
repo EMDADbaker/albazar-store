@@ -20,7 +20,6 @@ function PaymentInner({ methods }: { methods: Method[] }) {
 
   const [snap, setSnap] = useState<Snapshot | null>(null);
   const [method, setMethod] = useState(() => methods[0]?.id ?? '');
-  const [card, setCard] = useState({ number: '', exp: '', cvc: '' });
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState(false);
 
@@ -39,22 +38,39 @@ function PaymentInner({ methods }: { methods: Method[] }) {
   async function pay() {
     setError(false);
     setPaying(true);
-    // Simulate gateway latency for realism.
-    await new Promise((r) => setTimeout(r, 1100));
     try {
-      const res = await fetch('/api/checkout/pay', {
+      // Cash on delivery is confirmed directly; every online method is handled
+      // by Paymob's hosted checkout (card data never touches our page).
+      if (method === 'cash') {
+        const res = await fetch('/api/checkout/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId, method }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          setError(true);
+          setPaying(false);
+          return;
+        }
+        clear();
+        router.push(`/checkout/confirmation?order=${orderId}`);
+        return;
+      }
+
+      const res = await fetch('/api/checkout/paymob', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, method }),
+        body: JSON.stringify({ orderId }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) {
+      if (!res.ok || !data.url) {
         setError(true);
         setPaying(false);
         return;
       }
-      clear();
-      router.push(`/checkout/confirmation?order=${orderId}`);
+      // Cart is cleared on the confirmation page after the webhook confirms.
+      window.location.href = data.url;
     } catch {
       setError(true);
       setPaying(false);
@@ -115,37 +131,9 @@ function PaymentInner({ methods }: { methods: Method[] }) {
         ))}
       </div>
 
-      {/* Card fields (demo — any input works) */}
-      {active?.card && (
-        <div className="space-y-2 mb-5">
-          <input
-            value={card.number}
-            onChange={(e) => setCard({ ...card, number: e.target.value })}
-            placeholder={t('cardNumber')}
-            inputMode="numeric"
-            className="w-full bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none"
-          />
-          <div className="flex gap-2">
-            <input
-              value={card.exp}
-              onChange={(e) => setCard({ ...card, exp: e.target.value })}
-              placeholder="MM / YY"
-              className="flex-1 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none"
-            />
-            <input
-              value={card.cvc}
-              onChange={(e) => setCard({ ...card, cvc: e.target.value })}
-              placeholder="CVC"
-              className="w-24 bg-paper-2 border border-coal/15 focus:border-coal text-coal font-mono text-[13px] p-3 outline-none"
-            />
-          </div>
-        </div>
-      )}
-      {!active?.card && (
-        <div className="border border-coal/15 bg-paper-2 px-4 py-5 mb-5 text-center font-mono text-[11px] text-coal/55">
-          {method === 'cash' ? t('cashNote') : t('redirectNote', { method: active?.label ?? '' })}
-        </div>
-      )}
+      <div className="border border-coal/15 bg-paper-2 px-4 py-5 mb-5 text-center font-mono text-[11px] text-coal/55">
+        {method === 'cash' ? t('cashNote') : t('redirectNote', { method: active?.label ?? '' })}
+      </div>
 
       {error && (
         <div className="text-[11px] text-red-600 mb-4 font-mono text-center">{t('failed')}</div>

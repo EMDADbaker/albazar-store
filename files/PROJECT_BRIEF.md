@@ -1,9 +1,9 @@
 # 🖤 ALBAZAR — Project Brief v2 (The Drop Machine)
 
 ## What This Is
-ALBAZAR (البازار) is a bilingual (Arabic/English) streetwear e-commerce site for the Saudi market, targeting Gen Z (18–28). This is NOT a general store — it is a **drop-based hype machine**. Limited pieces, numbered items, countdown launches, no discounts, no restocks. The owner has full ownership of code, data, and infrastructure.
+ALBAZAR (البازار) is a bilingual (Arabic/English) streetwear e-commerce site for the Saudi market, targeting Gen Z (18–28). This is a store that houses worldwide brands & Saudi local brands. The owner has full ownership of code, data, and infrastructure.
 
-Brand positioning: **exclusive, elevated, Riyadh-coded.** The visitor should feel like they discovered something, not like they walked into a mall.
+Brand positioning: **exclusive, elevated, Riyadh & Jeddah-coded.** The visitor should feel like they discovered something, not like they walked into a mall.
 
 ---
 
@@ -19,22 +19,23 @@ TEASE → COUNTDOWN → DROP → SELL OUT → ARCHIVE → repeat
 
 ---
 
-## 🧱 Tech Stack (unchanged — still own everything)
+## 🧱 Tech Stack (own everything — updated 2026-06-24)
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js 14 (App Router) + React |
-| Styling | Tailwind CSS (+ RTL plugin) |
+| Frontend | Next.js 14 (App Router) + React + TypeScript (strict) |
+| Styling | Tailwind CSS (+ RTL) |
 | Animations | Framer Motion (entrance, scroll reveals, countdown) |
 | Backend | Next.js API Routes |
-| Database | PostgreSQL (Supabase) |
+| Database | PostgreSQL (Supabase, region `ap-southeast-2` Sydney) |
 | ORM | Prisma |
-| Auth (admin only) | NextAuth.js |
-| Payments | Moyasar (Mada, Visa/MC, Apple Pay, STC Pay, Tabby, Tamara) |
-| Notifications | WhatsApp Business API (or Twilio WhatsApp) — primary channel; email secondary |
-| Images | Cloudinary |
-| Hosting | Vercel + Supabase |
-| i18n | next-intl (ar default, en secondary, full RTL) |
+| Auth | NextAuth.js — **admin AND customer accounts** (credentials: email or phone + password) |
+| Payments | **Paymob (KSA) Unified Checkout** — `ksa.paymob.com`, hosted checkout + HMAC webhook. (Was Moyasar in v2 plan.) |
+| Transactional email | **Resend** — verification codes + password reset, from `baker@albazars.com` |
+| Notifications | WhatsApp = primary customer channel; **email (Resend) = account/verification channel** |
+| Images | Cloudinary (catalogue) + local `/public/img` |
+| Hosting | **Netlify** (`albazar-sa.netlify.app`) + Supabase |
+| i18n | next-intl (ar default no-prefix, en `/en`, full RTL) |
 
 ---
 
@@ -86,9 +87,11 @@ Rules (these matter — theater must never cost sales):
 4. **Product page** — images, story of the piece, size selector + size guide, live stock + piece numbering, Add to Cart
 5. **The Archive** — past drops
 6. **Lookbook** — full-bleed campaign imagery, shoppable tags
-7. **Cart + Checkout** — guest checkout, Saudi address form, Moyasar payment
+7. **Cart + Checkout** — guest or logged-in checkout, Saudi address form, Paymob hosted payment
 8. **Order confirmation** — order number, piece number(s), invoice download, WhatsApp updates opt-in
-9. **Info pages** — About (brand story), Contact (WhatsApp-first), Terms / Privacy / Returns (placeholders, owner fills later)
+9. **Customer accounts** *(built — no longer cut)* — register (email-primary + email verification code; phone optional), login (email **or** phone), forgot/reset password, account dashboard (orders, wishlist, saved address)
+10. **Editorial — /jeddah** — Old Jeddah × Streetwear full-bleed editorial page (transparent scroll header)
+11. **Info pages** — About (brand story), Contact (WhatsApp-first), Terms / Privacy / Returns (placeholders, owner fills later — **needed before payment-gateway approval**)
 
 ### Admin (NextAuth-protected)
 1. **Drops manager** — create a drop: name, launchAt, teaser image, pieces, quantities. One button: "Schedule drop."
@@ -97,7 +100,7 @@ Rules (these matter — theater must never cost sales):
 4. **Vault manager** — waitlist list, export, broadcast announcement
 5. **Settings** — store identity, shipping rates per region, free-shipping threshold
 
-Cut from v1: coupons (no discounts — exclusivity), reviews (social proof comes from Instagram/TikTok embeds instead), customer accounts at launch (guest checkout + WhatsApp updates; accounts can come later if needed).
+Still cut: coupons (no discounts — exclusivity), reviews (social proof comes from Instagram/TikTok embeds instead). **Customer accounts are now built** (email-verified registration, login by email or phone, password reset) — guest checkout still supported alongside.
 
 ---
 
@@ -107,10 +110,13 @@ Cut from v1: coupons (no discounts — exclusivity), reviews (social proof comes
 - Prices: `٣٤٩ ر.س` (ar) / `SAR 349` (en), VAT-inclusive display with "شامل ضريبة القيمة المضافة 15%".
 - Brand voice in Arabic should be street, not formal — write ar.json copy like Riyadh Gen Z talks, not like a bank.
 
-## 💳 Payments — Moyasar (unchanged from v1)
-- Mada, Visa/MC, Apple Pay, STC Pay, Tabby, Tamara via hosted form / moyasar.js.
-- Webhooks for payment status; store payment_id/status/method; never touch card data.
-- **Drop-specific rule:** stock is decremented and piece numbers assigned only on confirmed payment webhook. A 10-minute soft-hold on inventory at checkout start prevents overselling during drop rushes.
+## 💳 Payments — Paymob KSA (updated 2026-06-24; replaces Moyasar)
+- **Unified Checkout** on `ksa.paymob.com`: server creates a payment *intention* (`/v1/intention/`, `Authorization: Token <secret_key>`) → customer is redirected to Paymob's hosted checkout (`/unifiedcheckout/?publicKey=…&clientSecret=…`). **Card data never touches our page** (PCI-safe).
+- **Webhook** `/api/webhooks/paymob`: HMAC-SHA512 signature verified before any fulfilment. On a verified success it calls the shared `markOrderPaid` helper.
+- Admin can enable/disable individual payment methods (stored in `Setting`). Cash-on-delivery is confirmed directly (no gateway).
+- Env: `PAYMOB_BASE_URL`, `PAYMOB_SECRET_KEY`, `PAYMOB_PUBLIC_KEY`, `PAYMOB_HMAC_SECRET`, `PAYMOB_INTEGRATION_ID`. Test keys wired; **integration-ID/account match still being finalised** in the Paymob dashboard.
+- **Drop-specific rule (unchanged):** stock is decremented and piece numbers assigned only on the confirmed payment webhook. A 10-minute soft-hold (`InventoryHold`) at checkout start prevents overselling during drop rushes.
+- Code lives in `src/lib/paymob.ts`, `src/lib/order-fulfill.ts`, `src/app/api/checkout/paymob/route.ts`, `src/app/api/webhooks/paymob/route.ts`.
 
 ## 🚚 Shipping (Phase 2 logic unchanged)
 - Manual flat rates per region + free-shipping threshold at launch; Aramex/SMSA API later.
@@ -149,12 +155,32 @@ InventoryHold
 VaultMember
   - id, phone, email?, whatsappOptIn, joinedAt, source
 
-AdminUser
-  - id, email, passwordHash, role
+User  (admin AND customers — role-based)
+  - id, email? (unique), phone? (unique), passwordHash, name?,
+    role (ADMIN/EMPLOYEE/CLIENT), addressJson?, vaultOptIn, createdAt
+  - relations: orders[], wishlist[], cart
+
+Cart  (server-synced cart for logged-in members)
+  - id, userId (unique), itemsJson, updatedAt
+
+WishlistItem
+  - id, userId, productId, createdAt
+
+HeroSlide  (owner-controlled homepage hero slides)
+  - id, image, titleAr/En, subtitleAr/En, active, sortOrder
+
+VerificationCode  (email verification + password reset)
+  - id, email, purpose (EMAIL_VERIFY/PASSWORD_RESET), codeHash, expiresAt
+  - hashed, 10-min expiry, one active code per (email, purpose)
+
+Event  (first-party behaviour signal for recommendations)
+  - id, userId?, anonId?, type (view/search/add_to_cart), productId?, query?, createdAt
 
 Setting
-  - key, value (shipping rates, thresholds, store identity)
+  - key, value (shipping rates, thresholds, store identity, disabled payment methods)
 ```
+
+> Note: the old `AdminUser` model is now the unified `User` model with a `role` field. Phone-OTP models (the retired Twilio flow) have been removed.
 
 ## 🔐 Security (unchanged from v1)
 - Admin behind NextAuth; server-side session checks on all mutating routes; env vars for all secrets; rate-limit checkout + login + vault signup; sanitize inputs; HTTPS.
@@ -165,7 +191,7 @@ Setting
 ## 🎨 Design Direction
 
 - **Palette:** near-black (#080808) base, off-white text, gold accent (exclusivity). One accent color only.
-- **Type:** a bold display sans for headlines (e.g., Space Grotesk), mono for labels/prices (Space Mono), Cairo for Arabic — test Arabic headlines at heavy weights.
+- **Type:** Space Grotesk (display/headlines), Space Mono (labels/prices), **Tajawal for Arabic** at weight 500+ (switched from Cairo 2026-06-24 — Cairo read too thin on the dark background).
 - **Motion:** entrance gate, scroll-reveal sections, ticker bar (bilingual), product hover states, countdown flips. Framer Motion everywhere, but 60fps mobile is the law.
 - **Photography:** this brand lives or dies on imagery. Square 1:1 product shots + cinematic 4:5 campaign shots. Shoot in the city — Riyadh locations are part of the identity.
 - **Copy tone:** short, confident, slightly cocky. "Limited pieces. No restocks." / "قطع محدودة. ما فيه إعادة."
@@ -179,12 +205,15 @@ Setting
 - [ ] Visual identity: palette, type, photography style
 - [ ] First drop defined: 4–8 pieces, quantities, prices
 
-### Phase 1 — The Machine
-- [ ] Next.js + Tailwind + next-intl + Prisma setup
-- [ ] Schema + migrations
-- [ ] Home (countdown + live modes), Drop page, Product page, Cart, Checkout
-- [ ] Moyasar test-mode integration + webhook + inventory holds + piece numbering
-- [ ] Admin: drops, products, orders
+### Phase 1 — The Machine  *(largely done)*
+- [x] Next.js + Tailwind + next-intl + Prisma setup
+- [x] Schema + migrations (live on Supabase)
+- [x] Home (countdown + live modes), Drop page, Product page, Cart, Checkout
+- [x] Inventory holds + piece numbering + shared `markOrderPaid` fulfilment
+- [~] **Paymob** test-mode integration + HMAC webhook *(code done; finalising dashboard integration-ID/account match)*
+- [x] Admin: drops, products, orders, payments toggle (perf-tuned: batched queries for the remote DB)
+- [x] Catalogue seeded (~157 products / 29 categories); dual-state header + brand/category nav
+- [x] Customer accounts: email-verified registration, login (email or phone), password reset (via Resend)
 - [ ] The Entrance + The Vault capture
 
 ### Phase 2 — Hype Layer
@@ -193,10 +222,11 @@ Setting
 - [ ] PDF invoices with piece numbers
 - [ ] Instagram/TikTok feed embed as social proof
 
-### Phase 3 — Legal & Live
+### Phase 3 — Legal & Live  *(in progress — onboarding payment gateways)*
 - [ ] CR, VAT, Muthooq added to footer + invoices
-- [ ] Terms/Privacy/Returns filled
-- [ ] Moyasar live keys; full drop dry-run in test mode first
+- [ ] Terms/Privacy/Returns filled  ← **required for Paymob/Tap merchant approval**
+- [ ] Paymob live keys + verified domain; full drop dry-run in test mode first
+- [ ] Set production env vars on Netlify (`PAYMOB_*`, `RESEND_API_KEY`, `EMAIL_FROM`)
 
 ### Phase 4 — Scale
 - [ ] Aramex/SMSA API, shipment tracking

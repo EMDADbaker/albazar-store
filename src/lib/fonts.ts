@@ -1,4 +1,4 @@
-import { Space_Grotesk, Space_Mono, Cairo } from 'next/font/google';
+import { Space_Grotesk, Space_Mono, Tajawal } from 'next/font/google';
 
 export const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -14,10 +14,12 @@ export const spaceMono = Space_Mono({
   display: 'swap',
 });
 
-export const cairo = Cairo({
+// Tajawal — geometric Arabic face. Reads noticeably heavier and clearer than
+// Cairo on the dark background. 500 is the default body weight (see globals);
+// 700/800 carry headings and labels.
+export const arabicFont = Tajawal({
   subsets: ['arabic', 'latin'],
-  // 900 dropped — no font-black in use; trims the Arabic font payload.
-  weight: ['400', '700'],
-  variable: '--font-cairo',
+  weight: ['400', '500', '700', '800'],
+  variable: '--font-arabic',
   display: 'swap',
 });

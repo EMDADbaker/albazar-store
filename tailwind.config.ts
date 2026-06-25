@@ -21,9 +21,9 @@ const config: Config = {
         coal: '#0d0d0d', // near-black text on light sections
       },
       fontFamily: {
-        display: ['var(--font-space-grotesk)', 'var(--font-cairo)', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'var(--font-arabic)', 'sans-serif'],
         mono: ['var(--font-space-mono)', 'monospace'],
-        arabic: ['var(--font-cairo)', 'var(--font-space-grotesk)', 'sans-serif'],
+        arabic: ['var(--font-arabic)', 'var(--font-space-grotesk)', 'sans-serif'],
       },
       letterSpacing: {
         label: '0.25em',

@@ -8,10 +8,11 @@ Design reference for the entrance + countdown homepage: open `design-reference.h
 ## Stack
 - Next.js 14 (App Router) + React + TypeScript
 - Tailwind CSS + RTL support, Framer Motion for animation
-- Prisma + PostgreSQL (Supabase), NextAuth (admin only)
+- Prisma + PostgreSQL (Supabase, Sydney region), NextAuth (admin + customer accounts)
 - next-intl: /messages/ar.json + /messages/en.json — ZERO hardcoded strings
-- Payments: Moyasar (Mada, Visa/MC, Apple Pay, STC Pay, Tabby, Tamara)
-- Images: Cloudinary. Hosting: Vercel + Supabase.
+- Payments: Paymob KSA Unified Checkout (hosted checkout + HMAC webhook)
+- Email: Resend (verification codes + password reset, from baker@albazars.com)
+- Images: Cloudinary. Hosting: Netlify + Supabase.
 
 ## Commands
 - `npm run dev` — dev server
@@ -21,7 +22,7 @@ Design reference for the entrance + countdown homepage: open `design-reference.h
 
 ## Hard rules (never violate)
 1. Homepage state (countdown/live/soldout) lives in the DB — flips without deploys.
-2. Piece numbers ("07 / 150") assigned ONLY on confirmed Moyasar payment webhook, never at add-to-cart.
+2. Piece numbers ("07 / 150") assigned ONLY on confirmed Paymob payment webhook (HMAC-verified), never at add-to-cart.
 3. Inventory: 10-min soft-hold at checkout start (InventoryHold model); decrement stock only on webhook.
 4. The Entrance overlay: first visit only (localStorage), auto-skipped during live drops, max 4s, always skippable.
 5. No discount/coupon code paths anywhere. No restocks. Exclusivity is the brand.
@@ -34,9 +35,10 @@ Design reference for the entrance + countdown homepage: open `design-reference.h
 ## Conventions
 - Server components by default; client components only when interactive.
 - TypeScript strict; no `any`.
-- Design tokens: bg #080808, text #f0f0f0, accent gold #C8A050 (only accent). Fonts: Space Grotesk (display), Space Mono (labels/prices), Cairo (Arabic).
+- Design tokens: bg #080808, text #f0f0f0, accent gold #C8A050 (only accent). Fonts: Space Grotesk (display), Space Mono (labels/prices), Tajawal (Arabic, weight 500+).
 - Commit style: imperative, max 72 chars.
 
 ## Current phase
 Phase 1 — The Machine (see PROJECT_BRIEF.md → Phases). Build order:
-schema → home (countdown+live modes) → drop/product pages → cart/checkout → Moyasar test mode + webhook → admin (drops/products/orders) → Entrance + Vault.
+schema → home (countdown+live modes) → drop/product pages → cart/checkout → Paymob test mode + webhook → admin (drops/products/orders) → Entrance + Vault.
+Most of Phase 1 is built (catalogue, accounts, admin, Paymob code). Remaining: Entrance + Vault; finalise Paymob dashboard integration-ID match + go live.

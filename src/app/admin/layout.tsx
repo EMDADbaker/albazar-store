@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { spaceGrotesk, spaceMono, cairo } from '@/lib/fonts';
+import { spaceGrotesk, spaceMono, arabicFont } from '@/lib/fonts';
 import '../globals.css';
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function AdminRootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`${spaceGrotesk.variable} ${spaceMono.variable} ${cairo.variable}`}
+      className={`${spaceGrotesk.variable} ${spaceMono.variable} ${arabicFont.variable}`}
     >
       <body className="bg-bg text-ink antialiased">{children}</body>
     </html>
