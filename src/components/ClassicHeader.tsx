@@ -7,7 +7,7 @@ import { MENU } from '@/lib/nav-menu';
 import MobileNav from './MobileNav';
 import AccountMenu from './AccountMenu';
 import CartLink from './CartLink';
-import LangSwitch from './LangSwitch';
+import SearchOverlay from './SearchOverlay';
 import type { HeaderLabels } from './SiteHeader';
 
 type Brand = { slug: string; nameEn: string };
@@ -117,8 +117,8 @@ export default function ClassicHeader({
       {/* ── Desktop: utility + logo (scroll away) ───────────────────────── */}
       <header className="hidden lg:block bg-bg text-ink">
         <div dir="ltr" className="flex items-center justify-center gap-3 px-6 py-1.5 border-b border-ink/[0.06] text-[9px] font-mono tracking-wide uppercase text-ink/45">
-          <a href="https://wa.me/966500000000" className="hover:text-accent transition-colors">
-            WhatsApp · +966 50 000 0000
+          <a href="https://wa.me/966550955832" className="hover:text-accent transition-colors">
+            WhatsApp · +966 55 095 5832
           </a>
           <span className="text-ink/20">·</span>
           <span className="text-accent/70">{labels.freeShip}</span>
@@ -130,16 +130,22 @@ export default function ClassicHeader({
             <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} priority className="h-8 w-auto" />
           </Link>
           <div className="justify-self-end flex items-center gap-2.5">
+            <SearchOverlay label={labels.search} placeholder={labels.searchPlaceholder} />
             <AccountMenu />
             <CartLink />
-            <LangSwitch />
           </div>
         </div>
       </header>
 
-      {/* ── Desktop: taxonomy row that STICKS to the top on scroll ───────── */}
-      <div className="hidden lg:block sticky top-0 z-50 bg-bg text-ink border-y border-ink/10">
-        {Taxonomy}
+      {/* ── Desktop: taxonomy row that STICKS to the top on scroll. Carries
+             search/account/cart on the right so they're ALWAYS reachable. ─── */}
+      <div dir="ltr" className="hidden lg:flex items-center sticky top-0 z-50 bg-bg text-ink border-y border-ink/10">
+        <div className="flex-1 min-w-0">{Taxonomy}</div>
+        <div className="flex items-center gap-2.5 shrink-0 ps-3 pe-6">
+          <SearchOverlay label={labels.search} placeholder={labels.searchPlaceholder} />
+          <AccountMenu />
+          <CartLink />
+        </div>
       </div>
 
       {/* ── Mobile: one compact bar that sticks ─────────────────────────── */}
@@ -155,6 +161,7 @@ export default function ClassicHeader({
           <Image src="/img/albazar-logo-white.png" alt="ALBAZAR" width={1424} height={134} className="h-6 w-auto" />
         </Link>
         <div className="justify-self-end flex items-center gap-1.5">
+          <SearchOverlay label={labels.search} placeholder={labels.searchPlaceholder} />
           <AccountMenu />
           <CartLink />
         </div>

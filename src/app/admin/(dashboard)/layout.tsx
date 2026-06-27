@@ -15,6 +15,7 @@ const NAV = [
   { href: '/admin/members', label: 'Members' },
   { href: '/admin/vault', label: 'Vault' },
   { href: '/admin/hero', label: 'Hero' },
+  { href: '/admin/journal', label: 'Journal' },
 ];
 
 export default async function DashboardLayout({

@@ -93,7 +93,7 @@ function PaymentInner({ methods }: { methods: Method[] }) {
     return (
       <div className="flex-1 px-6 py-24 text-center">
         <p className="text-[14px] text-coal/60 mb-6 max-w-sm mx-auto">{t('noMethods')}</p>
-        <a href="https://wa.me/966500000000" className="font-mono text-[11px] uppercase tracking-wide text-coal underline">
+        <a href="https://wa.me/966550955832" className="font-mono text-[11px] uppercase tracking-wide text-coal underline">
           WhatsApp
         </a>
       </div>

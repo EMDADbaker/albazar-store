@@ -11,10 +11,36 @@ import Accordion from '@/components/Accordion';
 import ShopProductCard from '@/components/ShopProductCard';
 import WishlistButton from '@/components/WishlistButton';
 import ProductViewTracker from '@/components/ProductViewTracker';
+import JsonLd from '@/components/JsonLd';
+import { productSchema, breadcrumbSchema } from '@/lib/jsonld';
+import { pageMeta, clamp } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 // On-demand ISR (no generateStaticParams) — the build must not query the DB for
 // every product (677 build-time queries exhaust the pool and fail the deploy).
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale, slug },
+}: {
+  params: { locale: string; slug: string };
+}): Promise<Metadata> {
+  const product = await getProductBySlug(slug);
+  if (!product) return {};
+  const name = locale === 'ar' ? product.nameAr : product.nameEn;
+  const story = locale === 'ar' ? product.storyAr : product.storyEn;
+  const brand = product.brandNameEn ? ` — ${product.brandNameEn}` : '';
+  return pageMeta({
+    locale,
+    path: `/product/${product.slug}`,
+    title: `${name}${brand}`,
+    description: clamp(story || name),
+    // The product photo is the share image — a reliable, real preview. (A
+    // generated branded card was tried but @vercel/og can't run on this dev
+    // environment to verify it, so we keep the dependable photo.)
+    images: product.images,
+  });
+}
 
 export default async function ProductPage({
   params: { locale, slug },
@@ -37,6 +63,18 @@ export default async function ProductPage({
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-coal">
+      <JsonLd
+        data={[
+          productSchema(product, locale),
+          breadcrumbSchema(locale, [
+            { name: 'ALBAZAR', path: '/' },
+            ...(product.brandSlug && product.brandNameEn
+              ? [{ name: product.brandNameEn, path: `/brand/${product.brandSlug}` }]
+              : []),
+            { name, path: `/product/${product.slug}` },
+          ]),
+        ]}
+      />
       <ProductViewTracker productId={product.id} />
       <Nav />
 

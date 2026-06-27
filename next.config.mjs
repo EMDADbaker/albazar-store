@@ -7,9 +7,9 @@ const nextConfig = {
   images: {
     // Prefer modern formats — Netlify Image CDN serves AVIF/WebP automatically.
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-    ],
+    // Allow any HTTPS image host so admin-pasted cover/product image URLs
+    // (imgbb, Cloudinary, etc.) work without whitelisting each one.
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
   async headers() {
     return [

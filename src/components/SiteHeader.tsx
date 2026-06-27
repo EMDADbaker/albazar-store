@@ -145,6 +145,7 @@ export default function SiteHeader({
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-2.5">
+              <SearchOverlay label={labels.search} placeholder={labels.searchPlaceholder} />
               <AccountMenu />
               <CartLink />
             </div>

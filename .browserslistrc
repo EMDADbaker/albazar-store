@@ -1,0 +1,11 @@
+# Target modern browsers so Next.js skips legacy transpilation/polyfills
+# (PageSpeed flagged ~11 KiB of unnecessary legacy JS). These cover all
+# evergreen browsers and current mobile Safari/Chrome used by the audience.
+> 0.5%
+last 2 versions
+not dead
+not op_mini all
+Chrome >= 90
+Safari >= 14
+Firefox >= 90
+iOS >= 14

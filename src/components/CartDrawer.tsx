@@ -28,10 +28,11 @@ export default function CartDrawer() {
     };
   }, [drawerOpen, closeCart]);
 
+  // Free shipping is based on the incl-VAT total, matching the displayed prices.
   const subtotalIncl = inclVat(subtotal);
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const pct = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
-  const freeUnlocked = remaining === 0 && subtotal > 0;
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotalIncl);
+  const pct = Math.min(100, Math.round((subtotalIncl / FREE_SHIPPING_THRESHOLD) * 100));
+  const freeUnlocked = remaining === 0 && subtotalIncl > 0;
 
   return (
     <div

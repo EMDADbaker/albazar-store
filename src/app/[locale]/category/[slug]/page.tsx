@@ -4,10 +4,38 @@ import { menuTitleForSlug } from '@/lib/nav-menu';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
+import JsonLd from '@/components/JsonLd';
+import { itemListSchema, breadcrumbSchema } from '@/lib/jsonld';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 // On-demand ISR (no generateStaticParams) so the build doesn't query the DB for
 // every category — keeps the Netlify build off the connection pool.
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale, slug },
+}: {
+  params: { locale: string; slug: string };
+}): Promise<Metadata> {
+  const category = await getCategoryBySlug(slug);
+  const name = category
+    ? locale === 'ar'
+      ? category.nameAr
+      : category.nameEn
+    : menuTitleForSlug(slug, locale);
+  const description =
+    locale === 'ar'
+      ? `${name} من البازار — ستريت وير وبراندات محدودة في السعودية.`
+      : `${name} at ALBAZAR — limited streetwear drops and brands in Saudi Arabia.`;
+  return pageMeta({
+    locale,
+    path: `/category/${slug}`,
+    title: name,
+    description,
+    images: category?.products[0]?.images,
+  });
+}
 
 export default async function CategoryPage({
   params: { locale, slug },
@@ -29,6 +57,15 @@ export default async function CategoryPage({
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-coal">
+      <JsonLd
+        data={[
+          breadcrumbSchema(locale, [
+            { name: 'ALBAZAR', path: '/' },
+            { name, path: `/category/${slug}` },
+          ]),
+          ...(products.length ? [itemListSchema(locale, products)] : []),
+        ]}
+      />
       <Nav />
 
       <section className="px-5 sm:px-8 pt-12 pb-6 max-w-6xl mx-auto w-full">
@@ -40,6 +77,11 @@ export default async function CategoryPage({
         </h1>
         <p className="font-mono text-[11px] text-coal/50">
           {ts('pieces', { count: products.length })}
+        </p>
+        <p className="text-[13px] text-coal/60 max-w-2xl mt-4 leading-relaxed">
+          {locale === 'ar'
+            ? `تشكيلة ${name} من البازار — ستريت وير وبراندات محدودة، أسعار شاملة الضريبة، وتوصيل لكل مدن السعودية.`
+            : `Shop the ${name} edit at ALBAZAR — limited streetwear and brands, VAT-inclusive prices, delivered to every city in Saudi Arabia.`}
         </p>
       </section>
 

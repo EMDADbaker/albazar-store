@@ -4,8 +4,26 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  return pageMeta({
+    locale,
+    path: '/shop',
+    title: locale === 'ar' ? 'كل القطع — ستريت وير وبراندات' : 'Shop All — Streetwear & Brands',
+    description:
+      locale === 'ar'
+        ? 'تصفّح كل القطع في البازار — دروبات ستريت وير محدودة وبراندات مختارة، توصيل لكل السعودية.'
+        : 'Browse every piece at ALBAZAR — limited streetwear drops and curated brands, delivered across Saudi Arabia.',
+  });
+}
 
 export default async function ShopPage({
   params: { locale },

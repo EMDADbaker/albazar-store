@@ -61,6 +61,7 @@ export const MENU: MenuItem[] = [
   // No dedicated pages yet — both point at the full shop for now.
   { en: 'New Arrivals', ar: 'وصل حديثاً', href: '/shop' },
   { en: 'Sale', ar: 'تخفيضات', href: '/shop' },
+  { en: 'Journal', ar: 'المجلة', href: '/journal' },
 ];
 
 // Human-readable title for a category slug, used by the category page when the

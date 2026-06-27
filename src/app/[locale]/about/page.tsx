@@ -5,8 +5,26 @@ import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 export const revalidate = false;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  return pageMeta({
+    locale,
+    path: '/about',
+    title: locale === 'ar' ? 'عن البازار' : 'About',
+    description:
+      locale === 'ar'
+        ? 'البازار — ستريت وير سعودي بأسلوب جيل Z. قطع محدودة، ما فيه إعادة. القصة من جدة للعالم.'
+        : 'ALBAZAR — Saudi streetwear for Gen Z. Limited pieces, no restocks. The story, from Jeddah outward.',
+  });
+}
 
 export default function AboutPage({
   params: { locale },

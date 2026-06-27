@@ -19,7 +19,7 @@ export default function AdminRootLayout({
       dir="ltr"
       className={`${spaceGrotesk.variable} ${spaceMono.variable} ${arabicFont.variable}`}
     >
-      <body className="bg-bg text-ink antialiased">{children}</body>
+      <body className="admin-shell bg-bg text-ink antialiased">{children}</body>
     </html>
   );
 }

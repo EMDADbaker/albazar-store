@@ -64,8 +64,24 @@ export default function HeroCarousel({
     startTimer(); // reset the countdown so a manual press gets a full interval
   };
 
+  // Touch swipe (mobile): swipe left → next slide, swipe right → previous.
+  const touchX = useRef<number | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current === null || n <= 1) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+  };
+
   return (
-    <section ref={sectionRef} className="relative px-6 h-[100svh] min-h-[480px] flex flex-col items-center justify-center text-center overflow-hidden">
+    <section
+      ref={sectionRef}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      className="relative px-6 h-[100svh] min-h-[480px] flex flex-col items-center justify-center text-center overflow-hidden">
       {slides.map((s, idx) => (
         <div
           key={idx}

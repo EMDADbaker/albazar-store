@@ -9,6 +9,8 @@ import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import Vault from '@/components/Vault';
 import ShopProductCard from '@/components/ShopProductCard';
+import JsonLd from '@/components/JsonLd';
+import { organizationSchema, websiteSchema } from '@/lib/jsonld';
 import { Link } from '@/i18n/routing';
 
 // ISR: storefront re-renders at most once a minute; flips (drops/hero) appear
@@ -35,7 +37,8 @@ export default async function Home({
   }));
 
   return (
-    <div className="relative animate-reveal min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col">
+      <JsonLd data={[organizationSchema(), websiteSchema()]} />
       {/* Header watches this: transparent while it's in view, solid once the
           full-screen slide has scrolled past (spans ~the hero height). */}
       <div id="hero-sentinel" className="absolute top-0 inset-x-0 h-[100svh] pointer-events-none" aria-hidden />

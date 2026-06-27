@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 
 // Click-to-open account dropdown: links + sign in/out for every role.
 // Session is read client-side (useSession) so the surrounding Nav stays static.
@@ -16,6 +16,17 @@ export default function AccountMenu() {
   const name = user?.email;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Language toggle lives in this dropdown (no separate header button).
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const nextLocale = locale === 'ar' ? 'en' : 'ar';
+  function switchLang() {
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+    setOpen(false);
+    router.replace(pathname, { locale: nextLocale });
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -88,6 +99,14 @@ export default function AccountMenu() {
               </Link>
             </>
           )}
+          {/* Language toggle — switches the whole site between Arabic & English */}
+          <button onClick={switchLang} className={`${item} border-t border-ink/10 mt-1 pt-3 flex items-center gap-2`}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
+            </svg>
+            {nextLocale === 'ar' ? 'العربية' : 'English'}
+          </button>
         </div>
       )}
     </div>

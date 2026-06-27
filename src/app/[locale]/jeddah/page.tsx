@@ -6,11 +6,30 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ShopProductCard from '@/components/ShopProductCard';
 import JeddahExpandText from '@/components/JeddahExpandText';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 // "OLD JEDDAH × STREETWEAR" editorial special — an art-directed collage page
 // reached from the STREET WEAR hero slide. Static/ISR like the other browse
 // pages. Monochrome + gold adaptation of an editorial festival layout.
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  return pageMeta({
+    locale,
+    path: '/jeddah',
+    title: locale === 'ar' ? 'جدة القديمة × ستريت وير' : 'Old Jeddah × Streetwear',
+    description:
+      locale === 'ar'
+        ? 'حكاية بين جدة القديمة والستريت وير — افتتاحية مصوّرة من البازار.'
+        : 'Where Old Jeddah meets streetwear — a photo editorial from ALBAZAR.',
+    images: ['/img/campaign/saudi-heritage.jpg'],
+  });
+}
 
 // Tiny gold spark used as scattered decoration (the "star" overlay pattern).
 function Spark({ className = '' }: { className?: string }) {

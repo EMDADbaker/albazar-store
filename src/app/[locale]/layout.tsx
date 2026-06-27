@@ -5,6 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { spaceGrotesk, spaceMono, arabicFont } from '@/lib/fonts';
+import { SITE_URL, SITE_NAME, DEFAULT_OG } from '@/lib/seo';
 import { CartProvider } from '@/components/CartProvider';
 import CartDrawer from '@/components/CartDrawer';
 import AuthSessionProvider from '@/components/AuthSessionProvider';
@@ -18,6 +19,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  themeColor: '#080808',
 };
 
 export async function generateMetadata({
@@ -26,9 +28,27 @@ export async function generateMetadata({
   params: { locale: string };
 }): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Meta' });
+  const canonical = locale === 'en' ? `${SITE_URL}/en` : SITE_URL;
   return {
-    title: t('title'),
+    metadataBase: new URL(SITE_URL),
+    title: { default: t('title'), template: `%s | ${SITE_NAME}` },
     description: t('description'),
+    applicationName: SITE_NAME,
+    appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: 'black-translucent' },
+    alternates: {
+      canonical,
+      languages: { ar: SITE_URL, en: `${SITE_URL}/en`, 'x-default': SITE_URL },
+    },
+    openGraph: {
+      type: 'website',
+      siteName: SITE_NAME,
+      url: canonical,
+      title: t('title'),
+      description: t('description'),
+      locale: locale === 'ar' ? 'ar_SA' : 'en_US',
+      images: [DEFAULT_OG],
+    },
+    twitter: { card: 'summary_large_image', title: t('title'), description: t('description'), images: [DEFAULT_OG] },
   };
 }
 

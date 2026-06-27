@@ -76,6 +76,7 @@ model Brand {
   active    Boolean   @default(true)
   sortOrder Int       @default(0)
   products  Product[]
+  posts     Post[] // brand-spotlight journal articles
   createdAt DateTime  @default(now())
 }
 
@@ -99,6 +100,7 @@ model Product {
   variants    ProductVariant[]
   orderItems  OrderItem[]
   wishlist    WishlistItem[]
+  posts       Post[]           @relation("PostProducts") // featured in journal "shop the story"
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
@@ -263,4 +265,27 @@ model Event {
   @@index([userId])
   @@index([anonId])
   @@index([productId])
+}
+
+// Journal — bilingual brand-spotlight articles with a "shop the story" product
+// strip. Drives SEO (brand long-tail queries) and links content -> products.
+model Post {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  titleAr     String
+  titleEn     String
+  excerptAr   String?
+  excerptEn   String?
+  bodyAr      String // article body (plain text / simple markdown)
+  bodyEn      String
+  coverImage  String?
+  brandId     String? // the brand this spotlight features
+  brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  products    Product[] @relation("PostProducts") // shown in "shop the story"
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published, publishedAt])
 }

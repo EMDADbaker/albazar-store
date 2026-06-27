@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCart } from './CartProvider';
 
@@ -8,6 +9,12 @@ import { useCart } from './CartProvider';
 export default function CartLink() {
   const t = useTranslations('Nav');
   const { count, openCart } = useCart();
+  // The count comes from client-side cart state (localStorage). Render the
+  // badge only after mount so the server HTML (no badge) matches the first
+  // client render — otherwise a non-empty cart causes a hydration mismatch.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const showBadge = mounted && count > 0;
 
   return (
     <button
@@ -20,7 +27,7 @@ export default function CartLink() {
         <path d="M5.5 8h13l-1.1 12h-10.8L5.5 8Z" />
         <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
       </svg>
-      {count > 0 && (
+      {showBadge && (
         <span className="absolute -top-0.5 -right-1 min-w-[16px] h-4 px-1 bg-accent text-bg rounded-full font-mono text-[9px] leading-none flex items-center justify-center tabular-nums">
           {count}
         </span>

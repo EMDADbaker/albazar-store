@@ -3,8 +3,26 @@ import { Link } from '@/i18n/routing';
 import { getAllActiveBrands } from '@/lib/brands';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  return pageMeta({
+    locale,
+    path: '/brands',
+    title: locale === 'ar' ? 'كل البراندات' : 'All Brands',
+    description:
+      locale === 'ar'
+        ? 'كل البراندات في البازار — ستريت وير عالمي ومحلي، قطع محدودة، توصيل داخل السعودية.'
+        : 'Every brand at ALBAZAR — global and local streetwear labels, limited pieces, delivered across Saudi Arabia.',
+  });
+}
 
 export default async function BrandsPage({
   params: { locale },

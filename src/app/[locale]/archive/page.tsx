@@ -4,8 +4,26 @@ import Nav from '@/components/Nav';
 import Ticker from '@/components/Ticker';
 import Footer from '@/components/Footer';
 import { getArchivedDrops } from '@/lib/archive';
+import { pageMeta } from '@/lib/seo';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  return pageMeta({
+    locale,
+    path: '/archive',
+    title: locale === 'ar' ? 'الأرشيف — دروبات سابقة' : 'Archive — Past Drops',
+    description:
+      locale === 'ar'
+        ? 'أرشيف البازار — كل الدروبات اللي نفدت. تاريخ القطع المحدودة اللي ما تتكرر.'
+        : "ALBAZAR archive — every sold-out drop. The history of limited pieces that never come back.",
+  });
+}
 
 export default async function ArchivePage({
   params: { locale },

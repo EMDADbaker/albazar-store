@@ -80,11 +80,11 @@ export default function MobileNav({
         />
         <div
           dir={isRtl ? 'rtl' : 'ltr'}
-          className={`absolute inset-y-0 ${
-            isRtl ? 'right-0' : 'left-0'
-          } w-[84%] max-w-xs bg-bg border-ink/10 overflow-y-auto transition-transform duration-300 ease-out ${
-            isRtl ? 'border-s' : 'border-e'
-          } ${open ? 'translate-x-0' : isRtl ? 'translate-x-full' : '-translate-x-full'}`}
+          // Always slides in from the LEFT (the hamburger sits on the left in
+          // both languages), so Arabic opens from the left too.
+          className={`absolute inset-y-0 left-0 w-[84%] max-w-xs bg-bg border-e border-ink/10 overflow-y-auto transition-transform duration-300 ease-out ${
+            open ? 'translate-x-0' : '-translate-x-full'
+          }`}
         >
           <div className="flex items-center justify-between px-5 py-4 border-b border-ink/10">
             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-accent">
